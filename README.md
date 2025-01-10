@@ -127,7 +127,7 @@ pytest tests/
 - **`GET /comandas`**: Retorna todas as comandas.
 - **`POST /comandas`**: Cria uma nova comanda.
 - **`PUT /comandas/:id`**: Atualiza uma comanda existente.
-- **`DELETE /comandas/:id`**: Remove uma comanda.
+- **`DELETE /comandas/:id`**: Remove uma comanda. 
 
 Para mais detalhes, consulte a [documentação completa da API](#).
 
