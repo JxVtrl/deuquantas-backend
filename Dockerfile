@@ -1,25 +1,20 @@
-# Usar uma imagem base do Python
-FROM python:3.9-slim
+# Usa a imagem oficial do Node.js
+FROM node:18-alpine
 
-# Instalar dependências do sistema necessárias
-RUN apt-get update && apt-get install -y \
-    libpq-dev gcc && \
-    rm -rf /var/lib/apt/lists/*
-
-# Definir o diretório de trabalho
+# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar os arquivos de dependências
-COPY requirements.txt .
+# Copia os arquivos do projeto para dentro do container
+COPY package*.json ./
 
-# Instalar as dependências do Python
-RUN pip install --no-cache-dir -r requirements.txt
+# Instala as dependências
+RUN npm install
 
-# Copiar o código restante
+# Copia o restante do código para dentro do container
 COPY . .
 
-# Expor a porta da aplicação
-EXPOSE 8000
+# Expõe a porta do backend
+EXPOSE 3000
 
-# Comando para iniciar o backend
-CMD ["python", "app/app.py"]
+# Inicia o backend
+CMD ["npm", "run", "start:prod"]
