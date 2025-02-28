@@ -1,31 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { User, Table, Order, Payment, MenuItem } from './modules';
-
+import { DatabaseModule } from './database/database.module';
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      useFactory: async () => {
-        console.log('⏳ Aguardando o banco de dados...');
-        await new Promise((resolve) => setTimeout(resolve, 5000)); // Aguarda 5 segundos antes de conectar
-        console.log('✅ Conectando ao banco de dados!');
-        return {
-          type: 'postgres',
-          host: process.env.DATABASE_HOST || 'localhost',
-          port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-          username: process.env.DATABASE_USER || 'postgres',
-          password: process.env.DATABASE_PASSWORD || 'password',
-          database: process.env.DATABASE_NAME || 'deuquantas',
-          autoLoadEntities: true,
-          synchronize: true, // ⚠️ Apenas para desenvolvimento, desativar em produção!
-          logging: true,
-        };
-      },
-    }),
-    TypeOrmModule.forFeature([User, Table, Order, Payment, MenuItem]),
-  ],
+  imports: [DatabaseModule],
 })
-export class AppModule {}
 
+export class AppModule {}
