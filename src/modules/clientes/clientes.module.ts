@@ -3,10 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cliente } from './cliente.entity';
 import { ClienteRepository } from './cliente.repository';
 import { ClienteService } from './services/cliente.service';
+import { ClienteController } from './controllers/cliente.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Cliente])],
   providers: [ClienteRepository, ClienteService],
-  exports: [ClienteRepository],
+  controllers: [ClienteController],
+  exports: [ClienteService],
 })
 export class ClientesModule {}

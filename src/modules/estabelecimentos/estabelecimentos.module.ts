@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Estabelecimento } from './estabelecimento.entity';
 import { EstabelecimentoRepository } from './estabelecimento.repository';
 import { EstabelecimentoService } from './services/estabelecimento.service';
-
+import { EstabelecimentoController } from './controllers/estabelecimento.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Estabelecimento])],
   providers: [EstabelecimentoRepository, EstabelecimentoService],
-  exports: [EstabelecimentoRepository],
+  controllers: [EstabelecimentoController],
+  exports: [EstabelecimentoService],
 })
-export class EstabelecimentosModule {}
+export class EstabelecimentoModule {}
