@@ -7,7 +7,7 @@ import { FuncionarioService } from './services/funcionario.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Funcionario])],
-  providers: [FuncionarioRepository],
+  providers: [FuncionarioRepository, FuncionarioService],
   controllers: [FuncionarioController],
   exports: [FuncionarioService],
 })
