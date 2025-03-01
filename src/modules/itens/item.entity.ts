@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
+import { Cardapio } from '../cardapios/cardapio.entity';
 
 // Itens Entity
 @Entity('itens')
@@ -14,4 +15,7 @@ export class Item {
 
   @Column({ type: 'text', nullable: true })
   imgItem: string;
+
+  @OneToMany(() => Cardapio, (cardapio) => cardapio.item)
+  cardapios: Cardapio[];
 }

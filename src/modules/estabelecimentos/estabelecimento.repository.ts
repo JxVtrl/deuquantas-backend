@@ -14,7 +14,7 @@ export class EstabelecimentoRepository {
     return this.repository.find();
   }
 
-  async findByNome(nome: string): Promise<Estabelecimento | null> {
-          return this.repository.findOne({ where: { nome } });
-      }
+  async findByNome(nomeEstab: string): Promise<Estabelecimento | null> {
+    return this.repository.findOne({ where: { nomeEstab } });
+  }
 }

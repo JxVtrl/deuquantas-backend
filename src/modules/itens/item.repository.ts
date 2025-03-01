@@ -14,7 +14,7 @@ export class ItemRepository {
     return this.repository.find();
   }
 
- async findByNome(nome: string): Promise<Item | null> {
-          return this.repository.findOne({ where: { nome } });
-      }
+  async findByNome(desItem: string): Promise<Item | null> {
+    return this.repository.findOne({ where: { desItem } });
+  }
 }

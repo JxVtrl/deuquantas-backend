@@ -1,6 +1,7 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
+import { Item } from '../itens/item.entity';
 
-// Cardápio Entity
 @Entity('cardapios')
 export class Cardapio {
   @PrimaryColumn({ type: 'varchar', length: 14 })
@@ -9,21 +10,18 @@ export class Cardapio {
   @PrimaryColumn({ type: 'varchar', length: 3 })
   numOrdem: string;
 
-  @Column({ type: 'varchar', length: 15 })
-  codItem: string;
-
-  @Column({ type: 'varchar', length: 15 })
-  tipItem: string;
+  @ManyToOne(() => Item, (item) => item.codItem) // Relacionamento com Item
+  @JoinColumn({ name: 'codItem' }) // Chave estrangeira para Item
+  item: Item;
 
   @Column({ type: 'int' })
   tipBarCoz: number;
 
-  @Column({ type: 'varchar', length: 100 })
-  desDetalhe: string;
-
-  @Column({ type: 'text', nullable: true })
-  imgItemEstab: string;
-
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   valPreco: number;
+
+  // Relacionamento com Estabelecimento para obter o nome do restaurante
+  @ManyToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.cardapios)
+  @JoinColumn({ name: 'numCnpj' }) // Liga a chave estrangeira numCnpj com Estabelecimento
+  estabelecimento: Estabelecimento;
 }

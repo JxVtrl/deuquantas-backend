@@ -5,16 +5,26 @@ import { Cardapio } from './cardapio.entity';
 
 @Injectable()
 export class CardapioRepository {
-    constructor(
-        @InjectRepository(Cardapio)
-        private readonly repository: Repository<Cardapio>,
-    ) { }
+  constructor(
+    @InjectRepository(Cardapio)
+    private readonly repository: Repository<Cardapio>,
+  ) {}
 
-    async findAll(): Promise<Cardapio[]> {
-        return this.repository.find();
-    }
+  async findAll(): Promise<Cardapio[]> {
+    return this.repository.find({ relations: ['estabelecimento', 'item'] });
+  }
 
-    async findByNome(nome: string): Promise<Cardapio | null> {
-        return this.repository.findOne({ where: { nome } });
-    }
+  async findByNomeRestaurante(nomeEstab: string): Promise<Cardapio[]> {
+    return this.repository.find({
+      where: { estabelecimento: { nomeEstab } },
+      relations: ['estabelecimento', 'item'],
+    });
+  }
+
+  async findByCodigoItem(codItem: string): Promise<Cardapio[]> {
+    return this.repository.find({
+      where: { item: { codItem } },
+      relations: ['estabelecimento', 'item'],
+    });
+  }
 }
