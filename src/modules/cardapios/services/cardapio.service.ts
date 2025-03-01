@@ -1,11 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { CardapioRepository } from '../cardapio.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Cardapio } from '../cardapio.entity';
+import { CreateCardapioDto } from '../dtos/cardapio.dto';
 
 @Injectable()
 export class CardapioService {
-  constructor(private readonly cardapioRepository: CardapioRepository) {}
+  constructor(
+    @InjectRepository(Cardapio)
+    private readonly cardapioRepository: Repository<Cardapio>,
+  ) {}
 
-  async getAllCardapios() {
-    return this.cardapioRepository.findAll();
+  async getAllCardapios(): Promise<Cardapio[]> {
+    return this.cardapioRepository.find();
+  }
+
+  async getCardapioByCnpj(numCnpj: string): Promise<Cardapio[]> {
+    return this.cardapioRepository.find({ where: { numCnpj } });
+  }
+
+  async createCardapio(dto: CreateCardapioDto): Promise<Cardapio> {
+    const newCardapio = this.cardapioRepository.create(dto);
+    return this.cardapioRepository.save(newCardapio);
   }
 }

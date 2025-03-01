@@ -1,11 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { ContaRepository } from '../conta.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Conta } from '../conta.entity';
+import { CreateContaDto } from '../dtos/conta.dto';
 
 @Injectable()
 export class ContaService {
-  constructor(private readonly contaRepository: ContaRepository) {}
+  constructor(
+    @InjectRepository(Conta)
+    private readonly contaRepository: Repository<Conta>,
+  ) {}
 
-  async getAllContas() {
-    return this.contaRepository.findAll();
+  async getAllContas(): Promise<Conta[]> {
+    return this.contaRepository.find();
+  }
+
+  async getContaByCpf(numCpf: string): Promise<Conta[]> {
+    return this.contaRepository.find({ where: { numCpf } });
+  }
+
+  async createConta(dto: CreateContaDto): Promise<Conta> {
+    const newConta = this.contaRepository.create(dto);
+    return this.contaRepository.save(newConta);
   }
 }

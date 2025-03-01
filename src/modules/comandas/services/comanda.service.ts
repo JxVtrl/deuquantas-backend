@@ -1,11 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { ComandaRepository } from '../comanda.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Comanda } from '../comanda.entity';
+import { CreateComandaDto } from '../dtos/comanda.dto';
 
 @Injectable()
 export class ComandaService {
-  constructor(private readonly comandaRepository: ComandaRepository) {}
+  constructor(
+    @InjectRepository(Comanda)
+    private readonly comandaRepository: Repository<Comanda>,
+  ) {}
 
-  async getAllComandas() {
-    return this.comandaRepository.findAll();
+  async getAllComandas(): Promise<Comanda[]> {
+    return this.comandaRepository.find();
+  }
+
+  async getComandaByCpf(numCpf: string): Promise<Comanda[]> {
+    return this.comandaRepository.find({ where: { numCpf } });
+  }
+
+  async createComanda(dto: CreateComandaDto): Promise<Comanda> {
+    const newComanda = this.comandaRepository.create(dto);
+    return this.comandaRepository.save(newComanda);
   }
 }

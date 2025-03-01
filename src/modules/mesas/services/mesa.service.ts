@@ -1,11 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { MesaRepository } from '../mesa.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Mesa } from '../mesa.entity';
+import { CreateMesaDto } from '../dtos/mesa.dto';
 
 @Injectable()
 export class MesaService {
-  constructor(private readonly mesaRepository: MesaRepository) {}
+  constructor(
+    @InjectRepository(Mesa)
+    private readonly mesaRepository: Repository<Mesa>,
+  ) {}
 
-  async getAllMesas() {
-    return this.mesaRepository.findAll();
+  async getAllMesas(): Promise<Mesa[]> {
+    return this.mesaRepository.find();
+  }
+
+  async getMesaByNumero(numMesa: string): Promise<Mesa | null> {
+    return this.mesaRepository.findOne({ where: { numMesa } });
+  }
+
+  async createMesa(dto: CreateMesaDto): Promise<Mesa> {
+    const newMesa = this.mesaRepository.create(dto);
+    return this.mesaRepository.save(newMesa);
   }
 }
