@@ -11,4 +11,4 @@ import { EstabelecimentoController } from './controllers/estabelecimento.control
   controllers: [EstabelecimentoController],
   exports: [EstabelecimentoService],
 })
-export class EstabelecimentoModule {}
+export class EstabelecimentosModule {}

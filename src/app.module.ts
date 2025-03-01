@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { User, Table, Order, Payment, MenuItem } from './modules';
+import { Cardapio, Cliente, Comanda, Conta, Estabelecimento, Funcionario, Item, Mesa, CardapiosModule, ClientesModule, ComandasModule, ContasModule, EstabelecimentosModule, FuncionariosModule, ItensModule, MesasModule } from './modules';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MonitoringModule } from './monitoring/monitoring.module';
 
@@ -26,8 +26,16 @@ import { MonitoringModule } from './monitoring/monitoring.module';
         };
       },
     }),
-    TypeOrmModule.forFeature([User, Table, Order, Payment, MenuItem]),
+    TypeOrmModule.forFeature([Cardapio, Cliente, Comanda, Conta, Estabelecimento, Funcionario, Item, Mesa]),
     MonitoringModule,
+    ClientesModule,
+    EstabelecimentosModule,
+    ComandasModule,
+    FuncionariosModule,
+    CardapiosModule,
+    MesasModule,
+    ContasModule,
+    ItensModule,
   ],
 })
 export class AppModule implements NestModule {
