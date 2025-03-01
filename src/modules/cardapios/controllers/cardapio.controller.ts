@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { CardapioService } from '../services/cardapio.service';
 import { CreateCardapioDto } from '../dtos/cardapio.dto';
+import { JwtAuthGuard } from '../../../auth/auth.guard';
+import { RoleGuard } from '../../../auth/role.guard';
+import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('cardapios')
 export class CardapioController {
@@ -11,11 +14,8 @@ export class CardapioController {
     return this.cardapioService.getAllCardapios();
   }
 
-  @Get(':numCnpj')
-  async getCardapioByCnpj(@Param('numCnpj') numCnpj: string) {
-    return this.cardapioService.getCardapioByCnpj(numCnpj);
-  }
-
+  @Roles('funcionario', 'gerente')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post()
   async createCardapio(@Body() createCardapioDto: CreateCardapioDto) {
     return this.cardapioService.createCardapio(createCardapioDto);

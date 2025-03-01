@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ComandaService } from '../services/comanda.service';
 import { CreateComandaDto } from '../dtos/comanda.dto';
+import { JwtAuthGuard } from '../../../auth/auth.guard';
 
 @Controller('comandas')
+@UseGuards(JwtAuthGuard) // Toda a rota de comandas exige autenticação
 export class ComandaController {
   constructor(private readonly comandaService: ComandaService) {}
 

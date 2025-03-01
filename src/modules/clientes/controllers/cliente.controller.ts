@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ClienteService } from '../services/cliente.service';
 import { CreateClienteDto } from '../dtos/cliente.dto';
+import { JwtAuthGuard } from '../../../auth/auth.guard';
 
 @Controller('clientes')
+@UseGuards(JwtAuthGuard) // Toda a rota de clientes exige autenticação
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
