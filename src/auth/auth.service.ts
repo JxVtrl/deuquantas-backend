@@ -10,17 +10,26 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(numCpf: string, password: string): Promise<any> {
+  async validateUser(
+    numCpf: string,
+    password: string,
+  ): Promise<{ numCpf: string; nomeCliente: string } | null> {
     const user = await this.clienteService.getClienteByCpf(numCpf);
-    if (user && await bcrypt.compare(password, user.codCartao)) {
-      const { codCartao, ...result } = user;
+    if (user && (await bcrypt.compare(password, user.codCartao))) {
+      const { ...result } = user;
       return result;
     }
     throw new UnauthorizedException('Credenciais inválidas');
   }
 
-  async login(numCpf: string, password: string): Promise<{ access_token: string }> {
-    const user = await this.validateUser(numCpf, password);
+  async login(
+    numCpf: string,
+    password: string,
+  ): Promise<{ access_token: string }> {
+    const user = (await this.validateUser(numCpf, password)) as {
+      numCpf: string;
+      nomeCliente: string;
+    };
     const payload = { numCpf: user.numCpf, nomeCliente: user.nomeCliente };
     return {
       access_token: this.jwtService.sign(payload),

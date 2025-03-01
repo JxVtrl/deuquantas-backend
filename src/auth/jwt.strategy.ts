@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
+  validate(payload: { numCpf: string; nomeCliente: string }) {
     return { numCpf: payload.numCpf, nomeCliente: payload.nomeCliente };
   }
 }

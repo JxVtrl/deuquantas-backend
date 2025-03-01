@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from './auth.guard';
 
@@ -9,12 +14,17 @@ export class RoleGuard extends JwtAuthGuard implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
+    const requiredRoles = this.reflector.get<string[]>(
+      'roles', 
+      context.getHandler()
+    );
     if (!requiredRoles) {
       return true; // Se a rota não tiver restrição de função, segue normalmente
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context
+      .switchToHttp()
+      .getRequest<{ user: { role: string } }>();
     const user = request.user;
 
     if (!user || !requiredRoles.includes(user.role)) {
