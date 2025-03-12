@@ -1,23 +1,23 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { 
-  Cardapio, 
-  Cliente, 
-  Comanda, 
-  Conta, 
-  Estabelecimento, 
-  Funcionario, 
-  Item, 
-  Mesa, 
-  CardapiosModule, 
-  ClientesModule, 
-  ComandasModule, 
-  ContasModule, 
-  EstabelecimentosModule, 
-  FuncionariosModule, 
-  ItensModule, 
-  MesasModule 
+import {
+  Cardapio,
+  Cliente,
+  Comanda,
+  Conta,
+  Estabelecimento,
+  Funcionario,
+  Item,
+  Mesa,
+  CardapiosModule,
+  ClientesModule,
+  ComandasModule,
+  ContasModule,
+  EstabelecimentosModule,
+  FuncionariosModule,
+  ItensModule,
+  MesasModule,
 } from './modules';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MonitoringModule } from './monitoring/monitoring.module';
@@ -32,7 +32,7 @@ import { MonitoringModule } from './monitoring/monitoring.module';
         console.log('✅ Conectando ao banco de dados!');
         return {
           type: 'postgres',
-          host: process.env.DATABASE_HOST || 'localhost',
+          host: process.env.DATABASE_HOST || 'db',
           port: parseInt(process.env.DATABASE_PORT || '5432', 10),
           username: process.env.DATABASE_USER || 'postgres',
           password: process.env.DATABASE_PASSWORD || 'password',
@@ -45,13 +45,13 @@ import { MonitoringModule } from './monitoring/monitoring.module';
     }),
     TypeOrmModule.forFeature([
       Cardapio,
-      Cliente, 
-      Comanda, 
-      Conta, 
-      Estabelecimento, 
-      Funcionario, 
-      Item, 
-      Mesa
+      Cliente,
+      Comanda,
+      Conta,
+      Estabelecimento,
+      Funcionario,
+      Item,
+      Mesa,
     ]),
     MonitoringModule,
     ClientesModule,

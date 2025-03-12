@@ -76,7 +76,7 @@ Certifique-se de que as seguintes ferramentas estão instaladas:
 
 2. Preencha os valores das variáveis de ambiente:
    ```plaintext
-   DATABASE_URL=postgresql://user:password@localhost:5432/deuquantas
+   DATABASE_URL=postgresql://user:password@db:5432/deuquantas
    SECRET_KEY=sua-chave-secreta
    ```
 
