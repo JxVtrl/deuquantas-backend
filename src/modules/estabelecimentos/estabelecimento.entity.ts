@@ -27,4 +27,13 @@ export class Estabelecimento {
 
   @OneToMany(() => Cardapio, (cardapio) => cardapio.estabelecimento)
   cardapios: Cardapio[];
+
+  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  latitude: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  longitude: number;
+
+  @Column({ type: 'enum', enum: ['ativo', 'em_breve'], default: 'em_breve' })
+  status: 'ativo' | 'em_breve';
 }

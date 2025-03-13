@@ -8,9 +8,16 @@ async function bootstrap() {
   // Configurar o Swagger
   const config = new DocumentBuilder()
     .setTitle('DeuQuantas API')
-    .setDescription('Documentação da API do DeuQuantas')
+    .setDescription('Documentação completo da API do DeuQuantas')
     .setVersion('1.0')
-    .addBearerAuth() // Adiciona autenticação JWT se necessário
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'Authorization',
+      description: 'Insira o token JWT aqui',
+      in: 'header',
+    }) // Adiciona autenticação JWT se necessário
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
