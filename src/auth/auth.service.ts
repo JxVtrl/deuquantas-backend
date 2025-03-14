@@ -70,11 +70,15 @@ export class AuthService {
         );
       }
 
+      // Determinar o nível de permissão com base no isAdmin
+      const permission_level = usuario.isAdmin ? 1 : 3; // 1 para admin, 3 para cliente comum
+
       const payload = {
         sub: usuario.id,
         email: usuario.email,
         nome: usuario.nome,
         isAdmin: usuario.isAdmin,
+        permission_level: permission_level, // Adicionando o permission_level ao payload
       };
 
       return {
