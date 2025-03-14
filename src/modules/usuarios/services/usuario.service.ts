@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -13,8 +17,10 @@ export class UsuarioService {
     private usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto): Promise<Omit<Usuario, 'senha'>> {
-    const { email, senha } = createUsuarioDto;
+  async create(
+    createUsuarioDto: CreateUsuarioDto,
+  ): Promise<Omit<Usuario, 'password'>> {
+    const { email, password } = createUsuarioDto;
 
     // Verificar se o usuário já existe
     const usuarioExistente = await this.usuarioRepository.findOne({
@@ -27,28 +33,28 @@ export class UsuarioService {
 
     // Criptografar a senha
     const salt = await bcrypt.genSalt();
-    const senhaHash = await bcrypt.hash(senha, salt);
+    const senhaHash = await bcrypt.hash(password, salt);
 
     // Criar o usuário
     const usuario = this.usuarioRepository.create({
       ...createUsuarioDto,
-      senha: senhaHash,
+      password: senhaHash,
     });
 
     await this.usuarioRepository.save(usuario);
 
     // Remover a senha do objeto retornado
-    const { senha: _, ...result } = usuario;
+    const { password: _, ...result } = usuario;
     return result;
   }
 
   async findByEmail(email: string, incluirSenha = false): Promise<Usuario> {
     const queryBuilder = this.usuarioRepository.createQueryBuilder('usuario');
-    
+
     if (incluirSenha) {
-      queryBuilder.addSelect('usuario.senha');
+      queryBuilder.addSelect('usuario.password');
     }
-    
+
     const usuario = await queryBuilder
       .where('usuario.email = :email', { email })
       .getOne();
@@ -76,32 +82,38 @@ export class UsuarioService {
     return this.usuarioRepository.find();
   }
 
-  async update(id: string, updateUsuarioDto: UpdateUsuarioDto): Promise<Usuario> {
+  async update(
+    id: string,
+    updateUsuarioDto: UpdateUsuarioDto,
+  ): Promise<Usuario> {
     const usuario = await this.findById(id);
-    
+
     // Se estiver atualizando o email, verificar se já existe
     if (updateUsuarioDto.email && updateUsuarioDto.email !== usuario.email) {
       const emailExistente = await this.usuarioRepository.findOne({
         where: { email: updateUsuarioDto.email },
       });
-      
+
       if (emailExistente) {
         throw new ConflictException('Email já cadastrado');
       }
     }
-    
+
     // Se estiver atualizando a senha, criptografar
-    if (updateUsuarioDto.senha) {
+    if (updateUsuarioDto.password) {
       const salt = await bcrypt.genSalt();
-      updateUsuarioDto.senha = await bcrypt.hash(updateUsuarioDto.senha, salt);
+      updateUsuarioDto.password = await bcrypt.hash(
+        updateUsuarioDto.password,
+        salt,
+      );
     }
-    
+
     // Atualizar o usuário
     Object.assign(usuario, updateUsuarioDto);
     await this.usuarioRepository.save(usuario);
-    
+
     // Remover a senha do objeto retornado
-    const { senha: _, ...result } = usuario;
+    const { password: _, ...result } = usuario;
     return result as Usuario;
   }
-} 
+}

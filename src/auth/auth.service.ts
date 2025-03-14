@@ -20,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, senha: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     try {
       const usuario = await this.usuarioService.findByEmail(email, true);
 
@@ -31,13 +31,13 @@ export class AuthService {
         return null;
       }
 
-      const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+      const senhaCorreta = await bcrypt.compare(password, usuario.password);
       if (!senhaCorreta) {
         this.logger.warn(`Senha incorreta para o usuário: ${email}`);
         return null;
       }
 
-      const { senha: _, ...result } = usuario;
+      const { password: _, ...result } = usuario;
       return result;
     } catch (error) {
       this.logger.error(
@@ -52,13 +52,15 @@ export class AuthService {
     loginUsuarioDto: LoginUsuarioDto,
   ): Promise<{ access_token: string }> {
     try {
-      const { email, senha } = loginUsuarioDto;
+      const { email, password } = loginUsuarioDto;
 
-      if (!email || !senha) {
+      console.log(email, password);  
+
+      if (!email || !password) {
         throw new BadRequestException('Email e senha são obrigatórios');
       }
 
-      const usuario = await this.validateUser(email, senha);
+      const usuario = await this.validateUser(email, password);
 
       if (!usuario) {
         throw new UnauthorizedException(

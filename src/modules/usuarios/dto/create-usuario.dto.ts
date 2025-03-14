@@ -10,7 +10,7 @@ export class CreateUsuarioDto {
 
   @IsNotEmpty({ message: 'Senha é obrigatória' })
   @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
-  senha: string;
+  password: string;
 
   @IsOptional()
   telefone?: string;

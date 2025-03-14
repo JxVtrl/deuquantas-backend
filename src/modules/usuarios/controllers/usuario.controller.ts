@@ -21,7 +21,7 @@ export class UsuarioController {
   @Post()
   async create(
     @Body() createUsuarioDto: CreateUsuarioDto,
-  ): Promise<Omit<Usuario, 'senha'>> {
+  ): Promise<Omit<Usuario, 'password'>> {
     return this.usuarioService.create(createUsuarioDto);
   }
 

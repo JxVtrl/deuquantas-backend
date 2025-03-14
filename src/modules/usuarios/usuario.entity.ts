@@ -18,7 +18,7 @@ export class Usuario {
   nome: string;
 
   @Column({ select: false })
-  senha: string;
+  password: string;
 
   @Column({ nullable: true })
   telefone: string;
