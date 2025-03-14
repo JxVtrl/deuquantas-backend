@@ -20,6 +20,9 @@ export class UsuarioService {
   async create(
     createUsuarioDto: CreateUsuarioDto,
   ): Promise<Omit<Usuario, 'password'>> {
+
+    console.log('Dados recebidos para criação:', createUsuarioDto);
+
     const { email, password } = createUsuarioDto;
 
     // Verificar se o usuário já existe

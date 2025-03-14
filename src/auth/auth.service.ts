@@ -4,6 +4,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -54,7 +56,7 @@ export class AuthService {
     try {
       const { email, password } = loginUsuarioDto;
 
-      console.log(email, password);  
+      console.log(email, password);
 
       if (!email || !password) {
         throw new BadRequestException('Email e senha são obrigatórios');
@@ -94,22 +96,49 @@ export class AuthService {
 
   async register(createUsuarioDto: CreateUsuarioDto) {
     try {
-      // Verificar se o email já existe
-      const usuarioExistente = await this.usuarioService.findByEmail(
-        createUsuarioDto.email,
-        false,
+      this.logger.log(
+        `Tentativa de registro para email: ${createUsuarioDto.email}`,
       );
+
+      // Verificar se o usuário já existe sem lançar erro
+      let usuarioExistente;
+      try {
+        usuarioExistente = await this.usuarioService.findByEmail(
+          createUsuarioDto.email,
+          false,
+        );
+      } catch (error) {
+        if (!(error instanceof NotFoundException)) {
+          throw error; // Se for um erro diferente, relançamos
+        }
+      }
+
       if (usuarioExistente) {
-        throw new BadRequestException(
+        this.logger.warn(
+          `Tentativa de registro com email já existente: ${createUsuarioDto.email}`,
+        );
+        throw new ConflictException(
           'Este email já está em uso. Por favor, use outro email.',
         );
       }
 
-      return await this.usuarioService.create(createUsuarioDto);
+      this.logger.log(
+        `Criando usuário com os dados: ${JSON.stringify(createUsuarioDto)}`,
+      );
+
+      const novoUsuario = await this.usuarioService.create(createUsuarioDto);
+
+      this.logger.log(`Usuário criado com sucesso: ID ${novoUsuario.id}`);
+
+      return novoUsuario;
     } catch (error) {
-      if (error instanceof BadRequestException) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof ConflictException
+      ) {
         throw error;
       }
+
       this.logger.error(
         `Erro durante o registro: ${error.message}`,
         error.stack,
