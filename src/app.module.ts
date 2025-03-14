@@ -22,10 +22,12 @@ import {
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MonitoringModule } from './monitoring/monitoring.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthOtpModule } from './authotpmodule/auth-otp.module';
 
 @Module({
   imports: [
     AuthModule,
+    AuthOtpModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       useFactory: async () => {
