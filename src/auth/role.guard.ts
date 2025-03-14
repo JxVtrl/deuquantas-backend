@@ -5,32 +5,32 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtAuthGuard } from './auth.guard';
 
 @Injectable()
-export class RoleGuard extends JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {
-    super();
-  }
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.get<string[]>(
-      'roles', 
-      context.getHandler()
-    );
-    if (!requiredRoles) {
-      return true; // Se a rota não tiver restrição de função, segue normalmente
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    
+    if (!roles) {
+      return true;
     }
-
-    const request = context
-      .switchToHttp()
-      .getRequest<{ user: { role: string } }>();
+    
+    const request = context.switchToHttp().getRequest();
     const user = request.user;
-
-    if (!user || !requiredRoles.includes(user.role)) {
-      throw new ForbiddenException('Acesso negado');
+    
+    if (!user) {
+      throw new ForbiddenException('Usuário não autenticado');
     }
-
-    return true;
+    
+    // Verifica se o usuário é admin quando o role 'admin' é requerido
+    if (roles.includes('admin') && user.isAdmin) {
+      return true;
+    }
+    
+    // Adicione outras verificações de roles conforme necessário
+    
+    throw new ForbiddenException('Você não tem permissão para acessar este recurso');
   }
 }

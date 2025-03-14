@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { MesaService } from '../services/mesa.service';
 import { CreateMesaDto } from '../dtos/mesa.dto';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
-import { RoleGuard } from '../../../auth/role.guard';
+import { AuthGuard } from '../../../auth/auth.guard';
+import { RolesGuard } from '../../../auth/role.guard';
 import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('mesas')
-@UseGuards(JwtAuthGuard, RoleGuard) // Exige autenticação para todas as rotas
+@UseGuards(AuthGuard, RolesGuard) // Exige autenticação para todas as rotas
 export class MesaController {
   constructor(private readonly mesaService: MesaService) {}
 

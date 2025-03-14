@@ -7,12 +7,12 @@ import {
 } from '@nestjs/swagger';
 import { ClienteService } from '../services/cliente.service';
 import { CreateClienteDto } from '../dtos/cliente.dto';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
+import { AuthGuard } from '../../../auth/auth.guard';
 
 @ApiTags('clientes') // 🔥 Categoriza no Swagger
 @ApiBearerAuth() // 🔒 Aplica autenticação JWT no Swagger
 @Controller('clientes')
-@UseGuards(JwtAuthGuard) // 🔐 Protege todas as rotas com JWT
+@UseGuards(AuthGuard) // 🔐 Protege todas as rotas com JWT
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 

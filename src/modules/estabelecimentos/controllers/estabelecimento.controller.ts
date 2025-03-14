@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { EstabelecimentoService } from '../services/estabelecimento.service';
 import { CreateEstabelecimentoDto } from '../dtos/estabelecimento.dto';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
-import { RoleGuard } from '../../../auth/role.guard';
+import { AuthGuard } from '../../../auth/auth.guard';
+import { RolesGuard } from '../../../auth/role.guard';
 import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('estabelecimentos')
@@ -51,7 +51,7 @@ export class EstabelecimentoController {
   }
 
   @Roles('gerente')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Post()
   async createEstabelecimento(
     @Body() createEstabelecimentoDto: CreateEstabelecimentoDto,

@@ -22,6 +22,7 @@ import {
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MonitoringModule } from './monitoring/monitoring.module';
 import { AuthModule } from './auth/auth.module';
+import { UsuariosModule } from './modules/usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { AuthModule } from './auth/auth.module';
         console.log('✅ Conectando ao banco de dados!');
         return {
           type: 'postgres',
-          host: process.env.DATABASE_HOST || 'db',
+          host: process.env.DATABASE_HOST || 'localhost',
           port: parseInt(process.env.DATABASE_PORT || '5432', 10),
           username: process.env.DATABASE_USER || 'postgres',
           password: process.env.DATABASE_PASSWORD || 'password',
@@ -64,6 +65,7 @@ import { AuthModule } from './auth/auth.module';
     MesasModule,
     ContasModule,
     ItensModule,
+    UsuariosModule,
   ],
 })
 export class AppModule implements NestModule {

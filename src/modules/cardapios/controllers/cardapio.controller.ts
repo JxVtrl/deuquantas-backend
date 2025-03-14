@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { CardapioService } from '../services/cardapio.service';
 import { CreateCardapioDto } from '../dtos/cardapio.dto';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
-import { RoleGuard } from '../../../auth/role.guard';
+import { AuthGuard } from '../../../auth/auth.guard';
+import { RolesGuard } from '../../../auth/role.guard';
 import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('cardapios')
@@ -15,7 +15,7 @@ export class CardapioController {
   }
 
   @Roles('funcionario', 'gerente')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Post()
   async createCardapio(@Body() createCardapioDto: CreateCardapioDto) {
     return this.cardapioService.createCardapio(createCardapioDto);

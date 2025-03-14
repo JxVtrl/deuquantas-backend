@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { FuncionarioService } from '../services/funcionario.service';
 import { CreateFuncionarioDto } from '../dtos/funcionario.dto';
-import { JwtAuthGuard } from '../../../auth/auth.guard';
-import { RoleGuard } from '../../../auth/role.guard';
+import { AuthGuard } from '../../../auth/auth.guard';
+import { RolesGuard } from '../../../auth/role.guard';
 import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('funcionarios')
-@UseGuards(JwtAuthGuard, RoleGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class FuncionarioController {
   constructor(private readonly funcionarioService: FuncionarioService) {}
 
