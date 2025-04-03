@@ -32,6 +32,18 @@ export class UsuarioController {
     return this.usuarioService.findAll();
   }
 
+  @Get('check-email/:email')
+  async checkEmail(
+    @Param('email') email: string,
+  ): Promise<{ exists: boolean }> {
+    try {
+      await this.usuarioService.findByEmail(email);
+      return { exists: true };
+    } catch (error) {
+      return { exists: false };
+    }
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Usuario> {
