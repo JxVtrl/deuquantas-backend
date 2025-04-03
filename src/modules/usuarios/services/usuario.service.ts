@@ -22,7 +22,7 @@ export class UsuarioService {
   ): Promise<Omit<Usuario, 'password'>> {
     console.log('Dados recebidos para criação:', createUsuarioDto);
 
-    const { email, senha } = createUsuarioDto;
+    const { email, password } = createUsuarioDto;
 
     // Verificar se o usuário já existe
     const usuarioExistente = await this.usuarioRepository.findOne({
@@ -35,7 +35,7 @@ export class UsuarioService {
 
     // Criptografar a senha
     const salt = await bcrypt.genSalt();
-    const senhaHash = await bcrypt.hash(senha, salt);
+    const senhaHash = await bcrypt.hash(password, salt);
 
     // Criar o usuário
     const usuario = this.usuarioRepository.create({
@@ -47,7 +47,7 @@ export class UsuarioService {
 
     // Remover a senha do objeto retornado
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = usuario;
+    const { password: _, ...result } = usuario;
     return result;
   }
 

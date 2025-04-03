@@ -17,7 +17,7 @@ export class CreateUsuarioDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
-  senha: string;
+  password: string;
 
   @IsString()
   @IsNotEmpty()

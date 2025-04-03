@@ -18,7 +18,7 @@ export class Cliente {
   email: string;
 
   @Column()
-  senha: string;
+  password: string;
 
   @Column({ name: 'num_cpf', unique: true })
   numCpf: string;

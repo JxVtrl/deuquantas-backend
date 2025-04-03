@@ -23,11 +23,11 @@ export class ClienteService {
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
     // Criptografa a senha antes de salvar
     const salt = await bcrypt.genSalt();
-    const senhaHash = await bcrypt.hash(dto.senha, salt);
+    const senhaHash = await bcrypt.hash(dto.password, salt);
 
     const newCliente = this.clienteRepository.create({
       ...dto,
-      senha: senhaHash,
+      password: senhaHash,
     });
 
     return this.clienteRepository.save(newCliente);

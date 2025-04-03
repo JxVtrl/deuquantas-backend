@@ -21,7 +21,7 @@ export class CreateClienteDto {
 
   @IsString()
   @Length(6, 100)
-  senha: string;
+  password: string;
 
   @IsString()
   telefone: string;
