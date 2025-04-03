@@ -31,9 +31,6 @@ export class CreateEstabelecimentoDto {
   razaoSocial: string;
 
   @IsString()
-  nomeContato: string;
-
-  @IsString()
   numCelular: string;
 
   @IsString()

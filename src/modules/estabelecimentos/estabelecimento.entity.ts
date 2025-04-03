@@ -27,9 +27,6 @@ export class Estabelecimento {
   @Column({ type: 'varchar', length: 100 })
   razaoSocial: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  nomeContato: string;
-
   @Column({ type: 'varchar', length: 20 })
   numCelular: string;
 
