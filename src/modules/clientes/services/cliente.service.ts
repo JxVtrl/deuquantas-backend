@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cliente } from '../cliente.entity';
 import { CreateClienteDto } from '../dtos/cliente.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class ClienteService {
@@ -20,7 +21,15 @@ export class ClienteService {
   }
 
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
-    const newCliente = this.clienteRepository.create(dto);
+    // Criptografa a senha antes de salvar
+    const salt = await bcrypt.genSalt();
+    const senhaHash = await bcrypt.hash(dto.senha, salt);
+    
+    const newCliente = this.clienteRepository.create({
+      ...dto,
+      senha: senhaHash,
+    });
+    
     return this.clienteRepository.save(newCliente);
   }
 

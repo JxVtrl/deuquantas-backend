@@ -34,6 +34,7 @@ export class AuthService {
       }
 
       const senhaCorreta = await bcrypt.compare(password, cliente.senha);
+
       if (!senhaCorreta) {
         this.logger.warn(`Senha incorreta para o usuário: ${email}`);
         return null;
