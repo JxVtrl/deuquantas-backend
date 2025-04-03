@@ -180,7 +180,8 @@ export class AuthService {
 
   async checkCNPJExists(cnpj: string): Promise<boolean> {
     try {
-      const estabelecimento = await this.estabelecimentoService.findByCNPJ(cnpj);
+      const estabelecimento =
+        await this.estabelecimentoService.findByCNPJ(cnpj);
       return !!estabelecimento;
     } catch (error) {
       if (error instanceof NotFoundException) {
