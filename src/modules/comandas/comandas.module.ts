@@ -11,10 +11,10 @@ import { ComandaController } from './controllers/comanda.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([Comanda, TestComanda])],
   providers: [
-    ComandaRepository, 
-    TestComandaRepository, 
-    ComandaService, 
-    TestComandaService
+    ComandaRepository,
+    TestComandaRepository,
+    ComandaService,
+    TestComandaService,
   ],
   controllers: [ComandaController],
   exports: [ComandaRepository, TestComandaRepository],

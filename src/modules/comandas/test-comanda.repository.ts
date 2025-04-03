@@ -22,4 +22,4 @@ export class TestComandaRepository {
     const newTestComanda = this.repository.create(data);
     return this.repository.save(newTestComanda);
   }
-} 
+}

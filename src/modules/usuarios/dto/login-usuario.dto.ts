@@ -7,4 +7,4 @@ export class LoginUsuarioDto {
 
   @IsNotEmpty({ message: 'Senha é obrigatória' })
   password: string;
-} 
+}

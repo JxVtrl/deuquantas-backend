@@ -25,10 +25,10 @@ export class TestComandaService {
       ...dto,
       datApropriacao: new Date(dto.datApropriacao),
       horPedido: new Date(dto.horPedido),
-      isTestData: true
+      isTestData: true,
     };
-    
+
     const newTestComanda = this.testComandaRepository.create(testComandaData);
     return this.testComandaRepository.save(newTestComanda);
   }
-} 
+}

@@ -21,7 +21,10 @@ export class Cardapio {
   valPreco: number;
 
   // Relacionamento com Estabelecimento para obter o nome do restaurante
-  @ManyToOne(() => Estabelecimento, (estabelecimento) => estabelecimento.cardapios)
+  @ManyToOne(
+    () => Estabelecimento,
+    (estabelecimento) => estabelecimento.cardapios,
+  )
   @JoinColumn({ name: 'numCnpj' }) // Liga a chave estrangeira numCnpj com Estabelecimento
   estabelecimento: Estabelecimento;
 }

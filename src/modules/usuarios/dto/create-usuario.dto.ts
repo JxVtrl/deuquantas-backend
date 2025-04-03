@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsBoolean, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsBoolean,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsEmail({}, { message: 'Email inválido' })
@@ -18,4 +24,4 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsBoolean()
   isAdmin?: boolean;
-} 
+}

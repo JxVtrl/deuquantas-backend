@@ -28,4 +28,4 @@ export class TestComanda {
 
   @Column({ type: 'boolean', default: true })
   isTestData: boolean;
-} 
+}

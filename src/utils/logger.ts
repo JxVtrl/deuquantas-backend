@@ -3,7 +3,10 @@ import * as DailyRotateFile from 'winston-daily-rotate-file';
 
 const logFormat = format.combine(
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.printf(({ timestamp, level, message }) => `${timestamp} [${level.toUpperCase()}]: ${message}`),
+  format.printf(
+    ({ timestamp, level, message }) =>
+      `${timestamp} [${level.toUpperCase()}]: ${message}`,
+  ),
 );
 
 const logger = createLogger({

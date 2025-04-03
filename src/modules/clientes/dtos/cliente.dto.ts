@@ -1,4 +1,11 @@
-import { IsString, IsOptional, Length, IsEmail, IsDate, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  Length,
+  IsEmail,
+  IsDate,
+  IsBoolean,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateClienteDto {

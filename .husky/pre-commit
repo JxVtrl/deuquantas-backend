@@ -1,0 +1,5 @@
+#!/bin/sh
+export PATH="/c/Program Files/nodejs:$PATH"
+
+echo "🎨 Formatando arquivos com Prettier..."
+npx prettier --write "src/**/*.ts" 

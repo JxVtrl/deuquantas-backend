@@ -22,4 +22,4 @@ export class UpdateUsuarioDto {
   @IsOptional()
   @IsBoolean()
   isAtivo?: boolean;
-} 
+}
