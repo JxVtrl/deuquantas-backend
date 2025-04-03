@@ -38,17 +38,21 @@ export class AuthService {
   }
 
   async login(user: any) {
-    console.log(
-      'Dados do usuário recebidos no login:',
-      JSON.stringify(user, null, 2),
-    );
-
-    const payload = {
+    console.log('Dados do usuário recebidos no login:', {
+      id: user.id,
       email: user.email,
+      name: user.name,
+      isAdmin: user.isAdmin,
+      cliente: user.cliente,
+      estabelecimento: user.estabelecimento
+    });
+
+    const payload = { 
+      email: user.email, 
       sub: user.id,
-      permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
+      permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
       hasCliente: !!user.cliente,
-      hasEstabelecimento: !!user.estabelecimento,
+      hasEstabelecimento: !!user.estabelecimento
     };
 
     console.log('Payload gerado para o token:', payload);
@@ -56,22 +60,24 @@ export class AuthService {
     const response = {
       access_token: this.jwtService.sign(payload),
       user: {
-        ...user,
-        permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        isAdmin: user.isAdmin,
+        isAtivo: user.isAtivo,
+        dataCriacao: user.dataCriacao,
+        dataAtualizacao: user.dataAtualizacao,
+        permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
         hasCliente: !!user.cliente,
         hasEstabelecimento: !!user.estabelecimento,
-      },
+        cliente: user.cliente,
+        estabelecimento: user.estabelecimento
+      }
     };
 
     console.log('Resposta final do login:', {
       token: response.access_token,
-      user: {
-        id: response.user.id,
-        email: response.user.email,
-        permission_level: response.user.permission_level,
-        hasCliente: response.user.hasCliente,
-        hasEstabelecimento: response.user.hasEstabelecimento,
-      },
+      user: response.user
     });
 
     return response;
@@ -158,5 +164,12 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  async getUserData(user: any) {
+    console.log('Buscando dados completos do usuário:', user.id);
+    const usuario = await this.usuarioService.findById(user.id);
+    console.log('Dados completos encontrados:', usuario);
+    return usuario;
   }
 }

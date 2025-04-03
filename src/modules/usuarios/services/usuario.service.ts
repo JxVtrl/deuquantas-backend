@@ -52,7 +52,10 @@ export class UsuarioService {
   }
 
   async findByEmail(email: string, incluirSenha = false): Promise<Usuario> {
-    const queryBuilder = this.usuarioRepository.createQueryBuilder('usuario');
+    const queryBuilder = this.usuarioRepository
+      .createQueryBuilder('usuario')
+      .leftJoinAndSelect('usuario.cliente', 'cliente')
+      .leftJoinAndSelect('usuario.estabelecimento', 'estabelecimento');
 
     if (incluirSenha) {
       queryBuilder.addSelect('usuario.password');
@@ -72,6 +75,7 @@ export class UsuarioService {
   async findById(id: string): Promise<Usuario> {
     const usuario = await this.usuarioRepository.findOne({
       where: { id },
+      relations: ['cliente', 'estabelecimento'],
     });
 
     if (!usuario) {
