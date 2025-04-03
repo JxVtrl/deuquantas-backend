@@ -29,8 +29,8 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usuarioService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
+    const user = await this.usuarioService.findByEmail(email, true);
+    if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
       return result;
     }
@@ -38,10 +38,40 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
+    console.log('Dados do usuário recebidos no login:', JSON.stringify(user, null, 2));
+
+    const payload = { 
+      email: user.email, 
+      sub: user.id,
+      permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+      hasCliente: !!user.cliente,
+      hasEstabelecimento: !!user.estabelecimento
     };
+
+    console.log('Payload gerado para o token:', payload);
+
+    const response = {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        ...user,
+        permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+        hasCliente: !!user.cliente,
+        hasEstabelecimento: !!user.estabelecimento
+      }
+    };
+
+    console.log('Resposta final do login:', {
+      token: response.access_token,
+      user: {
+        id: response.user.id,
+        email: response.user.email,
+        permission_level: response.user.permission_level,
+        hasCliente: response.user.hasCliente,
+        hasEstabelecimento: response.user.hasEstabelecimento
+      }
+    });
+
+    return response;
   }
 
   async register(createUsuarioClienteDto: CreateUsuarioClienteDto) {
@@ -64,7 +94,7 @@ export class AuthService {
 
     // Depois cria o cliente com os dados específicos
     const createClienteDto: CreateClienteDto = {
-      nome: usuarioData.nome,
+      name: usuarioData.name,
       email: usuarioData.email,
       password: usuarioData.password,
       numCpf,

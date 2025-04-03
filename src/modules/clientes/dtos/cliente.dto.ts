@@ -14,7 +14,7 @@ export class CreateClienteDto {
   numCpf: string;
 
   @IsString()
-  nome: string;
+  name: string;
 
   @IsEmail()
   email: string;

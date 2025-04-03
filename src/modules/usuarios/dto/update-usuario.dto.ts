@@ -2,7 +2,7 @@ import { IsEmail, IsOptional, IsBoolean, MinLength } from 'class-validator';
 
 export class UpdateUsuarioDto {
   @IsOptional()
-  nome?: string;
+  name?: string;
 
   @IsOptional()
   @IsEmail({}, { message: 'Email inválido' })

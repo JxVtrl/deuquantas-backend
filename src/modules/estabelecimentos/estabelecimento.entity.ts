@@ -17,7 +17,7 @@ export class Estabelecimento {
   numCnpj: string;
 
   @Column({ type: 'varchar', length: 100 })
-  nome: string;
+  name: string;
 
   @Column({ type: 'varchar', length: 100, unique: true })
   email: string;

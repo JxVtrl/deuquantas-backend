@@ -13,7 +13,7 @@ import { Transform } from 'class-transformer';
 export class CreateUsuarioDto {
   @IsString()
   @IsNotEmpty()
-  nome: string;
+  name: string;
 
   @IsEmail()
   @IsNotEmpty()

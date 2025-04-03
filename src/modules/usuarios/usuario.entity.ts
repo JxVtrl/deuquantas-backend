@@ -18,7 +18,7 @@ export class Usuario {
   email: string;
 
   @Column()
-  nome: string;
+  name: string;
 
   @Column({ select: false })
   password: string;

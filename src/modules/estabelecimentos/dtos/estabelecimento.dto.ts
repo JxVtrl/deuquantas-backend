@@ -12,7 +12,7 @@ export class CreateEstabelecimentoDto {
   numCnpj: string;
 
   @IsString()
-  nome: string;
+  name: string;
 
   @IsEmail()
   email: string;
