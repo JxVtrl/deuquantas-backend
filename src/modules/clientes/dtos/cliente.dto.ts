@@ -1,26 +1,53 @@
-import { IsString, IsOptional, Length, IsNumberString } from 'class-validator';
+import { IsString, IsOptional, Length, IsEmail, IsDate, IsBoolean } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateClienteDto {
   @IsString()
-  @Length(11, 11)
+  @Length(11, 14)
   numCpf: string;
 
   @IsString()
-  nomeCliente: string;
+  nome: string;
 
-  @IsNumberString()
-  @Length(2, 2)
-  numCelPais: string;
+  @IsEmail()
+  email: string;
 
-  @IsNumberString()
-  @Length(2, 2)
-  numCelEstad: string;
-
-  @IsNumberString()
-  @Length(8, 8)
-  numCelTelef: string;
-
-  @IsOptional()
   @IsString()
-  imgCliente?: string;
+  @Length(6, 100)
+  senha: string;
+
+  @IsString()
+  telefone: string;
+
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+  dataNascimento: Date;
+
+  @IsString()
+  endereco: string;
+
+  @IsString()
+  numero: string;
+
+  @IsString()
+  @IsOptional()
+  complemento?: string;
+
+  @IsString()
+  bairro: string;
+
+  @IsString()
+  cidade: string;
+
+  @IsString()
+  @Length(2, 2)
+  estado: string;
+
+  @IsString()
+  @Length(8, 8)
+  cep: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isAtivo?: boolean;
 }

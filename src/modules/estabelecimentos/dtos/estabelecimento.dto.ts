@@ -1,4 +1,10 @@
-import { IsString, IsOptional, Length, IsNumberString } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  Length,
+  IsEmail,
+  IsBoolean,
+} from 'class-validator';
 
 export class CreateEstabelecimentoDto {
   @IsString()
@@ -6,18 +12,59 @@ export class CreateEstabelecimentoDto {
   numCnpj: string;
 
   @IsString()
+  nome: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @Length(6, 100)
+  senha: string;
+
+  @IsString()
+  telefone: string;
+
+  @IsString()
   nomeEstab: string;
 
-  @IsOptional()
   @IsString()
-  nomeContato?: string;
+  razaoSocial: string;
 
-  @IsOptional()
-  @IsNumberString()
-  @Length(12, 12)
-  numCelular?: string;
-
-  @IsOptional()
   @IsString()
+  nomeContato: string;
+
+  @IsString()
+  numCelular: string;
+
+  @IsString()
+  endereco: string;
+
+  @IsString()
+  numero: string;
+
+  @IsString()
+  @IsOptional()
+  complemento?: string;
+
+  @IsString()
+  bairro: string;
+
+  @IsString()
+  cidade: string;
+
+  @IsString()
+  @Length(2, 2)
+  estado: string;
+
+  @IsString()
+  @Length(8, 8)
+  cep: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isAtivo?: boolean;
+
+  @IsString()
+  @IsOptional()
   imgLogo?: string;
 }

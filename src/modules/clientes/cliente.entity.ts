@@ -1,37 +1,54 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('clientes')
 export class Cliente {
-  @PrimaryColumn({ type: 'varchar', length: 11 })
+  @PrimaryColumn({ type: 'varchar', length: 14 })
   numCpf: string;
 
-  @Column({ type: 'varchar', length: 30 })
-  nomeCliente: string;
+  @Column({ type: 'varchar', length: 100 })
+  nome: string;
+
+  @Column({ type: 'varchar', length: 100, unique: true })
+  email: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  @Exclude()
+  senha: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  telefone: string;
+
+  @Column({ type: 'date' })
+  dataNascimento: Date;
+
+  @Column({ type: 'varchar', length: 100 })
+  endereco: string;
+
+  @Column({ type: 'varchar', length: 10 })
+  numero: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  complemento: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  bairro: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  cidade: string;
 
   @Column({ type: 'varchar', length: 2 })
-  numCelPais: string;
-
-  @Column({ type: 'varchar', length: 2 })
-  numCelEstad: string;
+  estado: string;
 
   @Column({ type: 'varchar', length: 8 })
-  numCelTelef: string;
+  cep: string;
 
-  @Column({ type: 'varchar', length: 16, nullable: true })
-  numCartao: string;
-
-  @Column({ type: 'varchar', length: 2, nullable: true })
-  datValidMm: string;
-
-  @Column({ type: 'varchar', length: 2, nullable: true })
-  datValidAa: string;
-
-  @Column({ type: 'varchar', length: 3, nullable: true })
-  codCartao: string;
+  @Column({ type: 'boolean', default: true })
+  isAtivo: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  datRegistro: Date;
+  dataCriacao: Date;
 
-  @Column({ type: 'text', nullable: true })
-  imgCliente: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  dataAtualizacao: Date;
 }
