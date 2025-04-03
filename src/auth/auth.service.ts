@@ -44,15 +44,15 @@ export class AuthService {
       name: user.name,
       isAdmin: user.isAdmin,
       cliente: user.cliente,
-      estabelecimento: user.estabelecimento
+      estabelecimento: user.estabelecimento,
     });
 
-    const payload = { 
-      email: user.email, 
+    const payload = {
+      email: user.email,
       sub: user.id,
-      permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+      permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
       hasCliente: !!user.cliente,
-      hasEstabelecimento: !!user.estabelecimento
+      hasEstabelecimento: !!user.estabelecimento,
     };
 
     console.log('Payload gerado para o token:', payload);
@@ -67,17 +67,17 @@ export class AuthService {
         isAtivo: user.isAtivo,
         dataCriacao: user.dataCriacao,
         dataAtualizacao: user.dataAtualizacao,
-        permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+        permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
         hasCliente: !!user.cliente,
         hasEstabelecimento: !!user.estabelecimento,
         cliente: user.cliente,
-        estabelecimento: user.estabelecimento
-      }
+        estabelecimento: user.estabelecimento,
+      },
     };
 
     console.log('Resposta final do login:', {
       token: response.access_token,
-      user: response.user
+      user: response.user,
     });
 
     return response;

@@ -25,10 +25,10 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginUsuarioDto) {
-    const user = await this.authService.validateUser(
+    const user = (await this.authService.validateUser(
       loginDto.email,
       loginDto.password,
-    ) as Usuario | null;
+    )) as Usuario | null;
     if (!user) {
       throw new UnauthorizedException('Email ou senha incorretos');
     }
