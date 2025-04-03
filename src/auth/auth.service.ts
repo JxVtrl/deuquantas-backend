@@ -30,7 +30,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usuarioService.findByEmail(email, true);
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result;
     }
@@ -38,14 +38,17 @@ export class AuthService {
   }
 
   async login(user: any) {
-    console.log('Dados do usuário recebidos no login:', JSON.stringify(user, null, 2));
+    console.log(
+      'Dados do usuário recebidos no login:',
+      JSON.stringify(user, null, 2),
+    );
 
-    const payload = { 
-      email: user.email, 
+    const payload = {
+      email: user.email,
       sub: user.id,
-      permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+      permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
       hasCliente: !!user.cliente,
-      hasEstabelecimento: !!user.estabelecimento
+      hasEstabelecimento: !!user.estabelecimento,
     };
 
     console.log('Payload gerado para o token:', payload);
@@ -54,10 +57,10 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       user: {
         ...user,
-        permission_level: user.isAdmin ? 1 : (user.estabelecimento ? 2 : 3),
+        permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
         hasCliente: !!user.cliente,
-        hasEstabelecimento: !!user.estabelecimento
-      }
+        hasEstabelecimento: !!user.estabelecimento,
+      },
     };
 
     console.log('Resposta final do login:', {
@@ -67,8 +70,8 @@ export class AuthService {
         email: response.user.email,
         permission_level: response.user.permission_level,
         hasCliente: response.user.hasCliente,
-        hasEstabelecimento: response.user.hasEstabelecimento
-      }
+        hasEstabelecimento: response.user.hasEstabelecimento,
+      },
     });
 
     return response;
