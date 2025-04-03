@@ -1,6 +1,14 @@
-import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Cardapio } from '../cardapios/cardapio.entity';
 import { Exclude } from 'class-transformer';
+import { Usuario } from '../usuarios/usuario.entity';
 
 // Estabelecimento Entity
 @Entity('estabelecimentos')
@@ -19,16 +27,13 @@ export class Estabelecimento {
   password: string;
 
   @Column({ type: 'varchar', length: 20 })
-  telefone: string;
+  numCelular: string;
 
   @Column({ type: 'varchar', length: 100 })
   nomeEstab: string;
 
   @Column({ type: 'varchar', length: 100 })
   razaoSocial: string;
-
-  @Column({ type: 'varchar', length: 20 })
-  numCelular: string;
 
   @Column({ type: 'varchar', length: 100 })
   endereco: string;
@@ -74,4 +79,8 @@ export class Estabelecimento {
 
   @Column({ type: 'enum', enum: ['ativo', 'em_breve'], default: 'em_breve' })
   status: 'ativo' | 'em_breve';
+
+  @OneToOne(() => Usuario)
+  @JoinColumn()
+  usuario: Usuario;
 }

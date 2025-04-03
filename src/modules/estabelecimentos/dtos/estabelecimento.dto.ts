@@ -22,16 +22,13 @@ export class CreateEstabelecimentoDto {
   password: string;
 
   @IsString()
-  telefone: string;
+  numCelular: string;
 
   @IsString()
   nomeEstab: string;
 
   @IsString()
   razaoSocial: string;
-
-  @IsString()
-  numCelular: string;
 
   @IsString()
   endereco: string;

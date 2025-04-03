@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
+import { Cliente } from '../clientes/cliente.entity';
+import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -20,9 +23,6 @@ export class Usuario {
   @Column({ select: false })
   password: string;
 
-  @Column({ nullable: true })
-  telefone: string;
-
   @Column({ default: false })
   isAdmin: boolean;
 
@@ -34,4 +34,14 @@ export class Usuario {
 
   @UpdateDateColumn()
   dataAtualizacao: Date;
+
+  @OneToOne(() => Cliente, (cliente) => cliente.usuario, { nullable: true })
+  cliente: Cliente;
+
+  @OneToOne(
+    () => Estabelecimento,
+    (estabelecimento) => estabelecimento.usuario,
+    { nullable: true },
+  )
+  estabelecimento: Estabelecimento;
 }

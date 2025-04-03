@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
-import { CreateUsuarioDto } from '../modules/usuarios/dto/create-usuario.dto';
+import { CreateUsuarioClienteDto } from '../modules/usuarios/dto/create-usuario.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,8 +13,8 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.authService.register(createUsuarioDto);
+  async register(@Body() createUsuarioClienteDto: CreateUsuarioClienteDto) {
+    return this.authService.register(createUsuarioClienteDto);
   }
 
   @Get('check-email/:email')
@@ -23,15 +23,15 @@ export class AuthController {
     return { exists };
   }
 
-  @Get('check-cpf/:cpf')
-  async checkCPFExists(@Param('cpf') cpf: string) {
-    const exists = await this.authService.checkCPFExists(cpf);
+  @Get('check-cpf/:numCpf')
+  async checkCPFExists(@Param('numCpf') numCpf: string) {
+    const exists = await this.authService.checkCPFExists(numCpf);
     return { exists };
   }
 
-  @Get('check-cnpj/:cnpj')
-  async checkCNPJExists(@Param('cnpj') cnpj: string) {
-    const exists = await this.authService.checkCNPJExists(cnpj);
+  @Get('check-cnpj/:numCnpj')
+  async checkCNPJExists(@Param('numCnpj') numCnpj: string) {
+    const exists = await this.authService.checkCNPJExists(numCnpj);
     return { exists };
   }
 }

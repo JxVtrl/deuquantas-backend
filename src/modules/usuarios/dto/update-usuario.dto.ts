@@ -13,9 +13,6 @@ export class UpdateUsuarioDto {
   password?: string;
 
   @IsOptional()
-  telefone?: string;
-
-  @IsOptional()
   @IsBoolean()
   isAdmin?: boolean;
 

@@ -4,27 +4,21 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Usuario } from '../usuarios/usuario.entity';
 
 @Entity('clientes')
 export class Cliente {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  nome: string;
-
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  password: string;
-
   @Column({ name: 'num_cpf', unique: true })
   numCpf: string;
 
-  @Column()
-  telefone: string;
+  @Column({ name: 'num_celular' })
+  numCelular: string;
 
   @Column({ name: 'data_nascimento' })
   dataNascimento: Date;
@@ -58,4 +52,8 @@ export class Cliente {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToOne(() => Usuario)
+  @JoinColumn()
+  usuario: Usuario;
 }

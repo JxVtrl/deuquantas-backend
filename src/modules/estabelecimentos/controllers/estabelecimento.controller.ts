@@ -29,6 +29,19 @@ export class EstabelecimentoController {
     return this.estabelecimentoService.getEstabelecimentoByCnpj(numCnpj);
   }
 
+  @Get('check-cnpj/:numCnpj')
+  async checkCNPJ(
+    @Param('numCnpj') numCnpj: string,
+  ): Promise<{ exists: boolean }> {
+    try {
+      await this.estabelecimentoService.findByCNPJ(numCnpj);
+      return { exists: true };
+    } catch (error) {
+      console.error('Erro ao verificar CNPJ:', error);
+      return { exists: false };
+    }
+  }
+
   @Get('proximos')
   @UseGuards(AuthGuard)
   async buscarEstabelecimentosProximos(
@@ -58,5 +71,12 @@ export class EstabelecimentoController {
     return this.estabelecimentoService.createEstabelecimento(
       createEstabelecimentoDto,
     );
+  }
+
+  @Get('check-phone/:numCelular')
+  async checkPhoneExists(@Param('numCelular') numCelular: string) {
+    const exists =
+      await this.estabelecimentoService.checkPhoneExists(numCelular);
+    return { exists };
   }
 }

@@ -6,10 +6,15 @@ import {
   MinLength,
   IsString,
   IsDate,
+  Length,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 
 export class CreateUsuarioDto {
+  @IsString()
+  @IsNotEmpty()
+  nome: string;
+
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -19,52 +24,44 @@ export class CreateUsuarioDto {
   @MinLength(6)
   password: string;
 
-  @IsString()
-  @IsNotEmpty()
-  nome: string;
-
-  @IsString()
-  @IsNotEmpty()
-  numCpf: string;
-
-  @Type(() => Date)
-  @IsDate()
-  @IsNotEmpty()
-  dataNascimento: Date;
-
-  @IsString()
-  @IsNotEmpty()
-  endereco: string;
-
-  @IsString()
-  @IsNotEmpty()
-  numero: string;
-
-  @IsString()
-  @IsNotEmpty()
-  bairro: string;
-
-  @IsString()
-  @IsNotEmpty()
-  cidade: string;
-
-  @IsString()
-  @IsNotEmpty()
-  estado: string;
-
-  @IsString()
-  @IsNotEmpty()
-  cep: string;
-
-  @IsString()
-  @IsNotEmpty()
-  telefone: string;
-
-  @IsString()
-  @IsNotEmpty()
-  celular: string;
-
   @IsOptional()
   @IsBoolean()
   isAdmin?: boolean;
+}
+
+export class CreateUsuarioClienteDto extends CreateUsuarioDto {
+  @IsString()
+  @Length(11, 14)
+  numCpf: string;
+
+  @IsString()
+  numCelular: string;
+
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+  dataNascimento: Date;
+
+  @IsString()
+  endereco: string;
+
+  @IsString()
+  numero: string;
+
+  @IsString()
+  @IsOptional()
+  complemento?: string;
+
+  @IsString()
+  bairro: string;
+
+  @IsString()
+  cidade: string;
+
+  @IsString()
+  @Length(2, 2)
+  estado: string;
+
+  @IsString()
+  @Length(8, 8)
+  cep: string;
 }

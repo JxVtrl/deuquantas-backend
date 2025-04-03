@@ -75,9 +75,9 @@ export class EstabelecimentoService {
     return this.estabelecimentoRepository.save(newEstabelecimento);
   }
 
-  async findByCNPJ(cnpj: string): Promise<Estabelecimento> {
+  async findByCNPJ(numCnpj: string): Promise<Estabelecimento> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { numCnpj: cnpj },
+      where: { numCnpj },
     });
 
     if (!estabelecimento) {
@@ -85,5 +85,26 @@ export class EstabelecimentoService {
     }
 
     return estabelecimento;
+  }
+
+  async findByUsuarioId(usuarioId: string): Promise<Estabelecimento> {
+    const estabelecimento = await this.estabelecimentoRepository.findOne({
+      where: { usuario: { id: usuarioId } },
+      relations: ['usuario', 'cardapios'],
+    });
+
+    if (!estabelecimento) {
+      throw new NotFoundException('Estabelecimento não encontrado');
+    }
+
+    return estabelecimento;
+  }
+
+  async checkPhoneExists(numCelular: string): Promise<boolean> {
+    const estabelecimento = await this.estabelecimentoRepository.findOne({
+      where: { numCelular },
+    });
+
+    return !!estabelecimento;
   }
 }

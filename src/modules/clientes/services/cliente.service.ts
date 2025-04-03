@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cliente } from '../cliente.entity';
 import { CreateClienteDto } from '../dtos/cliente.dto';
-import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class ClienteService {
@@ -21,13 +20,18 @@ export class ClienteService {
   }
 
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
-    // Criptografa a senha antes de salvar
-    const salt = await bcrypt.genSalt();
-    const senhaHash = await bcrypt.hash(dto.password, salt);
-
     const newCliente = this.clienteRepository.create({
-      ...dto,
-      password: senhaHash,
+      numCpf: dto.numCpf,
+      numCelular: dto.numCelular,
+      dataNascimento: dto.dataNascimento,
+      endereco: dto.endereco,
+      numero: dto.numero,
+      complemento: dto.complemento,
+      bairro: dto.bairro,
+      cidade: dto.cidade,
+      estado: dto.estado,
+      cep: dto.cep,
+      isAtivo: dto.isAtivo,
     });
 
     return this.clienteRepository.save(newCliente);
@@ -35,7 +39,8 @@ export class ClienteService {
 
   async findByEmail(email: string): Promise<Cliente> {
     const cliente = await this.clienteRepository.findOne({
-      where: { email },
+      where: { usuario: { email } },
+      relations: ['usuario'],
     });
 
     if (!cliente) {
@@ -45,9 +50,9 @@ export class ClienteService {
     return cliente;
   }
 
-  async findByCPF(cpf: string): Promise<Cliente> {
+  async findByCPF(numCpf: string): Promise<Cliente> {
     const cliente = await this.clienteRepository.findOne({
-      where: { numCpf: cpf },
+      where: { numCpf },
     });
 
     if (!cliente) {
@@ -57,9 +62,22 @@ export class ClienteService {
     return cliente;
   }
 
-  async findByPhone(telefone: string): Promise<Cliente> {
+  async findByPhone(numCelular: string): Promise<Cliente> {
     const cliente = await this.clienteRepository.findOne({
-      where: { telefone },
+      where: { numCelular },
+    });
+
+    if (!cliente) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    return cliente;
+  }
+
+  async findByUsuarioId(usuarioId: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOne({
+      where: { usuario: { id: usuarioId } },
+      relations: ['usuario'],
     });
 
     if (!cliente) {

@@ -24,7 +24,7 @@ export class CreateClienteDto {
   password: string;
 
   @IsString()
-  telefone: string;
+  numCelular: string;
 
   @Transform(({ value }) => new Date(value))
   @IsDate()

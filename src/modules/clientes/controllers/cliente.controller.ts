@@ -50,10 +50,12 @@ export class ClienteController {
     }
   }
 
-  @Get('check-document/:cpf')
-  async checkCPF(@Param('cpf') cpf: string): Promise<{ exists: boolean }> {
+  @Get('check-cpf/:numCpf')
+  async checkCPF(
+    @Param('numCpf') numCpf: string,
+  ): Promise<{ exists: boolean }> {
     try {
-      await this.clienteService.findByCPF(cpf);
+      await this.clienteService.findByCPF(numCpf);
       return { exists: true };
     } catch (error) {
       console.error('Erro ao verificar CPF:', error);
@@ -61,15 +63,15 @@ export class ClienteController {
     }
   }
 
-  @Get('check-phone/:telefone')
+  @Get('check-phone/:numCelular')
   async checkPhone(
-    @Param('telefone') telefone: string,
+    @Param('numCelular') numCelular: string,
   ): Promise<{ exists: boolean }> {
     try {
-      await this.clienteService.findByPhone(telefone);
+      await this.clienteService.findByPhone(numCelular);
       return { exists: true };
     } catch (error) {
-      console.error('Erro ao verificar telefone:', error);
+      console.error('Erro ao verificar número de celular:', error);
       return { exists: false };
     }
   }
