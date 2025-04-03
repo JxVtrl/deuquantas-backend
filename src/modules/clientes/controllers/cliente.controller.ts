@@ -36,4 +36,41 @@ export class ClienteController {
   async createCliente(@Body() createClienteDto: CreateClienteDto) {
     return this.clienteService.createCliente(createClienteDto);
   }
+
+  @Get('check-email/:email')
+  async checkEmail(
+    @Param('email') email: string,
+  ): Promise<{ exists: boolean }> {
+    try {
+      await this.clienteService.findByEmail(email);
+      return { exists: true };
+    } catch (error) {
+      console.error('Erro ao verificar email:', error);
+      return { exists: false };
+    }
+  }
+
+  @Get('check-document/:cpf')
+  async checkCPF(@Param('cpf') cpf: string): Promise<{ exists: boolean }> {
+    try {
+      await this.clienteService.findByCPF(cpf);
+      return { exists: true };
+    } catch (error) {
+      console.error('Erro ao verificar CPF:', error);
+      return { exists: false };
+    }
+  }
+
+  @Get('check-phone/:telefone')
+  async checkPhone(
+    @Param('telefone') telefone: string,
+  ): Promise<{ exists: boolean }> {
+    try {
+      await this.clienteService.findByPhone(telefone);
+      return { exists: true };
+    } catch (error) {
+      console.error('Erro ao verificar telefone:', error);
+      return { exists: false };
+    }
+  }
 }

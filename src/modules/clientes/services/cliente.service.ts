@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cliente } from '../cliente.entity';
@@ -22,5 +22,41 @@ export class ClienteService {
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
     const newCliente = this.clienteRepository.create(dto);
     return this.clienteRepository.save(newCliente);
+  }
+
+  async findByEmail(email: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOne({
+      where: { email },
+    });
+
+    if (!cliente) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    return cliente;
+  }
+
+  async findByCPF(cpf: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOne({
+      where: { numCpf: cpf },
+    });
+
+    if (!cliente) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    return cliente;
+  }
+
+  async findByPhone(telefone: string): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOne({
+      where: { telefone },
+    });
+
+    if (!cliente) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    return cliente;
   }
 }

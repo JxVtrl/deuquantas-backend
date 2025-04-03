@@ -69,30 +69,6 @@ export class UsuarioService {
     return usuario;
   }
 
-  async findByCPF(cpf: string): Promise<Usuario> {
-    const usuario = await this.usuarioRepository.findOne({
-      where: { cpf },
-    });
-
-    if (!usuario) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
-    return usuario;
-  }
-
-  async findByPhone(telefone: string): Promise<Usuario> {
-    const usuario = await this.usuarioRepository.findOne({
-      where: { telefone },
-    });
-
-    if (!usuario) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
-    return usuario;
-  }
-
   async findById(id: string): Promise<Usuario> {
     const usuario = await this.usuarioRepository.findOne({
       where: { id },

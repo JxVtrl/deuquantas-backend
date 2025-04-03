@@ -40,30 +40,7 @@ export class UsuarioController {
       await this.usuarioService.findByEmail(email);
       return { exists: true };
     } catch (error) {
-      return { exists: false };
-    }
-  }
-
-  @Get('check-document/:cpf')
-  async checkCPF(
-    @Param('cpf') cpf: string,
-  ): Promise<{ exists: boolean }> {
-    try {
-      await this.usuarioService.findByCPF(cpf);
-      return { exists: true };
-    } catch (error) {
-      return { exists: false };
-    }
-  }
-
-  @Get('check-phone/:telefone')
-  async checkPhone(
-    @Param('telefone') telefone: string,
-  ): Promise<{ exists: boolean }> {
-    try {
-      await this.usuarioService.findByPhone(telefone);
-      return { exists: true };
-    } catch (error) {
+      console.error('Erro ao verificar email:', error);
       return { exists: false };
     }
   }
