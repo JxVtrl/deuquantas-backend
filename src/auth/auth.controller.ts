@@ -1,7 +1,15 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
 import { CreateUsuarioClienteDto } from '../modules/usuarios/dto/create-usuario.dto';
+import { Usuario } from '../modules/usuarios/usuario.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +17,14 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginUsuarioDto: LoginUsuarioDto) {
-    return this.authService.login(loginUsuarioDto);
+    const user = (await this.authService.validateUser(
+      loginUsuarioDto.email,
+      loginUsuarioDto.password,
+    )) as Usuario | null;
+    if (!user) {
+      throw new UnauthorizedException('Email ou senha incorretos');
+    }
+    return this.authService.login(user);
   }
 
   @Post('register')
