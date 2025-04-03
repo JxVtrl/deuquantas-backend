@@ -24,12 +24,12 @@ export class ClienteService {
     // Criptografa a senha antes de salvar
     const salt = await bcrypt.genSalt();
     const senhaHash = await bcrypt.hash(dto.senha, salt);
-    
+
     const newCliente = this.clienteRepository.create({
       ...dto,
       senha: senhaHash,
     });
-    
+
     return this.clienteRepository.save(newCliente);
   }
 
