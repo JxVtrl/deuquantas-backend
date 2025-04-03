@@ -30,7 +30,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usuarioService.findByEmail(email);
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result;
     }
@@ -46,10 +46,22 @@ export class AuthService {
 
   async register(createUsuarioClienteDto: CreateUsuarioClienteDto) {
     // Primeiro cria o usuário com dados básicos
-    const { numCpf, numCelular, dataNascimento, endereco, numero, complemento, bairro, cidade, estado, cep, ...usuarioData } = createUsuarioClienteDto;
-    
+    const {
+      numCpf,
+      numCelular,
+      dataNascimento,
+      endereco,
+      numero,
+      complemento,
+      bairro,
+      cidade,
+      estado,
+      cep,
+      ...usuarioData
+    } = createUsuarioClienteDto;
+
     const usuario = await this.usuarioService.create(usuarioData);
-    
+
     // Depois cria o cliente com os dados específicos
     const createClienteDto: CreateClienteDto = {
       nome: usuarioData.nome,
@@ -65,7 +77,7 @@ export class AuthService {
       cidade,
       estado,
       cep,
-      isAtivo: true
+      isAtivo: true,
     };
 
     try {
