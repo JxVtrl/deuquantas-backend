@@ -7,6 +7,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from '../modules/usuarios/usuarios.module';
 import { ClientesModule } from '../modules/clientes/clientes.module';
+import { EstabelecimentosModule } from '../modules/estabelecimentos/estabelecimentos.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ClientesModule } from '../modules/clientes/clientes.module';
       signOptions: { expiresIn: '7d' },
     }),
     ClientesModule,
+    EstabelecimentosModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
