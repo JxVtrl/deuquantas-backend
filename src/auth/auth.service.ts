@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { UsuarioService } from '../modules/usuarios/services/usuario.service';
+import { ClienteService } from '../modules/clientes/services/cliente.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
 import { CreateUsuarioDto } from '../modules/usuarios/dto/create-usuario.dto';
 
@@ -18,28 +18,28 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private readonly usuarioService: UsuarioService,
+    private readonly clienteService: ClienteService,
     private readonly jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
     try {
-      const usuario = await this.usuarioService.findByEmail(email, true);
+      const cliente = await this.clienteService.findByEmail(email);
 
-      if (!usuario) {
+      if (!cliente) {
         this.logger.warn(
           `Tentativa de login com email não encontrado: ${email}`,
         );
         return null;
       }
 
-      const senhaCorreta = await bcrypt.compare(password, usuario.password);
+      const senhaCorreta = await bcrypt.compare(password, cliente.senha);
       if (!senhaCorreta) {
         this.logger.warn(`Senha incorreta para o usuário: ${email}`);
         return null;
       }
 
-      const { password: _, ...result } = usuario;
+      const { senha: _, ...result } = cliente;
       return result;
     } catch (error) {
       this.logger.error(
@@ -71,14 +71,14 @@ export class AuthService {
       }
 
       // Determinar o nível de permissão com base no isAdmin
-      const permission_level = usuario.isAdmin ? 1 : 3; // 1 para admin, 3 para cliente comum
+      const permission_level = 3; // 3 para cliente comum
 
       const payload = {
-        sub: usuario.id,
+        sub: usuario.numCpf,
         email: usuario.email,
         nome: usuario.nome,
-        isAdmin: usuario.isAdmin,
-        permission_level: permission_level, // Adicionando o permission_level ao payload
+        isAdmin: false,
+        permission_level: permission_level,
       };
 
       return {
@@ -107,9 +107,8 @@ export class AuthService {
       // Verificar se o usuário já existe sem lançar erro
       let usuarioExistente;
       try {
-        usuarioExistente = await this.usuarioService.findByEmail(
+        usuarioExistente = await this.clienteService.findByEmail(
           createUsuarioDto.email,
-          false,
         );
       } catch (error) {
         if (!(error instanceof NotFoundException)) {
@@ -130,9 +129,9 @@ export class AuthService {
         `Criando usuário com os dados: ${JSON.stringify(createUsuarioDto)}`,
       );
 
-      const novoUsuario = await this.usuarioService.create(createUsuarioDto);
+      const novoUsuario = await this.clienteService.createCliente(createUsuarioDto);
 
-      this.logger.log(`Usuário criado com sucesso: ID ${novoUsuario.id}`);
+      this.logger.log(`Usuário criado com sucesso: CPF ${novoUsuario.numCpf}`);
 
       return novoUsuario;
     } catch (error) {

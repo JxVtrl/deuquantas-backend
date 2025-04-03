@@ -4,22 +4,65 @@ import {
   IsOptional,
   IsBoolean,
   MinLength,
+  IsString,
+  IsDate,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateUsuarioDto {
-  @IsEmail({}, { message: 'Email inválido' })
-  @IsNotEmpty({ message: 'Email é obrigatório' })
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
-  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  senha: string;
+
+  @IsString()
+  @IsNotEmpty()
   nome: string;
 
-  @IsNotEmpty({ message: 'Senha é obrigatória' })
-  @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
-  password: string;
+  @IsString()
+  @IsNotEmpty()
+  numCpf: string;
 
-  @IsOptional()
-  telefone?: string;
+  @Type(() => Date)
+  @IsDate()
+  @IsNotEmpty()
+  dataNascimento: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  endereco: string;
+
+  @IsString()
+  @IsNotEmpty()
+  numero: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bairro: string;
+
+  @IsString()
+  @IsNotEmpty()
+  cidade: string;
+
+  @IsString()
+  @IsNotEmpty()
+  estado: string;
+
+  @IsString()
+  @IsNotEmpty()
+  cep: string;
+
+  @IsString()
+  @IsNotEmpty()
+  telefone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  celular: string;
 
   @IsOptional()
   @IsBoolean()
