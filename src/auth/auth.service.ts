@@ -57,8 +57,6 @@ export class AuthService {
     try {
       const { email, password } = loginUsuarioDto;
 
-      console.log('loginUsuarioDto', loginUsuarioDto);
-
       if (!email || !password) {
         throw new BadRequestException('Email e senha são obrigatórios');
       }
