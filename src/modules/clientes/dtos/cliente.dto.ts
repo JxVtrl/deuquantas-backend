@@ -26,7 +26,11 @@ export class CreateClienteDto {
   @IsString()
   numCelular: string;
 
-  @Transform(({ value }) => new Date(value))
+  @Transform(({ value }) => {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  })
   @IsDate()
   dataNascimento: Date;
 
