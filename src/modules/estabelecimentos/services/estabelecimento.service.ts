@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Estabelecimento } from '../estabelecimento.entity';
@@ -73,5 +73,17 @@ export class EstabelecimentoService {
   ): Promise<Estabelecimento> {
     const newEstabelecimento = this.estabelecimentoRepository.create(dto);
     return this.estabelecimentoRepository.save(newEstabelecimento);
+  }
+
+  async findByCNPJ(cnpj: string): Promise<Estabelecimento> {
+    const estabelecimento = await this.estabelecimentoRepository.findOne({
+      where: { numCnpj: cnpj },
+    });
+
+    if (!estabelecimento) {
+      throw new NotFoundException('Estabelecimento não encontrado');
+    }
+
+    return estabelecimento;
   }
 }

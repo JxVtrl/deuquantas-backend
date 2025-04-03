@@ -1,54 +1,55 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('clientes')
 export class Cliente {
-  @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCpf: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column()
   nome: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  @Exclude()
+  @Column()
   senha: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ name: 'num_cpf', unique: true })
+  numCpf: string;
+
+  @Column()
   telefone: string;
 
-  @Column({ type: 'date' })
+  @Column({ name: 'data_nascimento' })
   dataNascimento: Date;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column()
   endereco: string;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column()
   numero: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ nullable: true })
   complemento: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column()
   bairro: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column()
   cidade: string;
 
-  @Column({ type: 'varchar', length: 2 })
+  @Column()
   estado: string;
 
-  @Column({ type: 'varchar', length: 8 })
+  @Column()
   cep: string;
 
   @Column({ type: 'boolean', default: true })
   isAtivo: boolean;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  dataCriacao: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  dataAtualizacao: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

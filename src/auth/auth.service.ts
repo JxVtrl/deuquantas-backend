@@ -12,6 +12,7 @@ import * as bcrypt from 'bcryptjs';
 import { ClienteService } from '../modules/clientes/services/cliente.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
 import { CreateUsuarioDto } from '../modules/usuarios/dto/create-usuario.dto';
+import { EstabelecimentoService } from '../modules/estabelecimentos/services/estabelecimento.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
 
   constructor(
     private readonly clienteService: ClienteService,
+    private readonly estabelecimentoService: EstabelecimentoService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -149,6 +151,42 @@ export class AuthService {
       throw new InternalServerErrorException(
         'Ocorreu um erro durante o registro. Por favor, tente novamente mais tarde.',
       );
+    }
+  }
+
+  async checkEmailExists(email: string): Promise<boolean> {
+    try {
+      const cliente = await this.clienteService.findByEmail(email);
+      return !!cliente;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return false;
+      }
+      throw error;
+    }
+  }
+
+  async checkCPFExists(cpf: string): Promise<boolean> {
+    try {
+      const cliente = await this.clienteService.findByCPF(cpf);
+      return !!cliente;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return false;
+      }
+      throw error;
+    }
+  }
+
+  async checkCNPJExists(cnpj: string): Promise<boolean> {
+    try {
+      const estabelecimento = await this.estabelecimentoService.findByCNPJ(cnpj);
+      return !!estabelecimento;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return false;
+      }
+      throw error;
     }
   }
 }
