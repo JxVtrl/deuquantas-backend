@@ -129,7 +129,8 @@ export class AuthService {
         `Criando usuário com os dados: ${JSON.stringify(createUsuarioDto)}`,
       );
 
-      const novoUsuario = await this.clienteService.createCliente(createUsuarioDto);
+      const novoUsuario =
+        await this.clienteService.createCliente(createUsuarioDto);
 
       this.logger.log(`Usuário criado com sucesso: CPF ${novoUsuario.numCpf}`);
 
