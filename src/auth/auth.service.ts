@@ -134,7 +134,34 @@ export class AuthService {
       // Atualizar o usuário com a referência ao cliente
       await this.usuarioService.update(usuario.id, { cliente });
 
-      return usuario;
+      // Gerar token JWT e retornar resposta similar ao login
+      const payload = {
+        email: usuario.email,
+        sub: usuario.id,
+        permission_level: usuario.isAdmin ? 1 : 3,
+        hasCliente: true,
+        hasEstabelecimento: false,
+      };
+
+      const response = {
+        access_token: this.jwtService.sign(payload),
+        user: {
+          id: usuario.id,
+          email: usuario.email,
+          name: usuario.name,
+          isAdmin: usuario.isAdmin,
+          isAtivo: usuario.isAtivo,
+          dataCriacao: usuario.dataCriacao,
+          dataAtualizacao: usuario.dataAtualizacao,
+          permission_level: usuario.isAdmin ? 1 : 3,
+          hasCliente: true,
+          hasEstabelecimento: false,
+          cliente: cliente,
+          estabelecimento: null,
+        },
+      };
+
+      return response;
     } catch (error) {
       console.error('Erro ao criar cliente:', error);
       throw error;
