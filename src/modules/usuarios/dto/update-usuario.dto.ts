@@ -1,4 +1,10 @@
-import { IsOptional, IsString, IsEmail, MinLength, IsBoolean } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsEmail,
+  MinLength,
+  IsBoolean,
+} from 'class-validator';
 import { Cliente } from '../../clientes/cliente.entity';
 import { Estabelecimento } from '../../estabelecimentos/estabelecimento.entity';
 

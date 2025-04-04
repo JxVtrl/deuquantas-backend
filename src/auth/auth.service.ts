@@ -125,10 +125,10 @@ export class AuthService {
     try {
       const cliente = await this.clienteService.createCliente(createClienteDto);
       console.log('Cliente criado com sucesso:', cliente);
-      
+
       // Atualizar o usuário com a referência ao cliente
       await this.usuarioService.update(usuario.id, { cliente });
-      
+
       return usuario;
     } catch (error) {
       console.error('Erro ao criar cliente:', error);
@@ -140,7 +140,7 @@ export class AuthService {
     try {
       const [cliente, estabelecimento] = await Promise.all([
         this.clienteService.findByEmail(email).catch(() => null),
-        this.estabelecimentoService.findByEmail(email).catch(() => null)
+        this.estabelecimentoService.findByEmail(email).catch(() => null),
       ]);
       return !!(cliente || estabelecimento);
     } catch (error) {
@@ -183,7 +183,9 @@ export class AuthService {
     return usuario;
   }
 
-  async registerEstablishment(createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto) {
+  async registerEstablishment(
+    createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto,
+  ) {
     // Primeiro cria o usuário com dados básicos
     const {
       numCnpj,
@@ -225,12 +227,15 @@ export class AuthService {
     };
 
     try {
-      const estabelecimento = await this.estabelecimentoService.createEstabelecimento(createEstabelecimentoDto);
+      const estabelecimento =
+        await this.estabelecimentoService.createEstabelecimento(
+          createEstabelecimentoDto,
+        );
       console.log('Estabelecimento criado com sucesso:', estabelecimento);
-      
+
       // Atualizar o usuário com a referência ao estabelecimento
       await this.usuarioService.update(usuario.id, { estabelecimento });
-      
+
       return usuario;
     } catch (error) {
       console.error('Erro ao criar estabelecimento:', error);

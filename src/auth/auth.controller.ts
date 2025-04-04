@@ -10,7 +10,10 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
-import { CreateUsuarioClienteDto, CreateUsuarioEstabelecimentoDto } from '../modules/usuarios/dto/create-usuario.dto';
+import {
+  CreateUsuarioClienteDto,
+  CreateUsuarioEstabelecimentoDto,
+} from '../modules/usuarios/dto/create-usuario.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request } from 'express';
 import { Usuario } from '../modules/usuarios/usuario.entity';
@@ -41,8 +44,12 @@ export class AuthController {
   }
 
   @Post('register-establishment')
-  async registerEstablishment(@Body() createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto) {
-    return this.authService.registerEstablishment(createUsuarioEstabelecimentoDto);
+  async registerEstablishment(
+    @Body() createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto,
+  ) {
+    return this.authService.registerEstablishment(
+      createUsuarioEstabelecimentoDto,
+    );
   }
 
   @Get('check-email/:email')
