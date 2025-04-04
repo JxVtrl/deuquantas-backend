@@ -19,6 +19,11 @@ import { CreateClienteDto } from '../modules/clientes/dtos/cliente.dto';
 import { CreateUsuarioEstabelecimentoDto } from '../modules/usuarios/dto/create-usuario.dto';
 import { CreateEstabelecimentoDto } from '../modules/estabelecimentos/dtos/estabelecimento.dto';
 
+export interface CheckAccountResponseDto {
+  hasClienteAccount: boolean;
+  hasEstabelecimentoAccount: boolean;
+}
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -240,6 +245,23 @@ export class AuthService {
     } catch (error) {
       console.error('Erro ao criar estabelecimento:', error);
       throw error;
+    }
+  }
+
+  async checkAccountType(email: string): Promise<CheckAccountResponseDto> {
+    try {
+      const [cliente, estabelecimento] = await Promise.all([
+        this.clienteService.findByEmail(email).catch(() => null),
+        this.estabelecimentoService.findByEmail(email).catch(() => null),
+      ]);
+
+      return {
+        hasClienteAccount: !!cliente,
+        hasEstabelecimentoAccount: !!estabelecimento,
+      };
+    } catch (error) {
+      this.logger.error(`Erro ao verificar tipo de conta para email ${email}:`, error);
+      throw new InternalServerErrorException('Erro ao verificar tipo de conta');
     }
   }
 }

@@ -7,6 +7,9 @@ import {
   UnauthorizedException,
   UseGuards,
   Req,
+  Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUsuarioDto } from '../modules/usuarios/dto/login-usuario.dto';
@@ -17,6 +20,7 @@ import {
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request } from 'express';
 import { Usuario } from '../modules/usuarios/usuario.entity';
+import { CheckAccountResponseDto } from './auth.service';
 
 interface RequestWithUser extends Request {
   user: Usuario;
@@ -75,5 +79,13 @@ export class AuthController {
   async getMe(@Req() req: RequestWithUser) {
     const user = await this.authService.getUserData(req.user);
     return { user };
+  }
+
+  @Get('check-account')
+  @HttpCode(HttpStatus.OK)
+  async checkAccountType(
+    @Query('email') email: string,
+  ): Promise<CheckAccountResponseDto> {
+    return this.authService.checkAccountType(email);
   }
 }
