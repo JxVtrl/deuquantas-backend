@@ -102,7 +102,8 @@ export class EstabelecimentoService {
 
   async findByEmail(email: string): Promise<Estabelecimento> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { email },
+      where: { usuario: { email } },
+      relations: ['usuario'],
     });
 
     if (!estabelecimento) {
