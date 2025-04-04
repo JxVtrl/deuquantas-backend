@@ -5,8 +5,10 @@ import {
   IsEmail,
   IsDate,
   IsBoolean,
+  IsObject,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { Usuario } from '../../usuarios/usuario.entity';
 
 export class CreateClienteDto {
   @IsString()
@@ -61,4 +63,8 @@ export class CreateClienteDto {
   @IsBoolean()
   @IsOptional()
   isAtivo?: boolean;
+
+  @IsObject()
+  @IsOptional()
+  usuario?: Omit<Usuario, 'password'>;
 }

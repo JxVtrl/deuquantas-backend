@@ -1,15 +1,19 @@
-import { IsEmail, IsOptional, IsBoolean, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsEmail, MinLength, IsBoolean } from 'class-validator';
+import { Cliente } from '../../clientes/cliente.entity';
+import { Estabelecimento } from '../../estabelecimentos/estabelecimento.entity';
 
 export class UpdateUsuarioDto {
   @IsOptional()
+  @IsString()
   name?: string;
 
   @IsOptional()
-  @IsEmail({}, { message: 'Email inválido' })
+  @IsEmail()
   email?: string;
 
   @IsOptional()
-  @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
+  @IsString()
+  @MinLength(6)
   password?: string;
 
   @IsOptional()
@@ -19,4 +23,10 @@ export class UpdateUsuarioDto {
   @IsOptional()
   @IsBoolean()
   isAtivo?: boolean;
+
+  @IsOptional()
+  cliente?: Cliente;
+
+  @IsOptional()
+  estabelecimento?: Estabelecimento;
 }

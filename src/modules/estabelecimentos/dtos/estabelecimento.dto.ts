@@ -61,4 +61,7 @@ export class CreateEstabelecimentoDto {
   @IsString()
   @IsOptional()
   imgLogo?: string;
+
+  @IsOptional()
+  usuario?: any;
 }

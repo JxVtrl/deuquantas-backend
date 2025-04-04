@@ -100,6 +100,18 @@ export class EstabelecimentoService {
     return estabelecimento;
   }
 
+  async findByEmail(email: string): Promise<Estabelecimento> {
+    const estabelecimento = await this.estabelecimentoRepository.findOne({
+      where: { email },
+    });
+
+    if (!estabelecimento) {
+      throw new NotFoundException('Estabelecimento não encontrado');
+    }
+
+    return estabelecimento;
+  }
+
   async checkPhoneExists(numCelular: string): Promise<boolean> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
       where: { numCelular },

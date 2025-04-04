@@ -32,6 +32,7 @@ export class ClienteService {
       estado: dto.estado,
       cep: dto.cep,
       isAtivo: dto.isAtivo,
+      usuario: dto.usuario,
     });
 
     return this.clienteRepository.save(newCliente);

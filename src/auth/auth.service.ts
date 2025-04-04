@@ -16,6 +16,8 @@ import { EstabelecimentoService } from '../modules/estabelecimentos/services/est
 import { UsuarioService } from '../modules/usuarios/services/usuario.service';
 import { CreateUsuarioClienteDto } from '../modules/usuarios/dto/create-usuario.dto';
 import { CreateClienteDto } from '../modules/clientes/dtos/cliente.dto';
+import { CreateUsuarioEstabelecimentoDto } from '../modules/usuarios/dto/create-usuario.dto';
+import { CreateEstabelecimentoDto } from '../modules/estabelecimentos/dtos/estabelecimento.dto';
 
 @Injectable()
 export class AuthService {
@@ -117,11 +119,16 @@ export class AuthService {
       estado,
       cep,
       isAtivo: true,
+      usuario: usuario, // Associando o usuário ao cliente
     };
 
     try {
       const cliente = await this.clienteService.createCliente(createClienteDto);
       console.log('Cliente criado com sucesso:', cliente);
+      
+      // Atualizar o usuário com a referência ao cliente
+      await this.usuarioService.update(usuario.id, { cliente });
+      
       return usuario;
     } catch (error) {
       console.error('Erro ao criar cliente:', error);
@@ -131,8 +138,11 @@ export class AuthService {
 
   async checkEmailExists(email: string): Promise<boolean> {
     try {
-      const cliente = await this.clienteService.findByEmail(email);
-      return !!cliente;
+      const [cliente, estabelecimento] = await Promise.all([
+        this.clienteService.findByEmail(email).catch(() => null),
+        this.estabelecimentoService.findByEmail(email).catch(() => null)
+      ]);
+      return !!(cliente || estabelecimento);
     } catch (error) {
       if (error instanceof NotFoundException) {
         return false;
@@ -171,5 +181,60 @@ export class AuthService {
     const usuario = await this.usuarioService.findById(user.id);
     console.log('Dados completos encontrados:', usuario);
     return usuario;
+  }
+
+  async registerEstablishment(createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto) {
+    // Primeiro cria o usuário com dados básicos
+    const {
+      numCnpj,
+      numCelular,
+      nomeEstab,
+      razaoSocial,
+      endereco,
+      numero,
+      complemento,
+      bairro,
+      cidade,
+      estado,
+      cep,
+      imgLogo,
+      ...usuarioData
+    } = createUsuarioEstabelecimentoDto;
+
+    const usuario = await this.usuarioService.create(usuarioData);
+
+    // Depois cria o estabelecimento com os dados específicos
+    const createEstabelecimentoDto: CreateEstabelecimentoDto = {
+      numCnpj,
+      name: usuarioData.name,
+      email: usuarioData.email,
+      password: usuarioData.password,
+      numCelular,
+      nomeEstab,
+      razaoSocial,
+      endereco,
+      numero,
+      complemento,
+      bairro,
+      cidade,
+      estado,
+      cep,
+      imgLogo,
+      isAtivo: true,
+      usuario: usuario, // Associando o usuário ao estabelecimento
+    };
+
+    try {
+      const estabelecimento = await this.estabelecimentoService.createEstabelecimento(createEstabelecimentoDto);
+      console.log('Estabelecimento criado com sucesso:', estabelecimento);
+      
+      // Atualizar o usuário com a referência ao estabelecimento
+      await this.usuarioService.update(usuario.id, { estabelecimento });
+      
+      return usuario;
+    } catch (error) {
+      console.error('Erro ao criar estabelecimento:', error);
+      throw error;
+    }
   }
 }

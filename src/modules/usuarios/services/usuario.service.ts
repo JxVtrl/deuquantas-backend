@@ -51,19 +51,21 @@ export class UsuarioService {
     return result;
   }
 
-  async findByEmail(email: string, incluirSenha = false): Promise<Usuario> {
-    const queryBuilder = this.usuarioRepository
-      .createQueryBuilder('usuario')
-      .leftJoinAndSelect('usuario.cliente', 'cliente')
-      .leftJoinAndSelect('usuario.estabelecimento', 'estabelecimento');
-
-    if (incluirSenha) {
-      queryBuilder.addSelect('usuario.password');
-    }
-
-    const usuario = await queryBuilder
-      .where('usuario.email = :email', { email })
-      .getOne();
+  async findByEmail(email: string, includePassword = false): Promise<Usuario> {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        isAdmin: true,
+        isAtivo: true,
+        dataCriacao: true,
+        dataAtualizacao: true,
+        ...(includePassword ? { password: true } : {}),
+      },
+      relations: ['cliente', 'estabelecimento'],
+    });
 
     if (!usuario) {
       throw new NotFoundException('Usuário não encontrado');
