@@ -53,7 +53,9 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
-      permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+      permission_level:
+        user.permission_level ||
+        (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
       cliente: user.cliente,
       estabelecimento: user.estabelecimento,
     });
@@ -61,7 +63,9 @@ export class AuthService {
     const payload = {
       email: user.email,
       sub: user.id,
-      permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+      permission_level:
+        user.permission_level ||
+        (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
       hasCliente: !!user.cliente,
       hasEstabelecimento: !!user.estabelecimento,
     };
@@ -77,7 +81,9 @@ export class AuthService {
         name: user.name,
         dataCriacao: user.dataCriacao,
         dataAtualizacao: user.dataAtualizacao,
-        permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+        permission_level:
+          user.permission_level ||
+          (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
         ...(user.cliente && {
           cliente: {
             id: user.cliente.id,
@@ -90,8 +96,8 @@ export class AuthService {
             bairro: user.cliente.bairro,
             cidade: user.cliente.cidade,
             estado: user.cliente.estado,
-            cep: user.cliente.cep
-          }
+            cep: user.cliente.cep,
+          },
         }),
         ...(user.estabelecimento && {
           estabelecimento: {
@@ -108,9 +114,9 @@ export class AuthService {
             cep: user.estabelecimento.cep,
             imgLogo: user.estabelecimento.imgLogo,
             isAtivo: user.estabelecimento.isAtivo,
-            status: user.estabelecimento.status
-          }
-        })
+            status: user.estabelecimento.status,
+          },
+        }),
       },
     };
 
@@ -196,8 +202,8 @@ export class AuthService {
             bairro: cliente.bairro,
             cidade: cliente.cidade,
             estado: cliente.estado,
-            cep: cliente.cep
-          }
+            cep: cliente.cep,
+          },
         },
       };
 
@@ -342,7 +348,7 @@ export class AuthService {
             imgLogo: estabelecimento.imgLogo,
             isAtivo: estabelecimento.isAtivo,
             status: estabelecimento.status,
-          }
+          },
         },
       };
 
@@ -388,7 +394,8 @@ export class AuthService {
 
   async checkPhoneExists(numCelular: string): Promise<boolean> {
     const cliente = await this.clienteRepository.findByNumCelular(numCelular);
-    const estabelecimento = await this.estabelecimentoRepository.findByNumCelular(numCelular);
+    const estabelecimento =
+      await this.estabelecimentoRepository.findByNumCelular(numCelular);
     return !!cliente || !!estabelecimento;
   }
 }

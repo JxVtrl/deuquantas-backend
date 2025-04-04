@@ -32,6 +32,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @Public()
   async login(@Body() loginDto: LoginUsuarioDto) {
     const user = (await this.authService.validateUser(
       loginDto.email,
@@ -44,11 +45,13 @@ export class AuthController {
   }
 
   @Post('register')
+  @Public()
   async register(@Body() createUsuarioClienteDto: CreateUsuarioClienteDto) {
     return this.authService.register(createUsuarioClienteDto);
   }
 
   @Post('register-establishment')
+  @Public()
   async registerEstablishment(
     @Body() createUsuarioEstabelecimentoDto: CreateUsuarioEstabelecimentoDto,
   ) {
@@ -93,6 +96,7 @@ export class AuthController {
   }
 
   @Get('check-account')
+  @Public()
   @HttpCode(HttpStatus.OK)
   async checkAccountType(
     @Query('email') email: string,
