@@ -126,4 +126,9 @@ export class UsuarioService {
     const { password, ...result } = usuario;
     return result as Usuario;
   }
+
+  async remove(id: string): Promise<void> {
+    const usuario = await this.findById(id);
+    await this.usuarioRepository.remove(usuario);
+  }
 }

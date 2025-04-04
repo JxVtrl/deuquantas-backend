@@ -144,28 +144,30 @@ export class AuthService {
       ...usuarioData
     } = createUsuarioClienteDto;
 
-    const usuario = await this.usuarioService.create(usuarioData);
-
-    // Depois cria o cliente com os dados específicos
-    const createClienteDto: CreateClienteDto = {
-      name: usuarioData.name,
-      email: usuarioData.email,
-      password: usuarioData.password,
-      numCpf,
-      numCelular,
-      dataNascimento,
-      endereco,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      estado,
-      cep,
-      isAtivo: true,
-      usuario: usuario, // Associando o usuário ao cliente
-    };
-
+    let usuario;
     try {
+      // Cria o usuário primeiro
+      usuario = await this.usuarioService.create(usuarioData);
+
+      // Depois cria o cliente com os dados específicos
+      const createClienteDto: CreateClienteDto = {
+        name: usuarioData.name,
+        email: usuarioData.email,
+        password: usuarioData.password,
+        numCpf,
+        numCelular,
+        dataNascimento,
+        endereco,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado,
+        cep,
+        isAtivo: true,
+        usuario: usuario, // Associando o usuário ao cliente
+      };
+
       const cliente = await this.clienteService.createCliente(createClienteDto);
       console.log('Cliente criado com sucesso:', cliente);
 
@@ -210,6 +212,14 @@ export class AuthService {
       return response;
     } catch (error) {
       console.error('Erro ao criar cliente:', error);
+      // Se houver erro, tenta remover o usuário criado para manter consistência
+      if (usuario?.id) {
+        try {
+          await this.usuarioService.remove(usuario.id);
+        } catch (removeError) {
+          console.error('Erro ao remover usuário após falha:', removeError);
+        }
+      }
       throw error;
     }
   }
@@ -243,8 +253,10 @@ export class AuthService {
 
   async checkCNPJExists(numCnpj: string): Promise<boolean> {
     try {
+      // Remove formatação do CNPJ
+      const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
       const estabelecimento =
-        await this.estabelecimentoService.findByCNPJ(numCnpj);
+        await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
       return !!estabelecimento;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -281,30 +293,34 @@ export class AuthService {
       ...usuarioData
     } = createUsuarioEstabelecimentoDto;
 
-    const usuario = await this.usuarioService.create(usuarioData);
-
-    // Depois cria o estabelecimento com os dados específicos
-    const createEstabelecimentoDto: CreateEstabelecimentoDto = {
-      numCnpj,
-      name: usuarioData.name,
-      email: usuarioData.email,
-      password: usuarioData.password,
-      numCelular,
-      nomeEstab,
-      razaoSocial,
-      endereco,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      estado,
-      cep,
-      imgLogo,
-      isAtivo: true,
-      usuario: usuario, // Associando o usuário ao estabelecimento
-    };
-
     try {
+      // Cria o usuário primeiro
+      const usuario = await this.usuarioService.create(usuarioData);
+
+      // Remove formatação do CNPJ
+      const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
+
+      // Depois cria o estabelecimento com os dados específicos
+      const createEstabelecimentoDto: CreateEstabelecimentoDto = {
+        numCnpj: cnpjSemFormatacao,
+        name: usuarioData.name,
+        email: usuarioData.email,
+        password: usuarioData.password,
+        numCelular,
+        nomeEstab,
+        razaoSocial,
+        endereco,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado,
+        cep,
+        imgLogo,
+        isAtivo: true,
+        usuario: usuario, // Associando o usuário ao estabelecimento
+      };
+
       const estabelecimento =
         await this.estabelecimentoService.createEstabelecimento(
           createEstabelecimentoDto,
