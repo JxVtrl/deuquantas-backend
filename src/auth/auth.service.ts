@@ -260,8 +260,24 @@ export class AuthService {
         hasEstabelecimentoAccount: !!estabelecimento,
       };
     } catch (error) {
-      this.logger.error(`Erro ao verificar tipo de conta para email ${email}:`, error);
+      this.logger.error(
+        `Erro ao verificar tipo de conta para email ${email}:`,
+        error,
+      );
       throw new InternalServerErrorException('Erro ao verificar tipo de conta');
+    }
+  }
+
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.usuarioService.findByEmail(email);
+      const { password, ...result } = user;
+      return result;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+      throw error;
     }
   }
 }

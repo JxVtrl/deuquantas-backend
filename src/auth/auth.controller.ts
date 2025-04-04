@@ -88,4 +88,10 @@ export class AuthController {
   ): Promise<CheckAccountResponseDto> {
     return this.authService.checkAccountType(email);
   }
+
+  @Get('user-by-email/:email')
+  @HttpCode(HttpStatus.OK)
+  async getUserByEmail(@Param('email') email: string) {
+    return this.authService.getUserByEmail(email);
+  }
 }
