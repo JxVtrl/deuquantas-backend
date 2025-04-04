@@ -9,6 +9,6 @@ import { EstabelecimentoController } from './controllers/estabelecimento.control
   imports: [TypeOrmModule.forFeature([Estabelecimento])],
   providers: [EstabelecimentoRepository, EstabelecimentoService],
   controllers: [EstabelecimentoController],
-  exports: [EstabelecimentoService],
+  exports: [EstabelecimentoService, EstabelecimentoRepository],
 })
 export class EstabelecimentosModule {}

@@ -18,6 +18,8 @@ import { CreateUsuarioClienteDto } from '../modules/usuarios/dto/create-usuario.
 import { CreateClienteDto } from '../modules/clientes/dtos/cliente.dto';
 import { CreateUsuarioEstabelecimentoDto } from '../modules/usuarios/dto/create-usuario.dto';
 import { CreateEstabelecimentoDto } from '../modules/estabelecimentos/dtos/estabelecimento.dto';
+import { ClienteRepository } from '../modules/clientes/cliente.repository';
+import { EstabelecimentoRepository } from '../modules/estabelecimentos/estabelecimento.repository';
 
 export interface CheckAccountResponseDto {
   hasClienteAccount: boolean;
@@ -33,6 +35,8 @@ export class AuthService {
     private readonly estabelecimentoService: EstabelecimentoService,
     private readonly jwtService: JwtService,
     private readonly usuarioService: UsuarioService,
+    private readonly clienteRepository: ClienteRepository,
+    private readonly estabelecimentoRepository: EstabelecimentoRepository,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -49,7 +53,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
-      isAdmin: user.isAdmin,
+      permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
       cliente: user.cliente,
       estabelecimento: user.estabelecimento,
     });
@@ -57,28 +61,56 @@ export class AuthService {
     const payload = {
       email: user.email,
       sub: user.id,
-      permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
+      permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
       hasCliente: !!user.cliente,
       hasEstabelecimento: !!user.estabelecimento,
     };
 
     console.log('Payload gerado para o token:', payload);
 
+    // Estrutura de resposta otimizada
     const response = {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        isAdmin: user.isAdmin,
-        isAtivo: user.isAtivo,
         dataCriacao: user.dataCriacao,
         dataAtualizacao: user.dataAtualizacao,
-        permission_level: user.isAdmin ? 1 : user.estabelecimento ? 2 : 3,
-        hasCliente: !!user.cliente,
-        hasEstabelecimento: !!user.estabelecimento,
-        cliente: user.cliente,
-        estabelecimento: user.estabelecimento,
+        permission_level: user.permission_level || (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+        ...(user.cliente && {
+          cliente: {
+            id: user.cliente.id,
+            numCpf: user.cliente.numCpf,
+            numCelular: user.cliente.numCelular,
+            dataNascimento: user.cliente.dataNascimento,
+            endereco: user.cliente.endereco,
+            numero: user.cliente.numero,
+            complemento: user.cliente.complemento,
+            bairro: user.cliente.bairro,
+            cidade: user.cliente.cidade,
+            estado: user.cliente.estado,
+            cep: user.cliente.cep
+          }
+        }),
+        ...(user.estabelecimento && {
+          estabelecimento: {
+            numCnpj: user.estabelecimento.numCnpj,
+            numCelular: user.estabelecimento.numCelular,
+            nomeEstab: user.estabelecimento.nomeEstab,
+            razaoSocial: user.estabelecimento.razaoSocial,
+            endereco: user.estabelecimento.endereco,
+            numero: user.estabelecimento.numero,
+            complemento: user.estabelecimento.complemento,
+            bairro: user.estabelecimento.bairro,
+            cidade: user.estabelecimento.cidade,
+            estado: user.estabelecimento.estado,
+            cep: user.estabelecimento.cep,
+            imgLogo: user.estabelecimento.imgLogo,
+            isAtivo: user.estabelecimento.isAtivo,
+            status: user.estabelecimento.status
+          }
+        })
       },
     };
 
@@ -138,26 +170,34 @@ export class AuthService {
       const payload = {
         email: usuario.email,
         sub: usuario.id,
-        permission_level: usuario.isAdmin ? 1 : 3,
+        permission_level: 3, // Cliente sempre tem permission_level 3
         hasCliente: true,
         hasEstabelecimento: false,
       };
 
+      // Estrutura de resposta otimizada
       const response = {
         access_token: this.jwtService.sign(payload),
         user: {
           id: usuario.id,
           email: usuario.email,
           name: usuario.name,
-          isAdmin: usuario.isAdmin,
-          isAtivo: usuario.isAtivo,
           dataCriacao: usuario.dataCriacao,
           dataAtualizacao: usuario.dataAtualizacao,
-          permission_level: usuario.isAdmin ? 1 : 3,
-          hasCliente: true,
-          hasEstabelecimento: false,
-          cliente: cliente,
-          estabelecimento: null,
+          permission_level: 3,
+          cliente: {
+            id: cliente.id,
+            numCpf: cliente.numCpf,
+            numCelular: cliente.numCelular,
+            dataNascimento: cliente.dataNascimento,
+            endereco: cliente.endereco,
+            numero: cliente.numero,
+            complemento: cliente.complemento,
+            bairro: cliente.bairro,
+            cidade: cliente.cidade,
+            estado: cliente.estado,
+            cep: cliente.cep
+          }
         },
       };
 
@@ -268,7 +308,45 @@ export class AuthService {
       // Atualizar o usuário com a referência ao estabelecimento
       await this.usuarioService.update(usuario.id, { estabelecimento });
 
-      return usuario;
+      // Gerar token JWT e retornar resposta similar ao login
+      const payload = {
+        email: usuario.email,
+        sub: usuario.id,
+        permission_level: 2, // Estabelecimento sempre tem permission_level 2
+        hasCliente: false,
+        hasEstabelecimento: true,
+      };
+
+      // Estrutura de resposta otimizada
+      const response = {
+        access_token: this.jwtService.sign(payload),
+        user: {
+          id: usuario.id,
+          email: usuario.email,
+          name: usuario.name,
+          dataCriacao: usuario.dataCriacao,
+          dataAtualizacao: usuario.dataAtualizacao,
+          permission_level: 2,
+          estabelecimento: {
+            numCnpj: estabelecimento.numCnpj,
+            numCelular: estabelecimento.numCelular,
+            nomeEstab: estabelecimento.nomeEstab,
+            razaoSocial: estabelecimento.razaoSocial,
+            endereco: estabelecimento.endereco,
+            numero: estabelecimento.numero,
+            complemento: estabelecimento.complemento,
+            bairro: estabelecimento.bairro,
+            cidade: estabelecimento.cidade,
+            estado: estabelecimento.estado,
+            cep: estabelecimento.cep,
+            imgLogo: estabelecimento.imgLogo,
+            isAtivo: estabelecimento.isAtivo,
+            status: estabelecimento.status,
+          }
+        },
+      };
+
+      return response;
     } catch (error) {
       console.error('Erro ao criar estabelecimento:', error);
       throw error;
@@ -306,5 +384,11 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  async checkPhoneExists(numCelular: string): Promise<boolean> {
+    const cliente = await this.clienteRepository.findByNumCelular(numCelular);
+    const estabelecimento = await this.estabelecimentoRepository.findByNumCelular(numCelular);
+    return !!cliente || !!estabelecimento;
   }
 }

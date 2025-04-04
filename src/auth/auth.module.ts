@@ -8,6 +8,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from '../modules/usuarios/usuarios.module';
 import { ClientesModule } from '../modules/clientes/clientes.module';
 import { EstabelecimentosModule } from '../modules/estabelecimentos/estabelecimentos.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Cliente } from '../modules/clientes/cliente.entity';
+import { Estabelecimento } from '../modules/estabelecimentos/estabelecimento.entity';
 
 @Module({
   imports: [
@@ -20,6 +23,7 @@ import { EstabelecimentosModule } from '../modules/estabelecimentos/estabelecime
     }),
     ClientesModule,
     EstabelecimentosModule,
+    TypeOrmModule.forFeature([Cliente, Estabelecimento]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

@@ -17,4 +17,8 @@ export class EstabelecimentoRepository {
   async findByNome(nomeEstab: string): Promise<Estabelecimento | null> {
     return this.repository.findOne({ where: { nomeEstab } });
   }
+
+  async findByNumCelular(numCelular: string): Promise<Estabelecimento | null> {
+    return this.repository.findOne({ where: { numCelular } });
+  }
 }

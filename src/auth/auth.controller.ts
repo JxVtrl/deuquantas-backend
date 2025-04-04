@@ -21,6 +21,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request } from 'express';
 import { Usuario } from '../modules/usuarios/usuario.entity';
 import { CheckAccountResponseDto } from './auth.service';
+import { Public } from './decorators/public.decorator';
 
 interface RequestWithUser extends Request {
   user: Usuario;
@@ -56,21 +57,31 @@ export class AuthController {
     );
   }
 
-  @Get('check-email/:email')
-  async checkEmailExists(@Param('email') email: string) {
-    const exists = await this.authService.checkEmailExists(email);
-    return { exists };
-  }
-
   @Get('check-cpf/:numCpf')
+  @Public()
   async checkCPFExists(@Param('numCpf') numCpf: string) {
     const exists = await this.authService.checkCPFExists(numCpf);
     return { exists };
   }
 
   @Get('check-cnpj/:numCnpj')
+  @Public()
   async checkCNPJExists(@Param('numCnpj') numCnpj: string) {
     const exists = await this.authService.checkCNPJExists(numCnpj);
+    return { exists };
+  }
+
+  @Get('check-phone/:numCelular')
+  @Public()
+  async checkPhoneExists(@Param('numCelular') numCelular: string) {
+    const exists = await this.authService.checkPhoneExists(numCelular);
+    return { exists };
+  }
+
+  @Get('check-email/:email')
+  @Public()
+  async checkEmailExists(@Param('email') email: string) {
+    const exists = await this.authService.checkEmailExists(email);
     return { exists };
   }
 

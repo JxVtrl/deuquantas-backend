@@ -17,4 +17,8 @@ export class ClienteRepository {
   async findByCpf(numCpf: string): Promise<Cliente | null> {
     return this.repository.findOne({ where: { numCpf } });
   }
+
+  async findByNumCelular(numCelular: string): Promise<Cliente | null> {
+    return this.repository.findOne({ where: { numCelular } });
+  }
 }
