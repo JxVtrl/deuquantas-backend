@@ -292,7 +292,6 @@ export class AuthService {
       // Depois cria o estabelecimento com os dados específicos
       const createEstabelecimentoDto: CreateEstabelecimentoDto = {
         numCnpj: cnpjSemFormatacao,
-        name: usuarioData.name,
         email: usuarioData.email,
         password: usuarioData.password,
         numCelular,

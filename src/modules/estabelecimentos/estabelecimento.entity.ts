@@ -16,9 +16,6 @@ export class Estabelecimento {
   @PrimaryColumn({ type: 'varchar', length: 14 })
   numCnpj: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  name: string;
-
   @Column({ type: 'varchar', length: 100, unique: true })
   email: string;
 

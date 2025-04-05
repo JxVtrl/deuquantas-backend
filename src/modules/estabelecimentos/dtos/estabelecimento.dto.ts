@@ -11,9 +11,6 @@ export class CreateEstabelecimentoDto {
   @Length(14, 14)
   numCnpj: string;
 
-  @IsString()
-  name: string;
-
   @IsEmail()
   email: string;
 
