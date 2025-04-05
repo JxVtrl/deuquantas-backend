@@ -224,43 +224,34 @@ export class AuthService {
     }
   }
 
-  async checkEmailExists(email: string): Promise<boolean> {
-    try {
-      const [cliente, estabelecimento] = await Promise.all([
-        this.clienteService.findByEmail(email).catch(() => null),
-        this.estabelecimentoService.findByEmail(email).catch(() => null),
-      ]);
-      return !!(cliente || estabelecimento);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        return false;
-      }
-      throw error;
+  async checkEmailExists(email: string): Promise<{ exists: boolean; message: string }> {
+    const user = await this.usuarioService.findByEmail(email);
+    if (user) {
+      return { exists: true, message: 'Email já cadastrado' };
     }
+    return { exists: false, message: 'Email disponível' };
   }
 
-  async checkCPFExists(numCpf: string): Promise<boolean> {
+  async checkCPFExists(numCpf: string): Promise<{ exists: boolean; message: string }> {
     try {
       const cliente = await this.clienteService.findByCPF(numCpf);
-      return !!cliente;
+      return { exists: true, message: 'CPF já cadastrado' };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return false;
+        return { exists: false, message: 'CPF disponível' };
       }
       throw error;
     }
   }
 
-  async checkCNPJExists(numCnpj: string): Promise<boolean> {
+  async checkCNPJExists(numCnpj: string): Promise<{ exists: boolean; message: string }> {
     try {
-      // Remove formatação do CNPJ
       const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
-      const estabelecimento =
-        await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
-      return !!estabelecimento;
+      const estabelecimento = await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
+      return { exists: true, message: 'CNPJ já cadastrado' };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return false;
+        return { exists: false, message: 'CNPJ disponível' };
       }
       throw error;
     }
@@ -408,10 +399,12 @@ export class AuthService {
     }
   }
 
-  async checkPhoneExists(numCelular: string): Promise<boolean> {
+  async checkPhoneExists(numCelular: string): Promise<{ exists: boolean; message: string }> {
     const cliente = await this.clienteRepository.findByNumCelular(numCelular);
-    const estabelecimento =
-      await this.estabelecimentoRepository.findByNumCelular(numCelular);
-    return !!cliente || !!estabelecimento;
+    const estabelecimento = await this.estabelecimentoRepository.findByNumCelular(numCelular);
+    if (cliente || estabelecimento) {
+      return { exists: true, message: 'Número de celular já cadastrado' };
+    }
+    return { exists: false, message: 'Número de celular disponível' };
   }
 }

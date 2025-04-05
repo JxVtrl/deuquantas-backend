@@ -62,30 +62,30 @@ export class AuthController {
 
   @Get('check-cpf/:numCpf')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async checkCPFExists(@Param('numCpf') numCpf: string) {
-    const exists = await this.authService.checkCPFExists(numCpf);
-    return { exists };
+    return this.authService.checkCPFExists(numCpf);
   }
 
   @Get('check-cnpj/:numCnpj')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async checkCNPJExists(@Param('numCnpj') numCnpj: string) {
-    const exists = await this.authService.checkCNPJExists(numCnpj);
-    return { exists };
+    return this.authService.checkCNPJExists(numCnpj);
   }
 
   @Get('check-phone/:numCelular')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async checkPhoneExists(@Param('numCelular') numCelular: string) {
-    const exists = await this.authService.checkPhoneExists(numCelular);
-    return { exists };
+    return this.authService.checkPhoneExists(numCelular);
   }
 
   @Get('check-email/:email')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async checkEmailExists(@Param('email') email: string) {
-    const exists = await this.authService.checkEmailExists(email);
-    return { exists };
+    return this.authService.checkEmailExists(email);
   }
 
   @Get('me')
