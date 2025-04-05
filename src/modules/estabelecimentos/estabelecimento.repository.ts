@@ -23,7 +23,7 @@ export class EstabelecimentoRepository {
   }
 
   async findByNumCnpj(numCnpj: string): Promise<Estabelecimento | null> {
-    return this.repository.findOne({ 
+    return this.repository.findOne({
       where: { numCnpj },
     });
   }
