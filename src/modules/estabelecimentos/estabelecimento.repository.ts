@@ -21,4 +21,8 @@ export class EstabelecimentoRepository {
   async findByNumCelular(numCelular: string): Promise<Estabelecimento | null> {
     return this.repository.findOne({ where: { numCelular } });
   }
+
+  async findByNumCnpj(numCnpj: string): Promise<Estabelecimento | null> {
+    return this.repository.findOne({ where: { numCnpj } });
+  }
 }

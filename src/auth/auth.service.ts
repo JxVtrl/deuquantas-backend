@@ -224,43 +224,33 @@ export class AuthService {
     }
   }
 
-  async checkEmailExists(
-    email: string,
-  ): Promise<{ exists: boolean; message: string }> {
-    const user = await this.usuarioService.findByEmail(email);
-    if (user) {
-      return { exists: true, message: 'Email já cadastrado' };
-    }
-    return { exists: false, message: 'Email disponível' };
-  }
-
-  async checkCPFExists(
-    numCpf: string,
-  ): Promise<{ exists: boolean; message: string }> {
+  async checkEmailExists(email: string): Promise<boolean> {
     try {
-      const cliente = await this.clienteService.findByCPF(numCpf);
-      return { exists: true, message: 'CPF já cadastrado' };
+      const user = await this.usuarioService.findByEmail(email);
+      return !!user;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        return { exists: false, message: 'CPF disponível' };
-      }
-      throw error;
+      this.logger.error(`Erro ao verificar email: ${error.message}`);
+      return false;
     }
   }
 
-  async checkCNPJExists(
-    numCnpj: string,
-  ): Promise<{ exists: boolean; message: string }> {
+  async checkCPFExists(cpf: string): Promise<boolean> {
     try {
-      const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
-      const estabelecimento =
-        await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
-      return { exists: true, message: 'CNPJ já cadastrado' };
+      const cliente = await this.clienteRepository.findByCpf(cpf);
+      return !!cliente;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        return { exists: false, message: 'CNPJ disponível' };
-      }
-      throw error;
+      this.logger.error(`Erro ao verificar CPF: ${error.message}`);
+      throw new InternalServerErrorException('Erro ao verificar CPF');
+    }
+  }
+
+  async checkCNPJExists(cnpj: string): Promise<boolean> {
+    try {
+      const estabelecimento = await this.estabelecimentoRepository.findByNumCnpj(cnpj);
+      return !!estabelecimento;
+    } catch (error) {
+      this.logger.error(`Erro ao verificar CNPJ: ${error.message}`);
+      throw new InternalServerErrorException('Erro ao verificar CNPJ');
     }
   }
 
@@ -406,15 +396,16 @@ export class AuthService {
     }
   }
 
-  async checkPhoneExists(
-    numCelular: string,
-  ): Promise<{ exists: boolean; message: string }> {
-    const cliente = await this.clienteRepository.findByNumCelular(numCelular);
-    const estabelecimento =
-      await this.estabelecimentoRepository.findByNumCelular(numCelular);
-    if (cliente || estabelecimento) {
-      return { exists: true, message: 'Número de celular já cadastrado' };
+  async checkPhoneExists(phone: string): Promise<boolean> {
+    try {
+      const [cliente, estabelecimento] = await Promise.all([
+        this.clienteRepository.findByNumCelular(phone),
+        this.estabelecimentoRepository.findByNumCelular(phone),
+      ]);
+      return !!(cliente || estabelecimento);
+    } catch (error) {
+      this.logger.error(`Erro ao verificar telefone: ${error.message}`);
+      throw new InternalServerErrorException('Erro ao verificar telefone');
     }
-    return { exists: false, message: 'Número de celular disponível' };
   }
 }

@@ -67,32 +67,47 @@ export class AuthController {
     );
   }
 
-  @Get('check-cpf/:numCpf')
+  @Get('check-cpf/:cpf')
   @Public()
-  @HttpCode(HttpStatus.OK)
-  async checkCPFExists(@Param('numCpf') numCpf: string) {
-    return this.authService.checkCPFExists(numCpf);
+  async checkCPF(@Param('cpf') cpf: string) {
+    const exists = await this.authService.checkCPFExists(cpf);
+    return {
+      exists,
+      message: exists ? 'CPF já cadastrado' : 'CPF disponível',
+    };
   }
 
-  @Get('check-cnpj/:numCnpj')
+  @Get('check-cnpj/:cnpj')
   @Public()
-  @HttpCode(HttpStatus.OK)
-  async checkCNPJExists(@Param('numCnpj') numCnpj: string) {
-    return this.authService.checkCNPJExists(numCnpj);
+  async checkCNPJ(@Param('cnpj') cnpj: string) {
+    const exists = await this.authService.checkCNPJExists(cnpj);
+    return {
+      exists,
+      message: exists ? 'CNPJ já cadastrado' : 'CNPJ disponível',
+    };
   }
 
-  @Get('check-phone/:numCelular')
+  @Get('check-phone/:phone')
   @Public()
-  @HttpCode(HttpStatus.OK)
-  async checkPhoneExists(@Param('numCelular') numCelular: string) {
-    return this.authService.checkPhoneExists(numCelular);
+  async checkPhone(@Param('phone') phone: string) {
+    const exists = await this.authService.checkPhoneExists(phone);
+    return {
+      exists,
+      message: exists ? 'Número de celular já cadastrado' : 'Número de celular disponível',
+    };
   }
 
   @Get('check-email/:email')
   @Public()
   @HttpCode(HttpStatus.OK)
-  async checkEmailExists(@Param('email') email: string) {
-    return this.authService.checkEmailExists(email);
+  async checkEmail(@Param('email') email: string) {
+    const exists = await this.authService.checkEmailExists(email);
+    return {
+      exists,
+      message: exists 
+        ? 'Este email já está cadastrado. Por favor, faça login ou use outro email.'
+        : 'Email disponível para cadastro',
+    };
   }
 
   @Get('me')
