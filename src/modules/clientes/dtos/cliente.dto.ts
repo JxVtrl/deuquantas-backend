@@ -22,10 +22,6 @@ export class CreateClienteDto {
   email: string;
 
   @IsString()
-  @Length(6, 100)
-  password: string;
-
-  @IsString()
   numCelular: string;
 
   @Transform(({ value }) => {

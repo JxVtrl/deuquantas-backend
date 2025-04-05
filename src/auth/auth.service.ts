@@ -49,17 +49,6 @@ export class AuthService {
   }
 
   async login(user: any) {
-    console.log('Dados do usuário recebidos no login:', {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      permission_level:
-        user.permission_level ||
-        (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
-      cliente: user.cliente,
-      estabelecimento: user.estabelecimento,
-    });
-
     const payload = {
       email: user.email,
       sub: user.id,
@@ -69,8 +58,6 @@ export class AuthService {
       hasCliente: !!user.cliente,
       hasEstabelecimento: !!user.estabelecimento,
     };
-
-    console.log('Payload gerado para o token:', payload);
 
     // Estrutura de resposta otimizada
     const response = {
@@ -153,7 +140,6 @@ export class AuthService {
       const createClienteDto: CreateClienteDto = {
         name: usuarioData.name,
         email: usuarioData.email,
-        password: usuarioData.password,
         numCpf,
         numCelular,
         dataNascimento,
@@ -293,7 +279,6 @@ export class AuthService {
       const createEstabelecimentoDto: CreateEstabelecimentoDto = {
         numCnpj: cnpjSemFormatacao,
         email: usuarioData.email,
-        password: usuarioData.password,
         numCelular,
         nomeEstab,
         razaoSocial,

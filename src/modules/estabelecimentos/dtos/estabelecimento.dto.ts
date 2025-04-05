@@ -15,10 +15,6 @@ export class CreateEstabelecimentoDto {
   email: string;
 
   @IsString()
-  @Length(6, 100)
-  password: string;
-
-  @IsString()
   numCelular: string;
 
   @IsString()
