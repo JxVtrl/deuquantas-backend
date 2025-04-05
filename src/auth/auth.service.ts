@@ -224,7 +224,9 @@ export class AuthService {
     }
   }
 
-  async checkEmailExists(email: string): Promise<{ exists: boolean; message: string }> {
+  async checkEmailExists(
+    email: string,
+  ): Promise<{ exists: boolean; message: string }> {
     const user = await this.usuarioService.findByEmail(email);
     if (user) {
       return { exists: true, message: 'Email já cadastrado' };
@@ -232,7 +234,9 @@ export class AuthService {
     return { exists: false, message: 'Email disponível' };
   }
 
-  async checkCPFExists(numCpf: string): Promise<{ exists: boolean; message: string }> {
+  async checkCPFExists(
+    numCpf: string,
+  ): Promise<{ exists: boolean; message: string }> {
     try {
       const cliente = await this.clienteService.findByCPF(numCpf);
       return { exists: true, message: 'CPF já cadastrado' };
@@ -244,10 +248,13 @@ export class AuthService {
     }
   }
 
-  async checkCNPJExists(numCnpj: string): Promise<{ exists: boolean; message: string }> {
+  async checkCNPJExists(
+    numCnpj: string,
+  ): Promise<{ exists: boolean; message: string }> {
     try {
       const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
-      const estabelecimento = await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
+      const estabelecimento =
+        await this.estabelecimentoService.findByCNPJ(cnpjSemFormatacao);
       return { exists: true, message: 'CNPJ já cadastrado' };
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -399,9 +406,12 @@ export class AuthService {
     }
   }
 
-  async checkPhoneExists(numCelular: string): Promise<{ exists: boolean; message: string }> {
+  async checkPhoneExists(
+    numCelular: string,
+  ): Promise<{ exists: boolean; message: string }> {
     const cliente = await this.clienteRepository.findByNumCelular(numCelular);
-    const estabelecimento = await this.estabelecimentoRepository.findByNumCelular(numCelular);
+    const estabelecimento =
+      await this.estabelecimentoRepository.findByNumCelular(numCelular);
     if (cliente || estabelecimento) {
       return { exists: true, message: 'Número de celular já cadastrado' };
     }
