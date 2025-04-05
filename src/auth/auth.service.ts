@@ -246,7 +246,8 @@ export class AuthService {
 
   async checkCNPJExists(cnpj: string): Promise<boolean> {
     try {
-      const estabelecimento = await this.estabelecimentoRepository.findByNumCnpj(cnpj);
+      const estabelecimento =
+        await this.estabelecimentoRepository.findByNumCnpj(cnpj);
       return !!estabelecimento;
     } catch (error) {
       this.logger.error(`Erro ao verificar CNPJ: ${error.message}`);

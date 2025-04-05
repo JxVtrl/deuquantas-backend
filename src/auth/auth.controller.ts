@@ -93,7 +93,9 @@ export class AuthController {
     const exists = await this.authService.checkPhoneExists(phone);
     return {
       exists,
-      message: exists ? 'Número de celular já cadastrado' : 'Número de celular disponível',
+      message: exists
+        ? 'Número de celular já cadastrado'
+        : 'Número de celular disponível',
     };
   }
 
@@ -104,7 +106,7 @@ export class AuthController {
     const exists = await this.authService.checkEmailExists(email);
     return {
       exists,
-      message: exists 
+      message: exists
         ? 'Este email já está cadastrado. Por favor, faça login ou use outro email.'
         : 'Email disponível para cadastro',
     };
