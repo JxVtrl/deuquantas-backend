@@ -33,15 +33,22 @@ export class AuthController {
 
   @Post('login')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginUsuarioDto) {
     const user = (await this.authService.validateUser(
       loginDto.email,
       loginDto.password,
     )) as Usuario | null;
     if (!user) {
-      throw new UnauthorizedException('Email ou senha incorretos');
+      return {
+        success: false,
+        message: 'Email ou senha incorretos',
+      };
     }
-    return this.authService.login(user);
+    return {
+      success: true,
+      ...(await this.authService.login(user)),
+    };
   }
 
   @Post('register')
