@@ -74,7 +74,7 @@ export class AuthService {
 
     // Estrutura de resposta otimizada
     const response = {
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
       user: {
         id: user.id,
         email: user.email,
@@ -121,7 +121,7 @@ export class AuthService {
     };
 
     console.log('Resposta final do login:', {
-      token: response.access_token,
+      token: response.token,
       user: response.user,
     });
 
@@ -185,7 +185,7 @@ export class AuthService {
 
       // Estrutura de resposta otimizada
       const response = {
-        access_token: this.jwtService.sign(payload),
+        token: this.jwtService.sign(payload),
         user: {
           id: usuario.id,
           email: usuario.email,
@@ -330,7 +330,7 @@ export class AuthService {
 
       // Estrutura de resposta otimizada
       const response = {
-        access_token: this.jwtService.sign(payload),
+        token: this.jwtService.sign(payload),
         user: {
           id: usuario.id,
           email: usuario.email,
