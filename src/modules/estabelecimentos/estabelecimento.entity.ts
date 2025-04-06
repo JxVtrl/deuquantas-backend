@@ -72,7 +72,7 @@ export class Estabelecimento {
   @Column({ type: 'enum', enum: ['ativo', 'em_breve'], default: 'em_breve' })
   status: 'ativo' | 'em_breve';
 
-  @OneToOne(() => Usuario)
-  @JoinColumn()
+  @OneToOne(() => Usuario, { eager: true })
+  @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 }

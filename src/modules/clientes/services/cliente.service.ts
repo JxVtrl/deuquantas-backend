@@ -76,10 +76,15 @@ export class ClienteService {
   }
 
   async findByUsuarioId(usuarioId: string): Promise<Cliente> {
-    const cliente = await this.clienteRepository.findOne({
-      where: { usuario: { id: usuarioId } },
-      relations: ['usuario'],
-    });
+    console.log('🔍 Buscando cliente para o usuário:', usuarioId);
+
+    const cliente = await this.clienteRepository
+      .createQueryBuilder('cliente')
+      .leftJoinAndSelect('cliente.usuario', 'usuario')
+      .where('usuario.id = :usuarioId', { usuarioId })
+      .getOne();
+
+    console.log('📌 Resultado da busca:', cliente);
 
     if (!cliente) {
       throw new NotFoundException('Cliente não encontrado');

@@ -53,7 +53,7 @@ export class Cliente {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToOne(() => Usuario)
-  @JoinColumn()
+  @OneToOne(() => Usuario, { eager: true })
+  @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 }

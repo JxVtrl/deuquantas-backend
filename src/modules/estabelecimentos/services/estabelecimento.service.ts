@@ -88,10 +88,16 @@ export class EstabelecimentoService {
   }
 
   async findByUsuarioId(usuarioId: string): Promise<Estabelecimento> {
-    const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { usuario: { id: usuarioId } },
-      relations: ['usuario', 'cardapios'],
-    });
+    console.log('🔍 Buscando estabelecimento para o usuário:', usuarioId);
+    
+    const estabelecimento = await this.estabelecimentoRepository
+      .createQueryBuilder('estabelecimento')
+      .leftJoinAndSelect('estabelecimento.usuario', 'usuario')
+      .leftJoinAndSelect('estabelecimento.cardapios', 'cardapios')
+      .where('usuario.id = :usuarioId', { usuarioId })
+      .getOne();
+
+    console.log('📌 Resultado da busca:', estabelecimento);
 
     if (!estabelecimento) {
       throw new NotFoundException('Estabelecimento não encontrado');
