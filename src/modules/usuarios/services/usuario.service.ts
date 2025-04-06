@@ -52,20 +52,17 @@ export class UsuarioService {
   }
 
   async findByEmail(email: string, includePassword = false): Promise<Usuario> {
-    const usuario = await this.usuarioRepository.findOne({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        is_admin: true,
-        is_ativo: true,
-        data_criacao: true,
-        data_atualizacao: true,
-        ...(includePassword ? { password: true } : {}),
-      },
-      relations: ['cliente', 'estabelecimento'],
-    });
+    const queryBuilder = this.usuarioRepository
+      .createQueryBuilder('usuario')
+      .leftJoinAndSelect('usuario.cliente', 'cliente')
+      .leftJoinAndSelect('usuario.estabelecimento', 'estabelecimento')
+      .where('usuario.email = :email', { email });
+
+    if (includePassword) {
+      queryBuilder.addSelect('usuario.password');
+    }
+
+    const usuario = await queryBuilder.getOne();
 
     if (!usuario) {
       throw new NotFoundException('Usuário não encontrado');
@@ -99,11 +96,11 @@ export class UsuarioService {
 
     // Se estiver atualizando o email, verificar se já existe
     if (updateUsuarioDto.email && updateUsuarioDto.email !== usuario.email) {
-      const emailExistente = await this.usuarioRepository.findOne({
+      const usuarioExistente = await this.usuarioRepository.findOne({
         where: { email: updateUsuarioDto.email },
       });
 
-      if (emailExistente) {
+      if (usuarioExistente) {
         throw new ConflictException('Email já cadastrado');
       }
     }
