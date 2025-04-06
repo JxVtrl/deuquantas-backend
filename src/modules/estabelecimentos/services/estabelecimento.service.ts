@@ -89,7 +89,7 @@ export class EstabelecimentoService {
 
   async findByUsuarioId(usuarioId: string): Promise<Estabelecimento> {
     console.log('🔍 Buscando estabelecimento para o usuário:', usuarioId);
-    
+
     const estabelecimento = await this.estabelecimentoRepository
       .createQueryBuilder('estabelecimento')
       .leftJoinAndSelect('estabelecimento.usuario', 'usuario')
