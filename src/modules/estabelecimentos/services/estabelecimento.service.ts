@@ -130,7 +130,9 @@ export class EstabelecimentoService {
     return !!estabelecimento;
   }
 
-  async getEstabelecimentoByUsuarioId(usuarioId: string): Promise<Estabelecimento> {
+  async getEstabelecimentoByUsuarioId(
+    usuarioId: string,
+  ): Promise<Estabelecimento> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
       where: { usuario: { id: usuarioId } },
       relations: ['usuario'],
