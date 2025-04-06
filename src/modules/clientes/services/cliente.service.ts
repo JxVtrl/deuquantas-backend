@@ -15,15 +15,15 @@ export class ClienteService {
     return this.clienteRepository.find();
   }
 
-  async getClienteByCpf(numCpf: string): Promise<Cliente | null> {
-    return this.clienteRepository.findOne({ where: { numCpf } });
+  async getClienteByCpf(num_cpf: string): Promise<Cliente | null> {
+    return this.clienteRepository.findOne({ where: { num_cpf } });
   }
 
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
     const newCliente = this.clienteRepository.create({
-      numCpf: dto.numCpf,
-      numCelular: dto.numCelular,
-      dataNascimento: dto.dataNascimento,
+      num_cpf: dto.num_cpf,
+      num_celular: dto.num_celular,
+      data_nascimento: dto.data_nascimento,
       endereco: dto.endereco,
       numero: dto.numero,
       complemento: dto.complemento,
@@ -31,7 +31,7 @@ export class ClienteService {
       cidade: dto.cidade,
       estado: dto.estado,
       cep: dto.cep,
-      isAtivo: dto.isAtivo,
+      is_ativo: dto.is_ativo,
       usuario: dto.usuario,
     });
 
@@ -51,9 +51,9 @@ export class ClienteService {
     return cliente;
   }
 
-  async findByCPF(numCpf: string): Promise<Cliente> {
+  async findByCPF(num_cpf: string): Promise<Cliente> {
     const cliente = await this.clienteRepository.findOne({
-      where: { numCpf },
+      where: { num_cpf },
     });
 
     if (!cliente) {
@@ -63,9 +63,9 @@ export class ClienteService {
     return cliente;
   }
 
-  async findByPhone(numCelular: string): Promise<Cliente> {
+  async findByPhone(num_celular: string): Promise<Cliente> {
     const cliente = await this.clienteRepository.findOne({
-      where: { numCelular },
+      where: { num_celular },
     });
 
     if (!cliente) {

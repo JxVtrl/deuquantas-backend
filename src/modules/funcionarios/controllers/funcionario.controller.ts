@@ -17,9 +17,9 @@ export class FuncionarioController {
   }
 
   @Roles('gerente')
-  @Get(':numCpf')
-  async getFuncionarioByCpf(@Param('numCpf') numCpf: string) {
-    return this.funcionarioService.getFuncionarioByCpf(numCpf);
+  @Get(':num_cpf')
+  async getFuncionarioByCpf(@Param('num_cpf') num_cpf: string) {
+    return this.funcionarioService.getFuncionarioByCpf(num_cpf);
   }
 
   @Roles('gerente')

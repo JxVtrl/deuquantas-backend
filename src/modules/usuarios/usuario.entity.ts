@@ -24,16 +24,16 @@ export class Usuario {
   password: string;
 
   @Column({ default: false })
-  isAdmin: boolean;
+  is_admin: boolean;
 
   @Column({ default: true })
-  isAtivo: boolean;
+  is_ativo: boolean;
 
   @CreateDateColumn()
-  dataCriacao: Date;
+  data_criacao: Date;
 
   @UpdateDateColumn()
-  dataAtualizacao: Date;
+  data_atualizacao: Date;
 
   @OneToOne(() => Cliente, (cliente) => cliente.usuario, { nullable: true })
   cliente: Cliente;

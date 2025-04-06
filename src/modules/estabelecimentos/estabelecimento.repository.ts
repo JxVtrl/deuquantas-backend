@@ -14,17 +14,17 @@ export class EstabelecimentoRepository {
     return this.repository.find();
   }
 
-  async findByNome(nomeEstab: string): Promise<Estabelecimento | null> {
-    return this.repository.findOne({ where: { nomeEstab } });
+  async findByNome(nome_estab: string): Promise<Estabelecimento | null> {
+    return this.repository.findOne({ where: { nome_estab } });
   }
 
-  async findByNumCelular(numCelular: string): Promise<Estabelecimento | null> {
-    return this.repository.findOne({ where: { numCelular } });
+  async findByNumCelular(num_celular: string): Promise<Estabelecimento | null> {
+    return this.repository.findOne({ where: { num_celular } });
   }
 
-  async findByNumCnpj(numCnpj: string): Promise<Estabelecimento | null> {
+  async findByNumCnpj(num_cnpj: string): Promise<Estabelecimento | null> {
     return this.repository.findOne({
-      where: { numCnpj },
+      where: { num_cnpj },
     });
   }
 }

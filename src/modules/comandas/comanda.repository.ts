@@ -14,7 +14,7 @@ export class ComandaRepository {
     return this.repository.find();
   }
 
-  async findByCpf(numCpf: string): Promise<Comanda | null> {
-    return this.repository.findOne({ where: { numCpf } });
+  async findByCpf(num_cpf: string): Promise<Comanda | null> {
+    return this.repository.findOne({ where: { num_cpf } });
   }
 }

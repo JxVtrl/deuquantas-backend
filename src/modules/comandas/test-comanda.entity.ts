@@ -3,10 +3,10 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 @Entity('test_comandas')
 export class TestComanda {
   @PrimaryColumn({ type: 'varchar', length: 11 })
-  numCpf: string;
+  num_cpf: string;
 
   @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCnpj: string;
+  num_cnpj: string;
 
   @Column({ type: 'varchar', length: 4 })
   numMesa: string;

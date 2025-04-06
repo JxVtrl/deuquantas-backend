@@ -14,16 +14,16 @@ export class ClienteRepository {
     return this.repository.find();
   }
 
-  async findByCpf(numCpf: string): Promise<Cliente | null> {
+  async findByCpf(num_cpf: string): Promise<Cliente | null> {
     return this.repository.findOne({
-      where: { numCpf },
+      where: { num_cpf },
       relations: ['usuario'],
     });
   }
 
-  async findByNumCelular(numCelular: string): Promise<Cliente | null> {
+  async findByNumCelular(num_celular: string): Promise<Cliente | null> {
     return this.repository.findOne({
-      where: { numCelular },
+      where: { num_celular },
       relations: ['usuario'],
     });
   }

@@ -4,13 +4,13 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 @Entity('contas')
 export class Conta {
   @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCnpj: string;
+  num_cnpj: string;
 
   @PrimaryColumn({ type: 'varchar', length: 4 })
   numMesa: string;
 
   @Column({ type: 'varchar', length: 11 })
-  numCpf: string;
+  num_cpf: string;
 
   @Column({ type: 'timestamp' })
   datConta: Date;

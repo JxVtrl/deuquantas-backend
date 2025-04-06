@@ -15,8 +15,8 @@ export class ContaService {
     return this.contaRepository.find();
   }
 
-  async getContaByCpf(numCpf: string): Promise<Conta[]> {
-    return this.contaRepository.find({ where: { numCpf } });
+  async getContaByCpf(num_cpf: string): Promise<Conta[]> {
+    return this.contaRepository.find({ where: { num_cpf } });
   }
 
   async createConta(dto: CreateContaDto): Promise<Conta> {

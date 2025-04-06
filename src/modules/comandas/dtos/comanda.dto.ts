@@ -2,10 +2,10 @@ import { IsString, IsDateString, IsNumber } from 'class-validator';
 
 export class CreateComandaDto {
   @IsString()
-  numCpf: string;
+  num_cpf: string;
 
   @IsString()
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
   numMesa: string;

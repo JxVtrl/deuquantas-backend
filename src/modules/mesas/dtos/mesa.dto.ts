@@ -3,7 +3,7 @@ import { IsString, IsNumber, Length } from 'class-validator';
 export class CreateMesaDto {
   @IsString()
   @Length(14, 14)
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
   @Length(4, 4)

@@ -13,19 +13,19 @@ import { Usuario } from '../usuarios/usuario.entity';
 @Entity('estabelecimentos')
 export class Estabelecimento {
   @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCnpj: string;
+  num_cnpj: string;
 
   @Column({ type: 'varchar', length: 100, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 20 })
-  numCelular: string;
+  num_celular: string;
 
   @Column({ type: 'varchar', length: 100 })
-  nomeEstab: string;
+  nome_estab: string;
 
   @Column({ type: 'varchar', length: 100 })
-  razaoSocial: string;
+  razao_social: string;
 
   @Column({ type: 'varchar', length: 100 })
   endereco: string;
@@ -49,13 +49,13 @@ export class Estabelecimento {
   cep: string;
 
   @Column({ type: 'boolean', default: true })
-  isAtivo: boolean;
+  is_ativo: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  dataCriacao: Date;
+  data_criacao: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  dataAtualizacao: Date;
+  data_atualizacao: Date;
 
   @Column({ type: 'text', nullable: true })
   imgLogo: string;

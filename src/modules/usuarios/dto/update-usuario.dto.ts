@@ -24,11 +24,11 @@ export class UpdateUsuarioDto {
 
   @IsOptional()
   @IsBoolean()
-  isAdmin?: boolean;
+  is_admin?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  isAtivo?: boolean;
+  is_ativo?: boolean;
 
   @IsOptional()
   cliente?: Cliente;

@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsOptional, IsDecimal } from 'class-validator';
 
 export class CreateCardapioDto {
   @IsString()
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
   numOrdem: string;

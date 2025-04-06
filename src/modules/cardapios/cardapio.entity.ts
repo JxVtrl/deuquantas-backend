@@ -5,7 +5,7 @@ import { Item } from '../itens/item.entity';
 @Entity('cardapios')
 export class Cardapio {
   @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCnpj: string;
+  num_cnpj: string;
 
   @PrimaryColumn({ type: 'varchar', length: 3 })
   numOrdem: string;
@@ -25,6 +25,6 @@ export class Cardapio {
     () => Estabelecimento,
     (estabelecimento) => estabelecimento.cardapios,
   )
-  @JoinColumn({ name: 'numCnpj' }) // Liga a chave estrangeira numCnpj com Estabelecimento
+  @JoinColumn({ name: 'num_cnpj' }) // Liga a chave estrangeira num_cnpj com Estabelecimento
   estabelecimento: Estabelecimento;
 }

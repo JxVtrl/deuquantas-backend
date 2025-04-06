@@ -14,7 +14,7 @@ export class FuncionarioRepository {
     return this.repository.find();
   }
 
-  async findByCpf(numCpf: string): Promise<Funcionario | null> {
-    return this.repository.findOne({ where: { numCpf } });
+  async findByCpf(num_cpf: string): Promise<Funcionario | null> {
+    return this.repository.findOne({ where: { num_cpf } });
   }
 }

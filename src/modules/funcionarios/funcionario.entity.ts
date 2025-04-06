@@ -4,10 +4,10 @@ import { Entity, PrimaryColumn, Column } from 'typeorm';
 @Entity('funcionarios')
 export class Funcionario {
   @PrimaryColumn({ type: 'varchar', length: 14 })
-  numCnpj: string;
+  num_cnpj: string;
 
   @PrimaryColumn({ type: 'varchar', length: 11 })
-  numCpf: string;
+  num_cpf: string;
 
   @Column({ type: 'varchar', length: 30 })
   nomeFunci: string;

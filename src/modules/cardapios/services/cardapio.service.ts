@@ -15,8 +15,8 @@ export class CardapioService {
     return this.cardapioRepository.find();
   }
 
-  async getCardapioByCnpj(numCnpj: string): Promise<Cardapio[]> {
-    return this.cardapioRepository.find({ where: { numCnpj } });
+  async getCardapioByCnpj(num_cnpj: string): Promise<Cardapio[]> {
+    return this.cardapioRepository.find({ where: { num_cnpj } });
   }
 
   async createCardapio(dto: CreateCardapioDto): Promise<Cardapio> {

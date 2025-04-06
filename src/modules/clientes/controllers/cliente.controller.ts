@@ -23,12 +23,12 @@ export class ClienteController {
     return this.clienteService.getAllClientes();
   }
 
-  @Get(':numCpf')
+  @Get(':num_cpf')
   @UseGuards(AuthGuard)
   @ApiBearerAuth() // 🔒 Adiciona autenticação no método
   @ApiOperation({ summary: 'Busca cliente por CPF (Requer autenticação)' })
-  async getClienteByCpf(@Param('numCpf') numCpf: string) {
-    return await this.clienteService.findByCPF(numCpf);
+  async getClienteByCpf(@Param('num_cpf') num_cpf: string) {
+    return await this.clienteService.findByCPF(num_cpf);
   }
 
   @Get('usuario/:usuarioId')
@@ -56,12 +56,12 @@ export class ClienteController {
     }
   }
 
-  @Get('check-cpf/:numCpf')
+  @Get('check-cpf/:num_cpf')
   async checkCPF(
-    @Param('numCpf') numCpf: string,
+    @Param('num_cpf') num_cpf: string,
   ): Promise<{ exists: boolean }> {
     try {
-      await this.clienteService.findByCPF(numCpf);
+      await this.clienteService.findByCPF(num_cpf);
       return { exists: true };
     } catch (error) {
       console.error('Erro ao verificar CPF:', error);
@@ -69,12 +69,12 @@ export class ClienteController {
     }
   }
 
-  @Get('check-phone/:numCelular')
+  @Get('check-phone/:num_celular')
   async checkPhone(
-    @Param('numCelular') numCelular: string,
+    @Param('num_celular') num_celular: string,
   ): Promise<{ exists: boolean }> {
     try {
-      await this.clienteService.findByPhone(numCelular);
+      await this.clienteService.findByPhone(num_celular);
       return { exists: true };
     } catch (error) {
       console.error('Erro ao verificar número de celular:', error);

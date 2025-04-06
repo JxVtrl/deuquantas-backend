@@ -14,9 +14,9 @@ export class CardapioRepository {
     return this.repository.find({ relations: ['estabelecimento', 'item'] });
   }
 
-  async findByNomeRestaurante(nomeEstab: string): Promise<Cardapio[]> {
+  async findByNomeRestaurante(nome_estab: string): Promise<Cardapio[]> {
     return this.repository.find({
-      where: { estabelecimento: { nomeEstab } },
+      where: { estabelecimento: { nome_estab } },
       relations: ['estabelecimento', 'item'],
     });
   }

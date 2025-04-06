@@ -15,8 +15,8 @@ export class TestComandaService {
     return this.testComandaRepository.find();
   }
 
-  async getTestComandaByCpf(numCpf: string): Promise<TestComanda[]> {
-    return this.testComandaRepository.find({ where: { numCpf } });
+  async getTestComandaByCpf(num_cpf: string): Promise<TestComanda[]> {
+    return this.testComandaRepository.find({ where: { num_cpf } });
   }
 
   async createTestComanda(dto: CreateComandaDto): Promise<TestComanda> {

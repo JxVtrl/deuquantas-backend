@@ -15,13 +15,13 @@ export class Cliente {
   id: string;
 
   @Column({ name: 'num_cpf', unique: true })
-  numCpf: string;
+  num_cpf: string;
 
   @Column({ name: 'num_celular' })
-  numCelular: string;
+  num_celular: string;
 
   @Column({ name: 'data_nascimento' })
-  dataNascimento: Date;
+  data_nascimento: Date;
 
   @Column()
   endereco: string;
@@ -45,7 +45,7 @@ export class Cliente {
   cep: string;
 
   @Column({ type: 'boolean', default: true })
-  isAtivo: boolean;
+  is_ativo: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

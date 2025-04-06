@@ -23,18 +23,18 @@ export class EstabelecimentoController {
     return this.estabelecimentoService.getAllEstabelecimentos();
   }
 
-  @Get(':numCnpj')
+  @Get(':num_cnpj')
   @UseGuards(AuthGuard)
-  async getEstabelecimentoByCnpj(@Param('numCnpj') numCnpj: string) {
-    return this.estabelecimentoService.getEstabelecimentoByCnpj(numCnpj);
+  async getEstabelecimentoByCnpj(@Param('num_cnpj') num_cnpj: string) {
+    return this.estabelecimentoService.getEstabelecimentoByCnpj(num_cnpj);
   }
 
-  @Get('check-cnpj/:numCnpj')
+  @Get('check-cnpj/:num_cnpj')
   async checkCNPJ(
-    @Param('numCnpj') numCnpj: string,
+    @Param('num_cnpj') num_cnpj: string,
   ): Promise<{ exists: boolean }> {
     try {
-      await this.estabelecimentoService.findByCNPJ(numCnpj);
+      await this.estabelecimentoService.findByCNPJ(num_cnpj);
       return { exists: true };
     } catch (error) {
       console.error('Erro ao verificar CNPJ:', error);
@@ -73,10 +73,10 @@ export class EstabelecimentoController {
     );
   }
 
-  @Get('check-phone/:numCelular')
-  async checkPhoneExists(@Param('numCelular') numCelular: string) {
+  @Get('check-phone/:num_celular')
+  async checkPhoneExists(@Param('num_celular') num_celular: string) {
     const exists =
-      await this.estabelecimentoService.checkPhoneExists(numCelular);
+      await this.estabelecimentoService.checkPhoneExists(num_celular);
     return { exists };
   }
 

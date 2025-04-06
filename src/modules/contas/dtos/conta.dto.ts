@@ -2,13 +2,13 @@ import { IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateContaDto {
   @IsString()
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
   numMesa: string;
 
   @IsString()
-  numCpf: string;
+  num_cpf: string;
 
   @IsDateString()
   datConta: string;

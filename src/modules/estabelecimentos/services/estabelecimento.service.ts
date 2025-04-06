@@ -63,9 +63,9 @@ export class EstabelecimentoService {
   }
 
   async getEstabelecimentoByCnpj(
-    numCnpj: string,
+    num_cnpj: string,
   ): Promise<Estabelecimento | null> {
-    return this.estabelecimentoRepository.findOne({ where: { numCnpj } });
+    return this.estabelecimentoRepository.findOne({ where: { num_cnpj } });
   }
 
   async createEstabelecimento(
@@ -75,9 +75,9 @@ export class EstabelecimentoService {
     return this.estabelecimentoRepository.save(newEstabelecimento);
   }
 
-  async findByCNPJ(numCnpj: string): Promise<Estabelecimento> {
+  async findByCNPJ(num_cnpj: string): Promise<Estabelecimento> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { numCnpj },
+      where: { num_cnpj },
     });
 
     if (!estabelecimento) {
@@ -119,9 +119,9 @@ export class EstabelecimentoService {
     return estabelecimento;
   }
 
-  async checkPhoneExists(numCelular: string): Promise<boolean> {
+  async checkPhoneExists(num_celular: string): Promise<boolean> {
     const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { numCelular },
+      where: { num_celular },
     });
 
     return !!estabelecimento;

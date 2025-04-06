@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
     }
 
     // Verifica se o usuário é admin quando o role 'admin' é requerido
-    if (roles.includes('admin') && user.isAdmin) {
+    if (roles.includes('admin') && user.is_admin) {
       return true;
     }
 

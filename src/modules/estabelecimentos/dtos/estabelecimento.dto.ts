@@ -9,19 +9,19 @@ import {
 export class CreateEstabelecimentoDto {
   @IsString()
   @Length(14, 14)
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsEmail()
   email: string;
 
   @IsString()
-  numCelular: string;
+  num_celular: string;
 
   @IsString()
-  nomeEstab: string;
+  nome_estab: string;
 
   @IsString()
-  razaoSocial: string;
+  razao_social: string;
 
   @IsString()
   endereco: string;
@@ -49,7 +49,7 @@ export class CreateEstabelecimentoDto {
 
   @IsBoolean()
   @IsOptional()
-  isAtivo?: boolean;
+  is_ativo?: boolean;
 
   @IsString()
   @IsOptional()

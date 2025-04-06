@@ -54,7 +54,7 @@ export class AuthService {
       sub: user.id,
       permission_level:
         user.permission_level ||
-        (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+        (user.is_admin ? 1 : user.estabelecimento ? 2 : 3),
       hasCliente: !!user.cliente,
       hasEstabelecimento: !!user.estabelecimento,
     };
@@ -66,17 +66,17 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
-        dataCriacao: user.dataCriacao,
-        dataAtualizacao: user.dataAtualizacao,
+        data_criacao: user.data_criacao,
+        data_atualizacao: user.data_atualizacao,
         permission_level:
           user.permission_level ||
-          (user.isAdmin ? 1 : user.estabelecimento ? 2 : 3),
+          (user.is_admin ? 1 : user.estabelecimento ? 2 : 3),
         ...(user.cliente && {
           cliente: {
             id: user.cliente.id,
-            numCpf: user.cliente.numCpf,
-            numCelular: user.cliente.numCelular,
-            dataNascimento: user.cliente.dataNascimento,
+            num_cpf: user.cliente.num_cpf,
+            num_celular: user.cliente.num_celular,
+            data_nascimento: user.cliente.data_nascimento,
             endereco: user.cliente.endereco,
             numero: user.cliente.numero,
             complemento: user.cliente.complemento,
@@ -88,10 +88,10 @@ export class AuthService {
         }),
         ...(user.estabelecimento && {
           estabelecimento: {
-            numCnpj: user.estabelecimento.numCnpj,
-            numCelular: user.estabelecimento.numCelular,
-            nomeEstab: user.estabelecimento.nomeEstab,
-            razaoSocial: user.estabelecimento.razaoSocial,
+            num_cnpj: user.estabelecimento.num_cnpj,
+            num_celular: user.estabelecimento.num_celular,
+            nome_estab: user.estabelecimento.nome_estab,
+            razao_social: user.estabelecimento.razao_social,
             endereco: user.estabelecimento.endereco,
             numero: user.estabelecimento.numero,
             complemento: user.estabelecimento.complemento,
@@ -100,7 +100,7 @@ export class AuthService {
             estado: user.estabelecimento.estado,
             cep: user.estabelecimento.cep,
             imgLogo: user.estabelecimento.imgLogo,
-            isAtivo: user.estabelecimento.isAtivo,
+            is_ativo: user.estabelecimento.is_ativo,
             status: user.estabelecimento.status,
           },
         }),
@@ -118,9 +118,9 @@ export class AuthService {
   async register(createUsuarioClienteDto: CreateUsuarioClienteDto) {
     // Primeiro cria o usuário com dados básicos
     const {
-      numCpf,
-      numCelular,
-      dataNascimento,
+      num_cpf,
+      num_celular,
+      data_nascimento,
       endereco,
       numero,
       complemento,
@@ -140,9 +140,9 @@ export class AuthService {
       const createClienteDto: CreateClienteDto = {
         name: usuarioData.name,
         email: usuarioData.email,
-        numCpf,
-        numCelular,
-        dataNascimento,
+        num_cpf,
+        num_celular,
+        data_nascimento,
         endereco,
         numero,
         complemento,
@@ -150,7 +150,7 @@ export class AuthService {
         cidade,
         estado,
         cep,
-        isAtivo: true,
+        is_ativo: true,
         usuario: usuario, // Associando o usuário ao cliente
       };
 
@@ -176,14 +176,14 @@ export class AuthService {
           id: usuario.id,
           email: usuario.email,
           name: usuario.name,
-          dataCriacao: usuario.dataCriacao,
-          dataAtualizacao: usuario.dataAtualizacao,
+          data_criacao: usuario.data_criacao,
+          data_atualizacao: usuario.data_atualizacao,
           permission_level: 3,
           cliente: {
             id: cliente.id,
-            numCpf: cliente.numCpf,
-            numCelular: cliente.numCelular,
-            dataNascimento: cliente.dataNascimento,
+            num_cpf: cliente.num_cpf,
+            num_celular: cliente.num_celular,
+            data_nascimento: cliente.data_nascimento,
             endereco: cliente.endereco,
             numero: cliente.numero,
             complemento: cliente.complemento,
@@ -253,10 +253,10 @@ export class AuthService {
   ) {
     // Primeiro cria o usuário com dados básicos
     const {
-      numCnpj,
-      numCelular,
-      nomeEstab,
-      razaoSocial,
+      num_cnpj,
+      num_celular,
+      nome_estab,
+      razao_social,
       endereco,
       numero,
       complemento,
@@ -273,15 +273,15 @@ export class AuthService {
       const usuario = await this.usuarioService.create(usuarioData);
 
       // Remove formatação do CNPJ
-      const cnpjSemFormatacao = numCnpj.replace(/\D/g, '');
+      const cnpjSemFormatacao = num_cnpj.replace(/\D/g, '');
 
       // Depois cria o estabelecimento com os dados específicos
       const createEstabelecimentoDto: CreateEstabelecimentoDto = {
-        numCnpj: cnpjSemFormatacao,
+        num_cnpj: cnpjSemFormatacao,
         email: usuarioData.email,
-        numCelular,
-        nomeEstab,
-        razaoSocial,
+        num_celular,
+        nome_estab,
+        razao_social,
         endereco,
         numero,
         complemento,
@@ -290,7 +290,7 @@ export class AuthService {
         estado,
         cep,
         imgLogo,
-        isAtivo: true,
+        is_ativo: true,
         usuario: usuario, // Associando o usuário ao estabelecimento
       };
 
@@ -319,14 +319,14 @@ export class AuthService {
           id: usuario.id,
           email: usuario.email,
           name: usuario.name,
-          dataCriacao: usuario.dataCriacao,
-          dataAtualizacao: usuario.dataAtualizacao,
+          data_criacao: usuario.data_criacao,
+          data_atualizacao: usuario.data_atualizacao,
           permission_level: 2,
           estabelecimento: {
-            numCnpj: estabelecimento.numCnpj,
-            numCelular: estabelecimento.numCelular,
-            nomeEstab: estabelecimento.nomeEstab,
-            razaoSocial: estabelecimento.razaoSocial,
+            num_cnpj: estabelecimento.num_cnpj,
+            num_celular: estabelecimento.num_celular,
+            nome_estab: estabelecimento.nome_estab,
+            razao_social: estabelecimento.razao_social,
             endereco: estabelecimento.endereco,
             numero: estabelecimento.numero,
             complemento: estabelecimento.complemento,
@@ -335,7 +335,7 @@ export class AuthService {
             estado: estabelecimento.estado,
             cep: estabelecimento.cep,
             imgLogo: estabelecimento.imgLogo,
-            isAtivo: estabelecimento.isAtivo,
+            is_ativo: estabelecimento.is_ativo,
             status: estabelecimento.status,
           },
         },

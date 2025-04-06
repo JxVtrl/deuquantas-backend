@@ -3,11 +3,11 @@ import { IsString, IsNumber, Length, IsDateString } from 'class-validator';
 export class CreateFuncionarioDto {
   @IsString()
   @Length(14, 14)
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
   @Length(11, 11)
-  numCpf: string;
+  num_cpf: string;
 
   @IsString()
   nomeFunci: string;

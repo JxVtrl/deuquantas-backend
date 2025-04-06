@@ -15,8 +15,8 @@ export class FuncionarioService {
     return this.funcionarioRepository.find();
   }
 
-  async getFuncionarioByCpf(numCpf: string): Promise<Funcionario | null> {
-    return this.funcionarioRepository.findOne({ where: { numCpf } });
+  async getFuncionarioByCpf(num_cpf: string): Promise<Funcionario | null> {
+    return this.funcionarioRepository.findOne({ where: { num_cpf } });
   }
 
   async createFuncionario(dto: CreateFuncionarioDto): Promise<Funcionario> {

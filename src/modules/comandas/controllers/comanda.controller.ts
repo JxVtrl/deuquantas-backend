@@ -22,15 +22,15 @@ export class ComandaController {
     return this.testComandaService.getAllTestComandas();
   }
 
-  @Get(':numCpf')
+  @Get(':num_cpf')
   @UseGuards(AuthGuard)
-  async getComandaByCpf(@Param('numCpf') numCpf: string) {
-    return this.comandaService.getComandaByCpf(numCpf);
+  async getComandaByCpf(@Param('num_cpf') num_cpf: string) {
+    return this.comandaService.getComandaByCpf(num_cpf);
   }
 
-  @Get('test/:numCpf')
-  async getTestComandaByCpf(@Param('numCpf') numCpf: string) {
-    return this.testComandaService.getTestComandaByCpf(numCpf);
+  @Get('test/:num_cpf')
+  async getTestComandaByCpf(@Param('num_cpf') num_cpf: string) {
+    return this.testComandaService.getTestComandaByCpf(num_cpf);
   }
 
   @Post()

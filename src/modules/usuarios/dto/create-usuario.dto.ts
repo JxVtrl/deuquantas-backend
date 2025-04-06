@@ -26,20 +26,20 @@ export class CreateUsuarioDto {
 
   @IsOptional()
   @IsBoolean()
-  isAdmin?: boolean;
+  is_admin?: boolean;
 }
 
 export class CreateUsuarioClienteDto extends CreateUsuarioDto {
   @IsString()
   @Length(11, 14)
-  numCpf: string;
+  num_cpf: string;
 
   @IsString()
-  numCelular: string;
+  num_celular: string;
 
   @Transform(({ value }) => new Date(value))
   @IsDate()
-  dataNascimento: Date;
+  data_nascimento: Date;
 
   @IsString()
   endereco: string;
@@ -69,16 +69,16 @@ export class CreateUsuarioClienteDto extends CreateUsuarioDto {
 export class CreateUsuarioEstabelecimentoDto extends CreateUsuarioDto {
   @IsString()
   @Length(14, 14)
-  numCnpj: string;
+  num_cnpj: string;
 
   @IsString()
-  numCelular: string;
+  num_celular: string;
 
   @IsString()
-  nomeEstab: string;
+  nome_estab: string;
 
   @IsString()
-  razaoSocial: string;
+  razao_social: string;
 
   @IsString()
   endereco: string;

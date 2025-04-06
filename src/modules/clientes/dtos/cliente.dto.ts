@@ -13,7 +13,7 @@ import { Usuario } from '../../usuarios/usuario.entity';
 export class CreateClienteDto {
   @IsString()
   @Length(11, 14)
-  numCpf: string;
+  num_cpf: string;
 
   @IsString()
   name: string;
@@ -22,7 +22,7 @@ export class CreateClienteDto {
   email: string;
 
   @IsString()
-  numCelular: string;
+  num_celular: string;
 
   @Transform(({ value }) => {
     if (!value) return null;
@@ -30,7 +30,7 @@ export class CreateClienteDto {
     return isNaN(date.getTime()) ? null : date;
   })
   @IsDate()
-  dataNascimento: Date;
+  data_nascimento: Date;
 
   @IsString()
   endereco: string;
@@ -58,7 +58,7 @@ export class CreateClienteDto {
 
   @IsBoolean()
   @IsOptional()
-  isAtivo?: boolean;
+  is_ativo?: boolean;
 
   @IsObject()
   @IsOptional()

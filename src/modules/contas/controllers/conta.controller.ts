@@ -13,9 +13,9 @@ export class ContaController {
     return this.contaService.getAllContas();
   }
 
-  @Get(':numCpf')
-  async getContaByCpf(@Param('numCpf') numCpf: string) {
-    return this.contaService.getContaByCpf(numCpf);
+  @Get(':num_cpf')
+  async getContaByCpf(@Param('num_cpf') num_cpf: string) {
+    return this.contaService.getContaByCpf(num_cpf);
   }
 
   @Post()

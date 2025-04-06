@@ -40,4 +40,4 @@ export class PreferenciasUsuarioService {
     Object.assign(preferencias, updateDto);
     return this.preferenciasRepository.save(preferencias);
   }
-} 
+}
