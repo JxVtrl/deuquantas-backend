@@ -23,6 +23,12 @@ export class EstabelecimentoController {
     return this.estabelecimentoService.getAllEstabelecimentos();
   }
 
+  @Get('usuario/:usuarioId')
+  @UseGuards(AuthGuard)
+  async getEstabelecimentoByUsuarioId(@Param('usuarioId') usuarioId: string) {
+    return this.estabelecimentoService.getEstabelecimentoByUsuarioId(usuarioId);
+  }
+
   @Get(':num_cnpj')
   @UseGuards(AuthGuard)
   async getEstabelecimentoByCnpj(@Param('num_cnpj') num_cnpj: string) {
@@ -78,11 +84,5 @@ export class EstabelecimentoController {
     const exists =
       await this.estabelecimentoService.checkPhoneExists(num_celular);
     return { exists };
-  }
-
-  @Get('usuario/:usuarioId')
-  @UseGuards(AuthGuard)
-  async getEstabelecimentoByUsuarioId(@Param('usuarioId') usuarioId: string) {
-    return this.estabelecimentoService.findByUsuarioId(usuarioId);
   }
 }

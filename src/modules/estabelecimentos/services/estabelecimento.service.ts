@@ -65,7 +65,10 @@ export class EstabelecimentoService {
   async getEstabelecimentoByCnpj(
     num_cnpj: string,
   ): Promise<Estabelecimento | null> {
-    return this.estabelecimentoRepository.findOne({ where: { num_cnpj } });
+    return this.estabelecimentoRepository.findOne({
+      where: { num_cnpj },
+      relations: ['usuario'],
+    });
   }
 
   async createEstabelecimento(
@@ -125,5 +128,18 @@ export class EstabelecimentoService {
     });
 
     return !!estabelecimento;
+  }
+
+  async getEstabelecimentoByUsuarioId(usuarioId: string): Promise<Estabelecimento> {
+    const estabelecimento = await this.estabelecimentoRepository.findOne({
+      where: { usuario: { id: usuarioId } },
+      relations: ['usuario'],
+    });
+
+    if (!estabelecimento) {
+      throw new NotFoundException('Estabelecimento não encontrado');
+    }
+
+    return estabelecimento;
   }
 }

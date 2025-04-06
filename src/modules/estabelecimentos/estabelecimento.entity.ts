@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Cardapio } from '../cardapios/cardapio.entity';
 import { Usuario } from '../usuarios/usuario.entity';
+import { Mesa } from '../mesas/mesa.entity';
 
 // Estabelecimento Entity
 @Entity('estabelecimentos')
@@ -75,4 +76,7 @@ export class Estabelecimento {
   @OneToOne(() => Usuario, { eager: true })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
+
+  @OneToMany(() => Mesa, (mesa) => mesa.estabelecimento, { lazy: true })
+  mesas: Promise<Mesa[]>;
 }
