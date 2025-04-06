@@ -28,7 +28,13 @@ export class ClienteController {
   @ApiBearerAuth() // 🔒 Adiciona autenticação no método
   @ApiOperation({ summary: 'Busca cliente por CPF (Requer autenticação)' })
   async getClienteByCpf(@Param('numCpf') numCpf: string) {
-    return this.clienteService.getClienteByCpf(numCpf);
+    return await this.clienteService.findByCPF(numCpf);
+  }
+
+  @Get('usuario/:usuarioId')
+  @UseGuards(AuthGuard)
+  async getClienteByUsuarioId(@Param('usuarioId') usuarioId: string) {
+    return await this.clienteService.findByUsuarioId(usuarioId);
   }
 
   @Post()

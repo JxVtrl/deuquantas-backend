@@ -79,4 +79,10 @@ export class EstabelecimentoController {
       await this.estabelecimentoService.checkPhoneExists(numCelular);
     return { exists };
   }
+
+  @Get('usuario/:usuarioId')
+  @UseGuards(AuthGuard)
+  async getEstabelecimentoByUsuarioId(@Param('usuarioId') usuarioId: string) {
+    return this.estabelecimentoService.findByUsuarioId(usuarioId);
+  }
 }
