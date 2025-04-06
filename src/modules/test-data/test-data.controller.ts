@@ -9,4 +9,4 @@ export class TestDataController {
   async createTestUsers() {
     return this.testDataService.createTestUsers();
   }
-} 
+}
