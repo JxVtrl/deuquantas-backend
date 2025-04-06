@@ -12,7 +12,6 @@ import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
 import { Usuario } from '../usuario.entity';
 import { AuthGuard } from '../../../auth/auth.guard';
-import { Roles } from '../../../auth/roles.decorator';
 
 @Controller('usuarios')
 export class UsuarioController {
@@ -27,7 +26,6 @@ export class UsuarioController {
 
   @Get()
   @UseGuards(AuthGuard)
-  @Roles('admin')
   async findAll(): Promise<Usuario[]> {
     return this.usuarioService.findAll();
   }
