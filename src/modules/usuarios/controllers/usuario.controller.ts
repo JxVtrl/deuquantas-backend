@@ -24,7 +24,9 @@ export class UsuarioController {
   async create(
     @Body() createUsuarioDto: CreateUsuarioDto,
   ): Promise<Omit<Usuario, 'password'>> {
-    this.logger.log(`Criando novo usuário com email: ${createUsuarioDto.email}`);
+    this.logger.log(
+      `Criando novo usuário com email: ${createUsuarioDto.email}`,
+    );
     const usuario = await this.usuarioService.create(createUsuarioDto);
     this.logger.log(`Usuário criado com sucesso. ID: ${usuario.id}`);
     return usuario;
@@ -59,7 +61,9 @@ export class UsuarioController {
   async findOne(@Param('id') id: string): Promise<Usuario> {
     this.logger.log(`Buscando usuário com ID: ${id}`);
     const usuario = await this.usuarioService.findById(id);
-    this.logger.log(`Usuário ${usuario ? 'encontrado' : 'não encontrado'} com ID: ${id}`);
+    this.logger.log(
+      `Usuário ${usuario ? 'encontrado' : 'não encontrado'} com ID: ${id}`,
+    );
     return usuario;
   }
 

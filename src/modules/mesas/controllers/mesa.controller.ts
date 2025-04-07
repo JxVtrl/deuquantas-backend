@@ -32,7 +32,9 @@ export class MesaController {
   async getMesasByEstabelecimento(@Param('cnpj') cnpj: string) {
     this.logger.log(`Buscando mesas do estabelecimento: ${cnpj}`);
     const mesas = await this.mesaService.getMesasByEstabelecimento(cnpj);
-    this.logger.log(`Encontradas ${mesas.length} mesas para o estabelecimento: ${cnpj}`);
+    this.logger.log(
+      `Encontradas ${mesas.length} mesas para o estabelecimento: ${cnpj}`,
+    );
     return mesas;
   }
 
@@ -40,15 +42,21 @@ export class MesaController {
   async getMesaByNumero(@Param('numMesa') numMesa: string) {
     this.logger.log(`Buscando mesa número: ${numMesa}`);
     const mesa = await this.mesaService.getMesaByNumero(numMesa);
-    this.logger.log(`Mesa ${mesa ? 'encontrada' : 'não encontrada'} com número: ${numMesa}`);
+    this.logger.log(
+      `Mesa ${mesa ? 'encontrada' : 'não encontrada'} com número: ${numMesa}`,
+    );
     return mesa;
   }
 
   @Post()
   async createMesa(@Body() createMesaDto: CreateMesaDto) {
-    this.logger.log(`Criando nova mesa para o estabelecimento: ${createMesaDto.num_cnpj}`);
+    this.logger.log(
+      `Criando nova mesa para o estabelecimento: ${createMesaDto.num_cnpj}`,
+    );
     const mesa = await this.mesaService.createMesa(createMesaDto);
-    this.logger.log(`Mesa criada com sucesso. Número: ${mesa.numMesa}, CNPJ: ${mesa.num_cnpj}`);
+    this.logger.log(
+      `Mesa criada com sucesso. Número: ${mesa.numMesa}, CNPJ: ${mesa.num_cnpj}`,
+    );
     return mesa;
   }
 
@@ -59,7 +67,9 @@ export class MesaController {
   ) {
     this.logger.log(`Atualizando mesa número: ${numMesa}`);
     const mesa = await this.mesaService.updateMesa(numMesa, updateMesaDto);
-    this.logger.log(`Mesa atualizada com sucesso. Número: ${mesa.numMesa}, CNPJ: ${mesa.num_cnpj}`);
+    this.logger.log(
+      `Mesa atualizada com sucesso. Número: ${mesa.numMesa}, CNPJ: ${mesa.num_cnpj}`,
+    );
     return mesa;
   }
 }

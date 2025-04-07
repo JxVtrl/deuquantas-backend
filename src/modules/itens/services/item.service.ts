@@ -23,15 +23,21 @@ export class ItemService {
   async getItemByCodigo(codItem: string): Promise<Item | null> {
     this.logger.log(`Buscando item com código: ${codItem} no banco de dados`);
     const item = await this.itemRepository.findOne({ where: { codItem } });
-    this.logger.log(`Item ${item ? 'encontrado' : 'não encontrado'} com código: ${codItem} no banco de dados`);
+    this.logger.log(
+      `Item ${item ? 'encontrado' : 'não encontrado'} com código: ${codItem} no banco de dados`,
+    );
     return item;
   }
 
   async createItem(dto: CreateItemDto): Promise<Item> {
-    this.logger.log(`Criando novo item com código: ${dto.codItem} no banco de dados`);
+    this.logger.log(
+      `Criando novo item com código: ${dto.codItem} no banco de dados`,
+    );
     const newItem = this.itemRepository.create(dto);
     const savedItem = await this.itemRepository.save(newItem);
-    this.logger.log(`Item criado com sucesso no banco de dados. Código: ${savedItem.codItem}`);
+    this.logger.log(
+      `Item criado com sucesso no banco de dados. Código: ${savedItem.codItem}`,
+    );
     return savedItem;
   }
 }

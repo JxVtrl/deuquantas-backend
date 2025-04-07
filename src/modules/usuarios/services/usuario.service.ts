@@ -23,7 +23,9 @@ export class UsuarioService {
   async create(
     createUsuarioDto: CreateUsuarioDto,
   ): Promise<Omit<Usuario, 'password'>> {
-    this.logger.log(`Criando novo usuário com email: ${createUsuarioDto.email}`);
+    this.logger.log(
+      `Criando novo usuário com email: ${createUsuarioDto.email}`,
+    );
 
     const { email, password } = createUsuarioDto;
 
@@ -114,7 +116,9 @@ export class UsuarioService {
 
     // Se estiver atualizando o email, verificar se já existe
     if (updateUsuarioDto.email && updateUsuarioDto.email !== usuario.email) {
-      this.logger.log(`Verificando se o novo email ${updateUsuarioDto.email} já está cadastrado`);
+      this.logger.log(
+        `Verificando se o novo email ${updateUsuarioDto.email} já está cadastrado`,
+      );
       const usuarioExistente = await this.usuarioRepository.findOne({
         where: { email: updateUsuarioDto.email },
       });

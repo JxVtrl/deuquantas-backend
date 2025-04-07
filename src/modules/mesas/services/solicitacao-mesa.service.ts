@@ -60,7 +60,9 @@ export class SolicitacaoMesaService
     data: { num_cnpj: string; numMesa: string; clienteId: string },
   ) {
     try {
-      this.logger.log(`Cliente ${client.id} solicitando mesa ${data.numMesa} do estabelecimento ${data.num_cnpj}`);
+      this.logger.log(
+        `Cliente ${client.id} solicitando mesa ${data.numMesa} do estabelecimento ${data.num_cnpj}`,
+      );
 
       const solicitacao = await this.solicitacaoMesaRepository.save({
         num_cnpj: data.num_cnpj,
@@ -73,11 +75,15 @@ export class SolicitacaoMesaService
 
       // Notificar o estabelecimento
       this.server.to(data.num_cnpj).emit('nova-solicitacao', solicitacao);
-      this.logger.log(`Estabelecimento ${data.num_cnpj} notificado sobre nova solicitação`);
+      this.logger.log(
+        `Estabelecimento ${data.num_cnpj} notificado sobre nova solicitação`,
+      );
 
       // Notificar o cliente
       client.emit('solicitacao-criada', solicitacao);
-      this.logger.log(`Cliente ${client.id} notificado sobre criação da solicitação`);
+      this.logger.log(
+        `Cliente ${client.id} notificado sobre criação da solicitação`,
+      );
 
       return solicitacao;
     } catch (error) {
@@ -114,14 +120,18 @@ export class SolicitacaoMesaService
         ...solicitacao,
         status: 'aprovado',
       });
-      this.logger.log(`Cliente notificado sobre aprovação da solicitação ${data.solicitacaoId}`);
+      this.logger.log(
+        `Cliente notificado sobre aprovação da solicitação ${data.solicitacaoId}`,
+      );
 
       // Notificar o estabelecimento
       this.server.to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
         ...solicitacao,
         status: 'aprovado',
       });
-      this.logger.log(`Estabelecimento ${solicitacao.num_cnpj} notificado sobre aprovação da solicitação`);
+      this.logger.log(
+        `Estabelecimento ${solicitacao.num_cnpj} notificado sobre aprovação da solicitação`,
+      );
     } catch (error) {
       this.logger.error('Erro ao aprovar solicitação:', error);
       client.emit('erro-aprovacao', { message: 'Erro ao aprovar solicitação' });
@@ -149,21 +159,27 @@ export class SolicitacaoMesaService
         data.solicitacaoId,
         'rejeitado',
       );
-      this.logger.log(`Solicitação ${data.solicitacaoId} rejeitada com sucesso`);
+      this.logger.log(
+        `Solicitação ${data.solicitacaoId} rejeitada com sucesso`,
+      );
 
       // Notificar o cliente
       this.server.emit('atualizacao-solicitacao', {
         ...solicitacao,
         status: 'rejeitado',
       });
-      this.logger.log(`Cliente notificado sobre rejeição da solicitação ${data.solicitacaoId}`);
+      this.logger.log(
+        `Cliente notificado sobre rejeição da solicitação ${data.solicitacaoId}`,
+      );
 
       // Notificar o estabelecimento
       this.server.to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
         ...solicitacao,
         status: 'rejeitado',
       });
-      this.logger.log(`Estabelecimento ${solicitacao.num_cnpj} notificado sobre rejeição da solicitação`);
+      this.logger.log(
+        `Estabelecimento ${solicitacao.num_cnpj} notificado sobre rejeição da solicitação`,
+      );
     } catch (error) {
       this.logger.error('Erro ao rejeitar solicitação:', error);
       client.emit('erro-rejeicao', { message: 'Erro ao rejeitar solicitação' });
@@ -172,11 +188,16 @@ export class SolicitacaoMesaService
   }
 
   async getSolicitacoesPendentes(num_cnpj: string): Promise<SolicitacaoMesa[]> {
-    this.logger.log(`Buscando solicitações pendentes para o estabelecimento: ${num_cnpj}`);
-    const solicitacoes = await this.solicitacaoMesaRepository.findPendentesByEstabelecimento(
-      num_cnpj,
+    this.logger.log(
+      `Buscando solicitações pendentes para o estabelecimento: ${num_cnpj}`,
     );
-    this.logger.log(`Encontradas ${solicitacoes.length} solicitações pendentes para o estabelecimento: ${num_cnpj}`);
+    const solicitacoes =
+      await this.solicitacaoMesaRepository.findPendentesByEstabelecimento(
+        num_cnpj,
+      );
+    this.logger.log(
+      `Encontradas ${solicitacoes.length} solicitações pendentes para o estabelecimento: ${num_cnpj}`,
+    );
     return solicitacoes;
   }
 }

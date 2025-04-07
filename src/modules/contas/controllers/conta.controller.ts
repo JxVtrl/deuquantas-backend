@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Logger,
+} from '@nestjs/common';
 import { ContaService } from '../services/conta.service';
 import { CreateContaDto } from '../dtos/conta.dto';
 import { AuthGuard } from '../../../auth/auth.guard';
@@ -22,7 +30,9 @@ export class ContaController {
   async getContaByCpf(@Param('num_cpf') num_cpf: string) {
     this.logger.log(`Buscando conta para o CPF: ${num_cpf}`);
     const conta = await this.contaService.getContaByCpf(num_cpf);
-    this.logger.log(`Conta ${conta ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`);
+    this.logger.log(
+      `Conta ${conta ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`,
+    );
     return conta;
   }
 

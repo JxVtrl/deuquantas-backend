@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Logger,
+} from '@nestjs/common';
 import { ItemService } from '../services/item.service';
 import { CreateItemDto } from '../dtos/item.dto';
 import { AuthGuard } from '../../../auth/auth.guard';
@@ -22,7 +30,9 @@ export class ItemController {
   async getItemByCodigo(@Param('codItem') codItem: string) {
     this.logger.log(`Buscando item com código: ${codItem}`);
     const item = await this.itemService.getItemByCodigo(codItem);
-    this.logger.log(`Item ${item ? 'encontrado' : 'não encontrado'} com código: ${codItem}`);
+    this.logger.log(
+      `Item ${item ? 'encontrado' : 'não encontrado'} com código: ${codItem}`,
+    );
     return item;
   }
 

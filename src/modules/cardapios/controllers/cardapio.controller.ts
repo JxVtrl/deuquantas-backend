@@ -21,9 +21,14 @@ export class CardapioController {
   @UseGuards(AuthGuard, RolesGuard)
   @Post()
   async createCardapio(@Body() createCardapioDto: CreateCardapioDto) {
-    this.logger.log(`Criando novo cardápio para CNPJ: ${createCardapioDto.num_cnpj}`);
-    const cardapio = await this.cardapioService.createCardapio(createCardapioDto);
-    this.logger.log(`Cardápio criado com sucesso. CNPJ: ${cardapio.num_cnpj}, Ordem: ${cardapio.numOrdem}`);
+    this.logger.log(
+      `Criando novo cardápio para CNPJ: ${createCardapioDto.num_cnpj}`,
+    );
+    const cardapio =
+      await this.cardapioService.createCardapio(createCardapioDto);
+    this.logger.log(
+      `Cardápio criado com sucesso. CNPJ: ${cardapio.num_cnpj}, Ordem: ${cardapio.numOrdem}`,
+    );
     return cardapio;
   }
 }

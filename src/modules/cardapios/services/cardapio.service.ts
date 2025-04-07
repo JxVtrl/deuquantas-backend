@@ -16,14 +16,22 @@ export class CardapioService {
   async getAllCardapios(): Promise<Cardapio[]> {
     this.logger.log('Buscando todos os cardápios no banco de dados');
     const cardapios = await this.cardapioRepository.find();
-    this.logger.log(`Encontrados ${cardapios.length} cardápios no banco de dados`);
+    this.logger.log(
+      `Encontrados ${cardapios.length} cardápios no banco de dados`,
+    );
     return cardapios;
   }
 
   async getCardapioByCnpj(num_cnpj: string): Promise<Cardapio[]> {
-    this.logger.log(`Buscando cardápios para o CNPJ: ${num_cnpj} no banco de dados`);
-    const cardapios = await this.cardapioRepository.find({ where: { num_cnpj } });
-    this.logger.log(`Encontrados ${cardapios.length} cardápios para o CNPJ: ${num_cnpj} no banco de dados`);
+    this.logger.log(
+      `Buscando cardápios para o CNPJ: ${num_cnpj} no banco de dados`,
+    );
+    const cardapios = await this.cardapioRepository.find({
+      where: { num_cnpj },
+    });
+    this.logger.log(
+      `Encontrados ${cardapios.length} cardápios para o CNPJ: ${num_cnpj} no banco de dados`,
+    );
     return cardapios;
   }
 
@@ -31,7 +39,9 @@ export class CardapioService {
     this.logger.log('Iniciando criação de novo cardápio no banco de dados');
     const newCardapio = this.cardapioRepository.create(dto);
     const savedCardapio = await this.cardapioRepository.save(newCardapio);
-    this.logger.log(`Cardápio criado com sucesso no banco de dados. CNPJ: ${savedCardapio.num_cnpj}, Ordem: ${savedCardapio.numOrdem}`);
+    this.logger.log(
+      `Cardápio criado com sucesso no banco de dados. CNPJ: ${savedCardapio.num_cnpj}, Ordem: ${savedCardapio.numOrdem}`,
+    );
     return savedCardapio;
   }
 }

@@ -21,14 +21,22 @@ export class ClienteService {
   }
 
   async getClienteByCpf(num_cpf: string): Promise<Cliente | null> {
-    this.logger.log(`Buscando cliente para o CPF: ${num_cpf} no banco de dados`);
-    const cliente = await this.clienteRepository.findOne({ where: { num_cpf } });
-    this.logger.log(`Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o CPF: ${num_cpf}`);
+    this.logger.log(
+      `Buscando cliente para o CPF: ${num_cpf} no banco de dados`,
+    );
+    const cliente = await this.clienteRepository.findOne({
+      where: { num_cpf },
+    });
+    this.logger.log(
+      `Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o CPF: ${num_cpf}`,
+    );
     return cliente;
   }
 
   async createCliente(dto: CreateClienteDto): Promise<Cliente> {
-    this.logger.log(`Criando novo cliente no banco de dados para o CPF: ${dto.num_cpf}`);
+    this.logger.log(
+      `Criando novo cliente no banco de dados para o CPF: ${dto.num_cpf}`,
+    );
     const newCliente = this.clienteRepository.create({
       num_cpf: dto.num_cpf,
       num_celular: dto.num_celular,
@@ -45,12 +53,16 @@ export class ClienteService {
     });
 
     const savedCliente = await this.clienteRepository.save(newCliente);
-    this.logger.log(`Cliente criado com sucesso no banco de dados. CPF: ${savedCliente.num_cpf}`);
+    this.logger.log(
+      `Cliente criado com sucesso no banco de dados. CPF: ${savedCliente.num_cpf}`,
+    );
     return savedCliente;
   }
 
   async findByEmail(email: string): Promise<Cliente> {
-    this.logger.log(`Buscando cliente para o email: ${email} no banco de dados`);
+    this.logger.log(
+      `Buscando cliente para o email: ${email} no banco de dados`,
+    );
     const cliente = await this.clienteRepository.findOne({
       where: { usuario: { email } },
       relations: ['usuario'],
@@ -66,7 +78,9 @@ export class ClienteService {
   }
 
   async findByCPF(num_cpf: string): Promise<Cliente> {
-    this.logger.log(`Buscando cliente para o CPF: ${num_cpf} no banco de dados`);
+    this.logger.log(
+      `Buscando cliente para o CPF: ${num_cpf} no banco de dados`,
+    );
     const cliente = await this.clienteRepository.findOne({
       where: { num_cpf },
     });
@@ -81,13 +95,17 @@ export class ClienteService {
   }
 
   async findByPhone(num_celular: string): Promise<Cliente> {
-    this.logger.log(`Buscando cliente para o telefone: ${num_celular} no banco de dados`);
+    this.logger.log(
+      `Buscando cliente para o telefone: ${num_celular} no banco de dados`,
+    );
     const cliente = await this.clienteRepository.findOne({
       where: { num_celular },
     });
 
     if (!cliente) {
-      this.logger.error(`Cliente não encontrado para o telefone: ${num_celular}`);
+      this.logger.error(
+        `Cliente não encontrado para o telefone: ${num_celular}`,
+      );
       throw new NotFoundException('Cliente não encontrado');
     }
 
@@ -96,7 +114,9 @@ export class ClienteService {
   }
 
   async findByUsuarioId(usuarioId: string): Promise<Cliente> {
-    this.logger.log(`Buscando cliente para o usuário: ${usuarioId} no banco de dados`);
+    this.logger.log(
+      `Buscando cliente para o usuário: ${usuarioId} no banco de dados`,
+    );
 
     const cliente = await this.clienteRepository
       .createQueryBuilder('cliente')

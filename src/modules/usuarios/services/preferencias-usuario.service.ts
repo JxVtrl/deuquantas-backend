@@ -14,12 +14,16 @@ export class PreferenciasUsuarioService {
   ) {}
 
   async findByUsuarioId(usuarioId: string): Promise<PreferenciasUsuario> {
-    this.logger.log(`Buscando preferências do usuário com ID: ${usuarioId} no banco de dados`);
+    this.logger.log(
+      `Buscando preferências do usuário com ID: ${usuarioId} no banco de dados`,
+    );
     const preferencias = await this.preferenciasRepository.findOne({
       where: { usuario: { id: usuarioId } },
     });
     if (!preferencias) {
-      this.logger.log(`Preferências não encontradas para o usuário: ${usuarioId}. Criando novas preferências.`);
+      this.logger.log(
+        `Preferências não encontradas para o usuário: ${usuarioId}. Criando novas preferências.`,
+      );
       return this.create(usuarioId);
     }
     this.logger.log(`Preferências encontradas para o usuário: ${usuarioId}`);
@@ -31,8 +35,11 @@ export class PreferenciasUsuarioService {
     const preferencias = this.preferenciasRepository.create({
       usuario: { id: usuarioId },
     });
-    const savedPreferencias = await this.preferenciasRepository.save(preferencias);
-    this.logger.log(`Preferências criadas com sucesso para o usuário: ${usuarioId}`);
+    const savedPreferencias =
+      await this.preferenciasRepository.save(preferencias);
+    this.logger.log(
+      `Preferências criadas com sucesso para o usuário: ${usuarioId}`,
+    );
     return savedPreferencias;
   }
 
@@ -43,13 +50,18 @@ export class PreferenciasUsuarioService {
     this.logger.log(`Atualizando preferências do usuário: ${usuarioId}`);
     const preferencias = await this.findByUsuarioId(usuarioId);
     if (!preferencias) {
-      this.logger.log(`Preferências não encontradas para o usuário: ${usuarioId}. Criando novas preferências.`);
+      this.logger.log(
+        `Preferências não encontradas para o usuário: ${usuarioId}. Criando novas preferências.`,
+      );
       return this.create(usuarioId);
     }
 
     Object.assign(preferencias, updateDto);
-    const updatedPreferencias = await this.preferenciasRepository.save(preferencias);
-    this.logger.log(`Preferências atualizadas com sucesso para o usuário: ${usuarioId}`);
+    const updatedPreferencias =
+      await this.preferenciasRepository.save(preferencias);
+    this.logger.log(
+      `Preferências atualizadas com sucesso para o usuário: ${usuarioId}`,
+    );
     return updatedPreferencias;
   }
 }

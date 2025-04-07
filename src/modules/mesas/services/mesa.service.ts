@@ -23,27 +23,37 @@ export class MesaService {
   }
 
   async getMesasByEstabelecimento(cnpj: string): Promise<Mesa[]> {
-    this.logger.log(`Buscando mesas do estabelecimento: ${cnpj} no banco de dados`);
+    this.logger.log(
+      `Buscando mesas do estabelecimento: ${cnpj} no banco de dados`,
+    );
     const mesas = await this.mesaRepository.find({
       where: { estabelecimento: { num_cnpj: cnpj } },
       relations: ['estabelecimento'],
     });
-    this.logger.log(`Encontradas ${mesas.length} mesas para o estabelecimento: ${cnpj}`);
+    this.logger.log(
+      `Encontradas ${mesas.length} mesas para o estabelecimento: ${cnpj}`,
+    );
     return mesas;
   }
 
   async getMesaByNumero(numMesa: string): Promise<Mesa | null> {
     this.logger.log(`Buscando mesa número: ${numMesa} no banco de dados`);
     const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
-    this.logger.log(`Mesa ${mesa ? 'encontrada' : 'não encontrada'} com número: ${numMesa}`);
+    this.logger.log(
+      `Mesa ${mesa ? 'encontrada' : 'não encontrada'} com número: ${numMesa}`,
+    );
     return mesa;
   }
 
   async createMesa(dto: CreateMesaDto): Promise<Mesa> {
-    this.logger.log(`Iniciando criação de mesa para o estabelecimento: ${dto.num_cnpj}`);
+    this.logger.log(
+      `Iniciando criação de mesa para o estabelecimento: ${dto.num_cnpj}`,
+    );
 
     // Verificar se já existe uma mesa com o mesmo número no mesmo estabelecimento
-    this.logger.log(`Verificando existência de mesa com número: ${dto.numMesa}`);
+    this.logger.log(
+      `Verificando existência de mesa com número: ${dto.numMesa}`,
+    );
     const mesaExistente = await this.mesaRepository.findOne({
       where: {
         numMesa: dto.numMesa,
@@ -52,7 +62,9 @@ export class MesaService {
     });
 
     if (mesaExistente) {
-      this.logger.error(`Mesa ${dto.numMesa} já existe no estabelecimento ${dto.num_cnpj}`);
+      this.logger.error(
+        `Mesa ${dto.numMesa} já existe no estabelecimento ${dto.num_cnpj}`,
+      );
       throw new Error('Já existe uma mesa com este número no estabelecimento');
     }
 
@@ -66,7 +78,9 @@ export class MesaService {
     mesa.qrCode = qrCode;
 
     const mesaSalva = await this.mesaRepository.save(mesa);
-    this.logger.log(`Mesa criada com sucesso. Número: ${mesaSalva.numMesa}, CNPJ: ${mesaSalva.num_cnpj}`);
+    this.logger.log(
+      `Mesa criada com sucesso. Número: ${mesaSalva.numMesa}, CNPJ: ${mesaSalva.num_cnpj}`,
+    );
     return mesaSalva;
   }
 
@@ -82,7 +96,9 @@ export class MesaService {
     this.logger.log(`Atualizando dados da mesa ${numMesa}`);
     Object.assign(mesa, dto);
     const mesaAtualizada = await this.mesaRepository.save(mesa);
-    this.logger.log(`Mesa atualizada com sucesso. Número: ${mesaAtualizada.numMesa}, CNPJ: ${mesaAtualizada.num_cnpj}`);
+    this.logger.log(
+      `Mesa atualizada com sucesso. Número: ${mesaAtualizada.numMesa}, CNPJ: ${mesaAtualizada.num_cnpj}`,
+    );
     return mesaAtualizada;
   }
 }

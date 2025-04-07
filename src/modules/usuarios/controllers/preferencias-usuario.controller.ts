@@ -17,8 +17,12 @@ export class PreferenciasUsuarioController {
   @Get()
   async findOne(@CurrentUser() user: Usuario) {
     this.logger.log(`Buscando preferências do usuário com ID: ${user.id}`);
-    const preferencias = await this.preferenciasService.findByUsuarioId(user.id);
-    this.logger.log(`Preferências ${preferencias ? 'encontradas' : 'não encontradas'} para o usuário: ${user.id}`);
+    const preferencias = await this.preferenciasService.findByUsuarioId(
+      user.id,
+    );
+    this.logger.log(
+      `Preferências ${preferencias ? 'encontradas' : 'não encontradas'} para o usuário: ${user.id}`,
+    );
     return preferencias;
   }
 
@@ -28,8 +32,13 @@ export class PreferenciasUsuarioController {
     @Body() updateDto: UpdatePreferenciasUsuarioDto,
   ) {
     this.logger.log(`Atualizando preferências do usuário com ID: ${user.id}`);
-    const preferencias = await this.preferenciasService.update(user.id, updateDto);
-    this.logger.log(`Preferências atualizadas com sucesso para o usuário: ${user.id}`);
+    const preferencias = await this.preferenciasService.update(
+      user.id,
+      updateDto,
+    );
+    this.logger.log(
+      `Preferências atualizadas com sucesso para o usuário: ${user.id}`,
+    );
     return preferencias;
   }
 }

@@ -24,7 +24,8 @@ export class EstabelecimentoController {
   @UseGuards(AuthGuard)
   async getAllEstabelecimentos() {
     this.logger.log('Buscando todos os estabelecimentos');
-    const estabelecimentos = await this.estabelecimentoService.getAllEstabelecimentos();
+    const estabelecimentos =
+      await this.estabelecimentoService.getAllEstabelecimentos();
     this.logger.log(`Encontrados ${estabelecimentos.length} estabelecimentos`);
     return estabelecimentos;
   }
@@ -33,8 +34,13 @@ export class EstabelecimentoController {
   @UseGuards(AuthGuard)
   async getEstabelecimentoByUsuarioId(@Param('usuarioId') usuarioId: string) {
     this.logger.log(`Buscando estabelecimento para o usuário: ${usuarioId}`);
-    const estabelecimento = await this.estabelecimentoService.getEstabelecimentoByUsuarioId(usuarioId);
-    this.logger.log(`Estabelecimento ${estabelecimento ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`);
+    const estabelecimento =
+      await this.estabelecimentoService.getEstabelecimentoByUsuarioId(
+        usuarioId,
+      );
+    this.logger.log(
+      `Estabelecimento ${estabelecimento ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`,
+    );
     return estabelecimento;
   }
 
@@ -42,8 +48,11 @@ export class EstabelecimentoController {
   @UseGuards(AuthGuard)
   async getEstabelecimentoByCnpj(@Param('num_cnpj') num_cnpj: string) {
     this.logger.log(`Buscando estabelecimento para o CNPJ: ${num_cnpj}`);
-    const estabelecimento = await this.estabelecimentoService.getEstabelecimentoByCnpj(num_cnpj);
-    this.logger.log(`Estabelecimento ${estabelecimento ? 'encontrado' : 'não encontrado'} para o CNPJ: ${num_cnpj}`);
+    const estabelecimento =
+      await this.estabelecimentoService.getEstabelecimentoByCnpj(num_cnpj);
+    this.logger.log(
+      `Estabelecimento ${estabelecimento ? 'encontrado' : 'não encontrado'} para o CNPJ: ${num_cnpj}`,
+    );
     return estabelecimento;
   }
 
@@ -69,15 +78,20 @@ export class EstabelecimentoController {
     @Query('longitude') longitude: string,
     @Query('raioKm') raioKm: string = '5',
   ) {
-    this.logger.log(`Buscando estabelecimentos próximos - latitude: ${latitude}, longitude: ${longitude}, raio: ${raioKm}km`);
-
-    const resultado = await this.estabelecimentoService.buscarEstabelecimentosProximos(
-      parseFloat(latitude),
-      parseFloat(longitude),
-      parseFloat(raioKm),
+    this.logger.log(
+      `Buscando estabelecimentos próximos - latitude: ${latitude}, longitude: ${longitude}, raio: ${raioKm}km`,
     );
 
-    this.logger.log(`Encontrados ${resultado.length} estabelecimentos próximos`);
+    const resultado =
+      await this.estabelecimentoService.buscarEstabelecimentosProximos(
+        parseFloat(latitude),
+        parseFloat(longitude),
+        parseFloat(raioKm),
+      );
+
+    this.logger.log(
+      `Encontrados ${resultado.length} estabelecimentos próximos`,
+    );
     return { estabelecimentos: resultado };
   }
 
@@ -85,19 +99,27 @@ export class EstabelecimentoController {
   async createEstabelecimento(
     @Body() createEstabelecimentoDto: CreateEstabelecimentoDto,
   ) {
-    this.logger.log(`Criando novo estabelecimento para o CNPJ: ${createEstabelecimentoDto.num_cnpj}`);
-    const estabelecimento = await this.estabelecimentoService.createEstabelecimento(
-      createEstabelecimentoDto,
+    this.logger.log(
+      `Criando novo estabelecimento para o CNPJ: ${createEstabelecimentoDto.num_cnpj}`,
     );
-    this.logger.log(`Estabelecimento criado com sucesso para o CNPJ: ${createEstabelecimentoDto.num_cnpj}`);
+    const estabelecimento =
+      await this.estabelecimentoService.createEstabelecimento(
+        createEstabelecimentoDto,
+      );
+    this.logger.log(
+      `Estabelecimento criado com sucesso para o CNPJ: ${createEstabelecimentoDto.num_cnpj}`,
+    );
     return estabelecimento;
   }
 
   @Get('check-phone/:num_celular')
   async checkPhoneExists(@Param('num_celular') num_celular: string) {
     this.logger.log(`Verificando existência do telefone: ${num_celular}`);
-    const exists = await this.estabelecimentoService.checkPhoneExists(num_celular);
-    this.logger.log(`Telefone ${num_celular} ${exists ? 'existe' : 'não existe'} no sistema`);
+    const exists =
+      await this.estabelecimentoService.checkPhoneExists(num_celular);
+    this.logger.log(
+      `Telefone ${num_celular} ${exists ? 'existe' : 'não existe'} no sistema`,
+    );
     return { exists };
   }
 }

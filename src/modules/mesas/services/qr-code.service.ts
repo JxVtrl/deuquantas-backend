@@ -14,7 +14,9 @@ export class QrCodeService {
   ) {}
 
   gerarQrCode(num_cnpj: string, numMesa: string): string {
-    this.logger.log(`Gerando QR Code para mesa ${numMesa} do estabelecimento ${num_cnpj}`);
+    this.logger.log(
+      `Gerando QR Code para mesa ${numMesa} do estabelecimento ${num_cnpj}`,
+    );
     const qrCode = `estabelecimento:${num_cnpj}:mesa:${numMesa}`;
     this.logger.log(`QR Code gerado: ${qrCode}`);
     return qrCode;
@@ -46,8 +48,10 @@ export class QrCodeService {
     num_cnpj: string,
     numMesa: string,
   ): Promise<boolean> {
-    this.logger.log(`Verificando disponibilidade da mesa ${numMesa} do estabelecimento ${num_cnpj}`);
-    
+    this.logger.log(
+      `Verificando disponibilidade da mesa ${numMesa} do estabelecimento ${num_cnpj}`,
+    );
+
     const mesa = await this.mesaRepository.findOne({
       where: {
         num_cnpj,
@@ -58,13 +62,15 @@ export class QrCodeService {
     });
 
     const disponivel = !!mesa;
-    this.logger.log(`Mesa ${numMesa} está ${disponivel ? 'disponível' : 'indisponível'}`);
+    this.logger.log(
+      `Mesa ${numMesa} está ${disponivel ? 'disponível' : 'indisponível'}`,
+    );
     return disponivel;
   }
 
   async ocuparMesa(num_cnpj: string, numMesa: string): Promise<void> {
     this.logger.log(`Ocupando mesa ${numMesa} do estabelecimento ${num_cnpj}`);
-    
+
     await this.mesaRepository.update(
       { num_cnpj, numMesa },
       { status: 'ocupada' },
@@ -75,7 +81,7 @@ export class QrCodeService {
 
   async liberarMesa(num_cnpj: string, numMesa: string): Promise<void> {
     this.logger.log(`Liberando mesa ${numMesa} do estabelecimento ${num_cnpj}`);
-    
+
     await this.mesaRepository.update(
       { num_cnpj, numMesa },
       { status: 'disponivel' },
@@ -86,13 +92,15 @@ export class QrCodeService {
 
   async getQrCodesEstabelecimento(cnpj: string) {
     this.logger.log(`Buscando QR Codes do estabelecimento ${cnpj}`);
-    
+
     const mesas = await this.mesaRepository.find({
       where: { num_cnpj: cnpj },
       select: ['numMesa', 'qrCode', 'status'],
     });
 
-    this.logger.log(`Encontrados ${mesas.length} QR Codes para o estabelecimento ${cnpj}`);
+    this.logger.log(
+      `Encontrados ${mesas.length} QR Codes para o estabelecimento ${cnpj}`,
+    );
     return mesas;
   }
 }

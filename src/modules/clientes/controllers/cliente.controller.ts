@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Logger,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -35,7 +43,9 @@ export class ClienteController {
   async getClienteByCpf(@Param('num_cpf') num_cpf: string) {
     this.logger.log(`Buscando cliente para o CPF: ${num_cpf}`);
     const cliente = await this.clienteService.findByCPF(num_cpf);
-    this.logger.log(`Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o CPF: ${num_cpf}`);
+    this.logger.log(
+      `Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o CPF: ${num_cpf}`,
+    );
     return cliente;
   }
 
@@ -44,16 +54,22 @@ export class ClienteController {
   async getClienteByUsuarioId(@Param('usuarioId') usuarioId: string) {
     this.logger.log(`Buscando cliente para o usuário: ${usuarioId}`);
     const cliente = await this.clienteService.findByUsuarioId(usuarioId);
-    this.logger.log(`Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`);
+    this.logger.log(
+      `Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`,
+    );
     return cliente;
   }
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo cliente' })
   async createCliente(@Body() createClienteDto: CreateClienteDto) {
-    this.logger.log(`Criando novo cliente para o CPF: ${createClienteDto.num_cpf}`);
+    this.logger.log(
+      `Criando novo cliente para o CPF: ${createClienteDto.num_cpf}`,
+    );
     const cliente = await this.clienteService.createCliente(createClienteDto);
-    this.logger.log(`Cliente criado com sucesso para o CPF: ${createClienteDto.num_cpf}`);
+    this.logger.log(
+      `Cliente criado com sucesso para o CPF: ${createClienteDto.num_cpf}`,
+    );
     return cliente;
   }
 
@@ -97,7 +113,10 @@ export class ClienteController {
       this.logger.log(`Telefone ${num_celular} encontrado`);
       return { exists: true };
     } catch (error) {
-      this.logger.error(`Erro ao verificar número de celular ${num_celular}:`, error);
+      this.logger.error(
+        `Erro ao verificar número de celular ${num_celular}:`,
+        error,
+      );
       return { exists: false };
     }
   }
