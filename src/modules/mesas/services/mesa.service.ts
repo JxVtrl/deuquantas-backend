@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mesa } from '../mesa.entity';
-import { CreateMesaDto } from '../dtos/mesa.dto';
+import { CreateMesaDto, UpdateMesaDto } from '../dtos/mesa.dto';
 
 @Injectable()
 export class MesaService {
@@ -29,5 +29,15 @@ export class MesaService {
   async createMesa(dto: CreateMesaDto): Promise<Mesa> {
     const newMesa = this.mesaRepository.create(dto);
     return this.mesaRepository.save(newMesa);
+  }
+
+  async updateMesa(numMesa: string, dto: UpdateMesaDto): Promise<Mesa> {
+    const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
+    if (!mesa) {
+      throw new Error('Mesa não encontrada');
+    }
+
+    Object.assign(mesa, dto);
+    return this.mesaRepository.save(mesa);
   }
 }

@@ -1,4 +1,10 @@
-import { IsString, IsNumber, Length } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+  Length,
+} from 'class-validator';
 
 export class CreateMesaDto {
   @IsString()
@@ -11,4 +17,22 @@ export class CreateMesaDto {
 
   @IsNumber()
   numMaxPax: number;
+
+  @IsBoolean()
+  @IsOptional()
+  is_ativo?: boolean;
+}
+
+export class UpdateMesaDto {
+  @IsString()
+  @IsOptional()
+  numMesa?: string;
+
+  @IsNumber()
+  @IsOptional()
+  numMaxPax?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  is_ativo?: boolean;
 }
