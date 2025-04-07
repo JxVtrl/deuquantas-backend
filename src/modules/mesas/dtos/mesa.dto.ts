@@ -12,7 +12,7 @@ export class CreateMesaDto {
   num_cnpj: string;
 
   @IsString()
-  @Length(4, 4)
+  @Length(1, 4)
   numMesa: string;
 
   @IsNumber()

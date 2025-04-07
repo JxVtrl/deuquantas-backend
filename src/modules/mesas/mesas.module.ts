@@ -1,16 +1,28 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mesa } from './mesa.entity';
+import { SolicitacaoMesa } from './entities/solicitacao-mesa.entity';
 import { MesaRepository } from './mesa.repository';
-import { MesaService } from './services/mesa.service';
+import { SolicitacaoMesaRepository } from './repositories/solicitacao-mesa.repository';
 import { MesaController } from './controllers/mesa.controller';
-import { QrCodeService } from './services/qr-code.service';
 import { QrCodeController } from './controllers/qr-code.controller';
+import { MesaService } from './services/mesa.service';
+import { SolicitacaoMesaService } from './services/solicitacao-mesa.service';
+import { QrCodeService } from './services/qr-code.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Mesa])],
-  providers: [MesaRepository, MesaService, QrCodeService],
+  imports: [
+    TypeOrmModule.forFeature([Mesa, SolicitacaoMesa]),
+    TypeOrmModule.forFeature([Mesa], 'default'),
+  ],
   controllers: [MesaController, QrCodeController],
-  exports: [MesaRepository, QrCodeService],
+  providers: [
+    MesaService,
+    SolicitacaoMesaService,
+    MesaRepository,
+    SolicitacaoMesaRepository,
+    QrCodeService,
+  ],
+  exports: [MesaService, SolicitacaoMesaService, QrCodeService],
 })
 export class MesasModule {}

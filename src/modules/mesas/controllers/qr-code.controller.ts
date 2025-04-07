@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { QrCodeService } from '../services/qr-code.service';
 import { QrCodeDto } from '../dtos/qr-code.dto';
 import { MesaService } from '../services/mesa.service';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('qr-code')
 export class QrCodeController {
@@ -21,6 +22,7 @@ export class QrCodeController {
     return this.qrCodeService.validarQrCode(qrCode);
   }
 
+  @Public()
   @Get('mesa/:num_cnpj/:numMesa/disponibilidade')
   async verificarDisponibilidade(
     @Param('num_cnpj') num_cnpj: string,

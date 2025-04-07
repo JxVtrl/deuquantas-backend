@@ -7,7 +7,7 @@ import { QrCodeDto } from '../dtos/qr-code.dto';
 @Injectable()
 export class QrCodeService {
   constructor(
-    @InjectRepository(Mesa)
+    @InjectRepository(Mesa, 'default')
     private readonly mesaRepository: Repository<Mesa>,
   ) {}
 
