@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mesa } from '../mesa.entity';
@@ -61,7 +66,9 @@ export class MesaService {
 
       if (!estabelecimento) {
         this.logger.error(`Estabelecimento não encontrado: ${dto.num_cnpj}`);
-        throw new NotFoundException(`Estabelecimento não encontrado: ${dto.num_cnpj}`);
+        throw new NotFoundException(
+          `Estabelecimento não encontrado: ${dto.num_cnpj}`,
+        );
       }
 
       // Verificar se já existe uma mesa com o mesmo número no mesmo estabelecimento
@@ -79,7 +86,9 @@ export class MesaService {
         this.logger.error(
           `Mesa ${dto.numMesa} já existe no estabelecimento ${dto.num_cnpj}`,
         );
-        throw new BadRequestException('Já existe uma mesa com este número no estabelecimento');
+        throw new BadRequestException(
+          'Já existe uma mesa com este número no estabelecimento',
+        );
       }
 
       // Criar nova mesa
@@ -92,7 +101,10 @@ export class MesaService {
 
       // Gerar QR Code para a mesa
       this.logger.log(`Gerando QR Code para a mesa ${newMesa.numMesa}`);
-      const qrCode = this.qrCodeService.gerarQrCode(dto.num_cnpj, newMesa.numMesa);
+      const qrCode = this.qrCodeService.gerarQrCode(
+        dto.num_cnpj,
+        newMesa.numMesa,
+      );
       newMesa.qrCode = qrCode;
 
       // Salvar a mesa
@@ -107,7 +119,10 @@ export class MesaService {
         error.stack,
       );
 
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
 

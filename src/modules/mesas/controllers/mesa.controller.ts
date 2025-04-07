@@ -59,7 +59,9 @@ export class MesaController {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException('Erro ao buscar mesas do estabelecimento');
+      throw new InternalServerErrorException(
+        'Erro ao buscar mesas do estabelecimento',
+      );
     }
   }
 
@@ -103,7 +105,10 @@ export class MesaController {
         `Erro ao criar mesa para o estabelecimento ${createMesaDto.num_cnpj}:`,
         error.stack,
       );
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
       throw new InternalServerErrorException('Erro ao criar mesa');
@@ -127,7 +132,10 @@ export class MesaController {
       };
     } catch (error) {
       this.logger.error(`Erro ao atualizar mesa ${numMesa}:`, error.stack);
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
       throw new InternalServerErrorException('Erro ao atualizar mesa');
