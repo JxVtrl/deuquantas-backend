@@ -1,5 +1,12 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
-
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  CreateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Conta } from '../contas/conta.entity';
 @Entity('comandas')
 export class Comanda {
   @PrimaryColumn({ type: 'varchar', length: 11 })
@@ -25,4 +32,18 @@ export class Comanda {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   valPreco: number;
+
+  @Column({ type: 'boolean', default: true })
+  is_ativo: boolean;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  data_criacao: Date;
+
+  @OneToOne(() => Conta)
+  @JoinColumn([
+    { name: 'num_cnpj', referencedColumnName: 'num_cnpj' },
+    { name: 'numMesa', referencedColumnName: 'numMesa' },
+    { name: 'num_cpf', referencedColumnName: 'num_cpf' },
+  ])
+  conta: Conta;
 }

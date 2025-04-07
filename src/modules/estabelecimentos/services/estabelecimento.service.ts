@@ -183,19 +183,40 @@ export class EstabelecimentoService {
     this.logger.log(
       `Buscando estabelecimento para o usuário: ${usuarioId} no banco de dados`,
     );
-    const estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { usuario: { id: usuarioId } },
-      relations: ['usuario'],
-    });
 
-    if (!estabelecimento) {
+    try {
+      if (!usuarioId) {
+        this.logger.error('ID do usuário não fornecido');
+        throw new NotFoundException('ID do usuário não fornecido');
+      }
+
+      const estabelecimento = await this.estabelecimentoRepository
+        .createQueryBuilder('estabelecimento')
+        .leftJoinAndSelect('estabelecimento.usuario', 'usuario')
+        .leftJoinAndSelect('estabelecimento.cardapios', 'cardapios')
+        .where('usuario.id = :usuarioId', { usuarioId })
+        .getOne();
+
+      if (!estabelecimento) {
+        this.logger.error(
+          `Estabelecimento não encontrado para o usuário: ${usuarioId}`,
+        );
+        throw new NotFoundException(`Estabelecimento não encontrado para o usuário: ${usuarioId}`);
+      }
+
+      this.logger.log(`Estabelecimento encontrado para o usuário: ${usuarioId}`);
+      return estabelecimento;
+    } catch (error) {
       this.logger.error(
-        `Estabelecimento não encontrado para o usuário: ${usuarioId}`,
+        `Erro ao buscar estabelecimento para o usuário ${usuarioId}:`,
+        error.stack,
       );
-      throw new NotFoundException('Estabelecimento não encontrado');
+      
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      
+      throw new Error(`Erro ao buscar estabelecimento: ${error.message}`);
     }
-
-    this.logger.log(`Estabelecimento encontrado para o usuário: ${usuarioId}`);
-    return estabelecimento;
   }
 }

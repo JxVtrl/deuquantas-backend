@@ -9,7 +9,7 @@ export class Conta {
   @PrimaryColumn({ type: 'varchar', length: 4 })
   numMesa: string;
 
-  @Column({ type: 'varchar', length: 11 })
+  @PrimaryColumn({ type: 'varchar', length: 11 })
   num_cpf: string;
 
   @Column({ type: 'timestamp' })

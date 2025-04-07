@@ -7,9 +7,10 @@ import { TestComandaRepository } from './test-comanda.repository';
 import { ComandaService } from './services/comanda.service';
 import { TestComandaService } from './services/test-comanda.service';
 import { ComandaController } from './controllers/comanda.controller';
+import { ContasModule } from '../contas/contas.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comanda, TestComanda])],
+  imports: [TypeOrmModule.forFeature([Comanda, TestComanda]), ContasModule],
   providers: [
     ComandaRepository,
     TestComandaRepository,

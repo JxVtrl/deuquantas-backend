@@ -115,21 +115,39 @@ export class ClienteService {
 
   async findByUsuarioId(usuarioId: string): Promise<Cliente> {
     this.logger.log(
-      `Buscando cliente para o usuário: ${usuarioId} no banco de dados`,
+      `Iniciando busca de cliente para o usuário: ${usuarioId}`,
     );
 
-    const cliente = await this.clienteRepository
-      .createQueryBuilder('cliente')
-      .leftJoinAndSelect('cliente.usuario', 'usuario')
-      .where('usuario.id = :usuarioId', { usuarioId })
-      .getOne();
+    try {
+      if (!usuarioId) {
+        this.logger.error('ID do usuário não fornecido');
+        throw new NotFoundException('ID do usuário não fornecido');
+      }
 
-    if (!cliente) {
-      this.logger.error(`Cliente não encontrado para o usuário: ${usuarioId}`);
-      throw new NotFoundException('Cliente não encontrado');
+      const cliente = await this.clienteRepository
+        .createQueryBuilder('cliente')
+        .leftJoinAndSelect('cliente.usuario', 'usuario')
+        .where('usuario.id = :usuarioId', { usuarioId })
+        .getOne();
+
+      if (!cliente) {
+        this.logger.error(`Cliente não encontrado para o usuário: ${usuarioId}`);
+        throw new NotFoundException(`Cliente não encontrado para o usuário: ${usuarioId}`);
+      }
+
+      this.logger.log(`Cliente encontrado com sucesso para o usuário: ${usuarioId}`);
+      return cliente;
+    } catch (error) {
+      this.logger.error(
+        `Erro ao buscar cliente para o usuário ${usuarioId}:`,
+        error.stack,
+      );
+      
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      
+      throw new Error(`Erro ao buscar cliente: ${error.message}`);
     }
-
-    this.logger.log(`Cliente encontrado para o usuário: ${usuarioId}`);
-    return cliente;
   }
 }

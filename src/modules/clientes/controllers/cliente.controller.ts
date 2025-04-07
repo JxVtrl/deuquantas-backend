@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -51,13 +52,42 @@ export class ClienteController {
 
   @Get('usuario/:usuarioId')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Busca cliente por ID do usuário (Requer autenticação)' })
+  @ApiResponse({ status: 200, description: 'Cliente encontrado com sucesso' })
+  @ApiResponse({ status: 404, description: 'Cliente não encontrado' })
+  @ApiResponse({ status: 500, description: 'Erro interno do servidor' })
   async getClienteByUsuarioId(@Param('usuarioId') usuarioId: string) {
-    this.logger.log(`Buscando cliente para o usuário: ${usuarioId}`);
-    const cliente = await this.clienteService.findByUsuarioId(usuarioId);
-    this.logger.log(
-      `Cliente ${cliente ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`,
-    );
-    return cliente;
+    this.logger.log(`Iniciando busca de cliente para o usuário ID: ${usuarioId}`);
+    
+    try {
+      if (!usuarioId) {
+        this.logger.error('ID do usuário não fornecido');
+        throw new NotFoundException('ID do usuário não fornecido');
+      }
+
+      const cliente = await this.clienteService.findByUsuarioId(usuarioId);
+      
+      this.logger.log(
+        `Cliente encontrado com sucesso para o usuário ID: ${usuarioId}`,
+      );
+      
+      return {
+        success: true,
+        data: cliente,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Erro ao buscar cliente para o usuário ID: ${usuarioId}:`,
+        error.stack,
+      );
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new Error(`Erro ao buscar cliente: ${error.message}`);
+    }
   }
 
   @Post()

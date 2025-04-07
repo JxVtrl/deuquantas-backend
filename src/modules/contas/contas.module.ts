@@ -9,6 +9,6 @@ import { ContaController } from './controllers/conta.controller';
   imports: [TypeOrmModule.forFeature([Conta])],
   providers: [ContaRepository, ContaService],
   controllers: [ContaController],
-  exports: [ContaRepository],
+  exports: [ContaRepository, ContaService],
 })
 export class ContasModule {}

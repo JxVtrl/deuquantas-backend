@@ -34,14 +34,25 @@ export class EstabelecimentoController {
   @UseGuards(AuthGuard)
   async getEstabelecimentoByUsuarioId(@Param('usuarioId') usuarioId: string) {
     this.logger.log(`Buscando estabelecimento para o usuário: ${usuarioId}`);
-    const estabelecimento =
-      await this.estabelecimentoService.getEstabelecimentoByUsuarioId(
-        usuarioId,
+    try {
+      const estabelecimento =
+        await this.estabelecimentoService.getEstabelecimentoByUsuarioId(
+          usuarioId,
+        );
+      this.logger.log(
+        `Estabelecimento encontrado para o usuário: ${usuarioId}`,
       );
-    this.logger.log(
-      `Estabelecimento ${estabelecimento ? 'encontrado' : 'não encontrado'} para o usuário: ${usuarioId}`,
-    );
-    return estabelecimento;
+      return {
+        success: true,
+        data: estabelecimento,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Erro ao buscar estabelecimento para o usuário ${usuarioId}:`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 
   @Get(':num_cnpj')
