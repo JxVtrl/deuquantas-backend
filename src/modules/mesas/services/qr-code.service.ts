@@ -12,7 +12,7 @@ export class QrCodeService {
   ) {}
 
   gerarQrCode(num_cnpj: string, numMesa: string): string {
-    return `estabelecimento:${num_cnpj}:mesa:${numMesa}`;
+    return `${num_cnpj}:${numMesa}`;
   }
 
   validarQrCode(qrCode: string): QrCodeDto {

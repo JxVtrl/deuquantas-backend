@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SolicitacaoMesaRepository } from '../repositories/solicitacao-mesa.repository';
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SolicitacaoMesa } from '../entities/solicitacao-mesa.entity';
 
@@ -12,7 +18,9 @@ import { SolicitacaoMesa } from '../entities/solicitacao-mesa.entity';
     credentials: true,
   },
 })
-export class SolicitacaoMesaService implements OnGatewayConnection, OnGatewayDisconnect {
+export class SolicitacaoMesaService
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -43,7 +51,10 @@ export class SolicitacaoMesaService implements OnGatewayConnection, OnGatewayDis
   }
 
   @SubscribeMessage('solicitar-mesa')
-  async handleSolicitarMesa(client: Socket, data: { num_cnpj: string; numMesa: string; clienteId: string }) {
+  async handleSolicitarMesa(
+    client: Socket,
+    data: { num_cnpj: string; numMesa: string; clienteId: string },
+  ) {
     try {
       const solicitacao = await this.solicitacaoMesaRepository.save({
         num_cnpj: data.num_cnpj,
@@ -66,14 +77,22 @@ export class SolicitacaoMesaService implements OnGatewayConnection, OnGatewayDis
   }
 
   @SubscribeMessage('aprovar-solicitacao')
-  async handleAprovarSolicitacao(client: Socket, data: { solicitacaoId: string }) {
+  async handleAprovarSolicitacao(
+    client: Socket,
+    data: { solicitacaoId: string },
+  ) {
     try {
-      const solicitacao = await this.solicitacaoMesaRepository.findById(data.solicitacaoId);
+      const solicitacao = await this.solicitacaoMesaRepository.findById(
+        data.solicitacaoId,
+      );
       if (!solicitacao) {
         throw new Error('Solicitação não encontrada');
       }
 
-      await this.solicitacaoMesaRepository.updateStatus(data.solicitacaoId, 'aprovado');
+      await this.solicitacaoMesaRepository.updateStatus(
+        data.solicitacaoId,
+        'aprovado',
+      );
 
       // Notificar o cliente
       this.server.emit('atualizacao-solicitacao', {
@@ -93,14 +112,22 @@ export class SolicitacaoMesaService implements OnGatewayConnection, OnGatewayDis
   }
 
   @SubscribeMessage('rejeitar-solicitacao')
-  async handleRejeitarSolicitacao(client: Socket, data: { solicitacaoId: string }) {
+  async handleRejeitarSolicitacao(
+    client: Socket,
+    data: { solicitacaoId: string },
+  ) {
     try {
-      const solicitacao = await this.solicitacaoMesaRepository.findById(data.solicitacaoId);
+      const solicitacao = await this.solicitacaoMesaRepository.findById(
+        data.solicitacaoId,
+      );
       if (!solicitacao) {
         throw new Error('Solicitação não encontrada');
       }
 
-      await this.solicitacaoMesaRepository.updateStatus(data.solicitacaoId, 'rejeitado');
+      await this.solicitacaoMesaRepository.updateStatus(
+        data.solicitacaoId,
+        'rejeitado',
+      );
 
       // Notificar o cliente
       this.server.emit('atualizacao-solicitacao', {
@@ -120,6 +147,8 @@ export class SolicitacaoMesaService implements OnGatewayConnection, OnGatewayDis
   }
 
   async getSolicitacoesPendentes(num_cnpj: string): Promise<SolicitacaoMesa[]> {
-    return this.solicitacaoMesaRepository.findPendentesByEstabelecimento(num_cnpj);
+    return this.solicitacaoMesaRepository.findPendentesByEstabelecimento(
+      num_cnpj,
+    );
   }
-} 
+}
