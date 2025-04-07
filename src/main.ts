@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthGuard } from './auth/auth.guard';
 import { Reflector } from '@nestjs/core';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,10 +12,42 @@ async function bootstrap() {
   // Aplicar AuthGuard globalmente
   app.useGlobalGuards(new AuthGuard(app.get(Reflector)));
 
+  // Configuração do WebSocket
+  const wsAdapter = new IoAdapter(app);
+  wsAdapter.createIOServer(3002, {
+    cors: {
+      origin: [
+        process.env.FRONTEND_URL || 'http://localhost:3000',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+      ],
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
+    path: '/socket.io',
+    transports: ['websocket', 'polling'],
+    allowEIO3: true,
+  });
+  app.useWebSocketAdapter(wsAdapter);
+
   // Configuração do CORS
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+    ],
     credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'X-Requested-With',
+      'Origin',
+    ],
+    exposedHeaders: ['Authorization'],
+    maxAge: 3600,
   });
 
   // Configurar o Swagger
@@ -29,15 +62,22 @@ async function bootstrap() {
       name: 'Authorization',
       description: 'Insira o token JWT aqui',
       in: 'header',
-    }) // Adiciona autenticação JWT se necessário
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // Define o endpoint /api
+  SwaggerModule.setup('api', app, document);
 
   // Configuração do ValidationPipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
-  await app.listen(3001);
+  // Permitir conexões de qualquer host quando em Docker
+  await app.listen(3001, '0.0.0.0');
 }
 bootstrap();

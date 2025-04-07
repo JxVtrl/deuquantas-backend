@@ -9,10 +9,11 @@ import { QrCodeController } from './controllers/qr-code.controller';
 import { MesaService } from './services/mesa.service';
 import { SolicitacaoMesaService } from './services/solicitacao-mesa.service';
 import { QrCodeService } from './services/qr-code.service';
+import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Mesa, SolicitacaoMesa]),
+    TypeOrmModule.forFeature([Mesa, SolicitacaoMesa, Estabelecimento]),
     TypeOrmModule.forFeature([Mesa], 'default'),
   ],
   controllers: [MesaController, QrCodeController],
