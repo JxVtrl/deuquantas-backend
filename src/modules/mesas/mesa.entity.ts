@@ -16,11 +16,21 @@ export class Mesa {
   @Column({ type: 'boolean', default: true })
   is_ativo: boolean;
 
+  @Column({
+    type: 'enum',
+    enum: ['disponivel', 'ocupada'],
+    default: 'disponivel',
+  })
+  status: 'disponivel' | 'ocupada';
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   data_criacao: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   data_atualizacao: Date;
+
+  @Column({ nullable: true })
+  qrCode: string;
 
   @ManyToOne(
     () => Estabelecimento,
