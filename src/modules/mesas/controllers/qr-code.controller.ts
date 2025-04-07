@@ -46,10 +46,10 @@ export class QrCodeController {
   @Get('estabelecimento/:cnpj')
   async getQrCodesByEstabelecimento(@Param('cnpj') cnpj: string) {
     const mesas = await this.mesaService.getMesasByEstabelecimento(cnpj);
-    return mesas.map(mesa => ({
+    return mesas.map((mesa) => ({
       numMesa: mesa.numMesa,
       qrCode: mesa.qrCode,
-      status: mesa.status
+      status: mesa.status,
     }));
   }
 }

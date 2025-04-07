@@ -10,4 +10,4 @@ export class QrCodeDto {
   @IsNotEmpty()
   @Length(1, 4)
   numMesa: string;
-} 
+}
