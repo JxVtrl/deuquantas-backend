@@ -19,7 +19,7 @@ export class ComandaService {
   async getAllComandas(): Promise<Comanda[]> {
     this.logger.log('Buscando todas as comandas no banco de dados');
     const comandas = await this.comandaRepository.find({
-      relations: ['conta']
+      relations: ['conta'],
     });
     this.logger.log(`Retornando ${comandas.length} comandas do banco de dados`);
     return comandas;
@@ -29,9 +29,9 @@ export class ComandaService {
     this.logger.log(
       `Buscando comandas para o CPF: ${num_cpf} no banco de dados`,
     );
-    const comandas = await this.comandaRepository.find({ 
+    const comandas = await this.comandaRepository.find({
       where: { num_cpf },
-      relations: ['conta']
+      relations: ['conta'],
     });
     this.logger.log(
       `Encontradas ${comandas.length} comandas para o CPF: ${num_cpf}`,
@@ -44,14 +44,14 @@ export class ComandaService {
       `Buscando comanda ativa para o CPF: ${num_cpf} no banco de dados`,
     );
     const comanda = await this.comandaRepository.findOne({
-      where: { 
+      where: {
         num_cpf,
-        is_ativo: true 
+        is_ativo: true,
       },
       relations: ['conta'],
       order: {
-        data_criacao: 'DESC'
-      }
+        data_criacao: 'DESC',
+      },
     });
     this.logger.log(
       `Comanda ativa ${comanda ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`,
@@ -76,18 +76,14 @@ export class ComandaService {
       codErro: undefined,
     };
 
-    this.logger.log(
-      `Criando conta para a comanda. CPF: ${dto.num_cpf}`,
-    );
+    this.logger.log(`Criando conta para a comanda. CPF: ${dto.num_cpf}`);
     await this.contaService.createConta(contaDto);
-    this.logger.log(
-      `Conta criada com sucesso. CPF: ${dto.num_cpf}`,
-    );
+    this.logger.log(`Conta criada com sucesso. CPF: ${dto.num_cpf}`);
 
     // Depois criar a comanda como inativa inicialmente
     const newComanda = this.comandaRepository.create({
       ...dto,
-      is_ativo: false // Comanda inativa até ser aprovada pelo estabelecimento
+      is_ativo: false, // Comanda inativa até ser aprovada pelo estabelecimento
     });
     const savedComanda = await this.comandaRepository.save(newComanda);
     this.logger.log(
@@ -101,28 +97,24 @@ export class ComandaService {
     this.logger.log(
       `Ativando comanda para o CPF: ${num_cpf} no banco de dados`,
     );
-    
+
     const comanda = await this.comandaRepository.findOne({
       where: { num_cpf },
       order: {
-        data_criacao: 'DESC'
-      }
+        data_criacao: 'DESC',
+      },
     });
 
     if (!comanda) {
-      this.logger.log(
-        `Comanda não encontrada para o CPF: ${num_cpf}`,
-      );
+      this.logger.log(`Comanda não encontrada para o CPF: ${num_cpf}`);
       return null;
     }
 
     comanda.is_ativo = true;
     const updatedComanda = await this.comandaRepository.save(comanda);
-    
-    this.logger.log(
-      `Comanda ativada com sucesso para o CPF: ${num_cpf}`,
-    );
-    
+
+    this.logger.log(`Comanda ativada com sucesso para o CPF: ${num_cpf}`);
+
     return updatedComanda;
   }
 }

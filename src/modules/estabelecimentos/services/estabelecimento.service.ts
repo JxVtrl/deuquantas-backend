@@ -201,21 +201,25 @@ export class EstabelecimentoService {
         this.logger.error(
           `Estabelecimento não encontrado para o usuário: ${usuarioId}`,
         );
-        throw new NotFoundException(`Estabelecimento não encontrado para o usuário: ${usuarioId}`);
+        throw new NotFoundException(
+          `Estabelecimento não encontrado para o usuário: ${usuarioId}`,
+        );
       }
 
-      this.logger.log(`Estabelecimento encontrado para o usuário: ${usuarioId}`);
+      this.logger.log(
+        `Estabelecimento encontrado para o usuário: ${usuarioId}`,
+      );
       return estabelecimento;
     } catch (error) {
       this.logger.error(
         `Erro ao buscar estabelecimento para o usuário ${usuarioId}:`,
         error.stack,
       );
-      
+
       if (error instanceof NotFoundException) {
         throw error;
       }
-      
+
       throw new Error(`Erro ao buscar estabelecimento: ${error.message}`);
     }
   }

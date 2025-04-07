@@ -114,9 +114,7 @@ export class ClienteService {
   }
 
   async findByUsuarioId(usuarioId: string): Promise<Cliente> {
-    this.logger.log(
-      `Iniciando busca de cliente para o usuário: ${usuarioId}`,
-    );
+    this.logger.log(`Iniciando busca de cliente para o usuário: ${usuarioId}`);
 
     try {
       if (!usuarioId) {
@@ -131,22 +129,28 @@ export class ClienteService {
         .getOne();
 
       if (!cliente) {
-        this.logger.error(`Cliente não encontrado para o usuário: ${usuarioId}`);
-        throw new NotFoundException(`Cliente não encontrado para o usuário: ${usuarioId}`);
+        this.logger.error(
+          `Cliente não encontrado para o usuário: ${usuarioId}`,
+        );
+        throw new NotFoundException(
+          `Cliente não encontrado para o usuário: ${usuarioId}`,
+        );
       }
 
-      this.logger.log(`Cliente encontrado com sucesso para o usuário: ${usuarioId}`);
+      this.logger.log(
+        `Cliente encontrado com sucesso para o usuário: ${usuarioId}`,
+      );
       return cliente;
     } catch (error) {
       this.logger.error(
         `Erro ao buscar cliente para o usuário ${usuarioId}:`,
         error.stack,
       );
-      
+
       if (error instanceof NotFoundException) {
         throw error;
       }
-      
+
       throw new Error(`Erro ao buscar cliente: ${error.message}`);
     }
   }

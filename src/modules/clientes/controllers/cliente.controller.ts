@@ -53,13 +53,17 @@ export class ClienteController {
   @Get('usuario/:usuarioId')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Busca cliente por ID do usuário (Requer autenticação)' })
+  @ApiOperation({
+    summary: 'Busca cliente por ID do usuário (Requer autenticação)',
+  })
   @ApiResponse({ status: 200, description: 'Cliente encontrado com sucesso' })
   @ApiResponse({ status: 404, description: 'Cliente não encontrado' })
   @ApiResponse({ status: 500, description: 'Erro interno do servidor' })
   async getClienteByUsuarioId(@Param('usuarioId') usuarioId: string) {
-    this.logger.log(`Iniciando busca de cliente para o usuário ID: ${usuarioId}`);
-    
+    this.logger.log(
+      `Iniciando busca de cliente para o usuário ID: ${usuarioId}`,
+    );
+
     try {
       if (!usuarioId) {
         this.logger.error('ID do usuário não fornecido');
@@ -67,11 +71,11 @@ export class ClienteController {
       }
 
       const cliente = await this.clienteService.findByUsuarioId(usuarioId);
-      
+
       this.logger.log(
         `Cliente encontrado com sucesso para o usuário ID: ${usuarioId}`,
       );
-      
+
       return {
         success: true,
         data: cliente,
