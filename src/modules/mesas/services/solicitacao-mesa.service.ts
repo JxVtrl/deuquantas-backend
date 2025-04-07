@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SolicitacaoMesaRepository } from '../repositories/solicitacao-mesa.repository';
 import {
@@ -24,6 +24,7 @@ export class SolicitacaoMesaService
   @WebSocketServer()
   server: Server;
 
+  private readonly logger = new Logger(SolicitacaoMesaService.name);
   private clientRooms: Map<string, string> = new Map();
 
   constructor(
@@ -32,22 +33,25 @@ export class SolicitacaoMesaService
   ) {}
 
   handleConnection(client: Socket) {
-    console.log(`Cliente conectado: ${client.id}`);
+    this.logger.log(`Cliente conectado: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Cliente desconectado: ${client.id}`);
+    this.logger.log(`Cliente desconectado: ${client.id}`);
     const room = this.clientRooms.get(client.id);
     if (room) {
       client.leave(room);
       this.clientRooms.delete(client.id);
+      this.logger.log(`Cliente removido da sala: ${room}`);
     }
   }
 
   @SubscribeMessage('join-room')
   handleJoinRoom(client: Socket, room: string) {
+    this.logger.log(`Cliente ${client.id} entrando na sala: ${room}`);
     client.join(room);
     this.clientRooms.set(client.id, room);
+    this.logger.log(`Cliente ${client.id} entrou na sala: ${room}`);
   }
 
   @SubscribeMessage('solicitar-mesa')
@@ -56,6 +60,8 @@ export class SolicitacaoMesaService
     data: { num_cnpj: string; numMesa: string; clienteId: string },
   ) {
     try {
+      this.logger.log(`Cliente ${client.id} solicitando mesa ${data.numMesa} do estabelecimento ${data.num_cnpj}`);
+
       const solicitacao = await this.solicitacaoMesaRepository.save({
         num_cnpj: data.num_cnpj,
         numMesa: data.numMesa,
@@ -63,16 +69,21 @@ export class SolicitacaoMesaService
         status: 'pendente',
       });
 
+      this.logger.log(`Solicitação criada com sucesso. ID: ${solicitacao.id}`);
+
       // Notificar o estabelecimento
       this.server.to(data.num_cnpj).emit('nova-solicitacao', solicitacao);
+      this.logger.log(`Estabelecimento ${data.num_cnpj} notificado sobre nova solicitação`);
 
       // Notificar o cliente
       client.emit('solicitacao-criada', solicitacao);
+      this.logger.log(`Cliente ${client.id} notificado sobre criação da solicitação`);
 
       return solicitacao;
     } catch (error) {
-      console.error('Erro ao criar solicitação:', error);
+      this.logger.error('Erro ao criar solicitação:', error);
       client.emit('erro-solicitacao', { message: 'Erro ao criar solicitação' });
+      throw error;
     }
   }
 
@@ -82,10 +93,13 @@ export class SolicitacaoMesaService
     data: { solicitacaoId: string },
   ) {
     try {
+      this.logger.log(`Aprovando solicitação: ${data.solicitacaoId}`);
+
       const solicitacao = await this.solicitacaoMesaRepository.findById(
         data.solicitacaoId,
       );
       if (!solicitacao) {
+        this.logger.error(`Solicitação não encontrada: ${data.solicitacaoId}`);
         throw new Error('Solicitação não encontrada');
       }
 
@@ -93,21 +107,25 @@ export class SolicitacaoMesaService
         data.solicitacaoId,
         'aprovado',
       );
+      this.logger.log(`Solicitação ${data.solicitacaoId} aprovada com sucesso`);
 
       // Notificar o cliente
       this.server.emit('atualizacao-solicitacao', {
         ...solicitacao,
         status: 'aprovado',
       });
+      this.logger.log(`Cliente notificado sobre aprovação da solicitação ${data.solicitacaoId}`);
 
       // Notificar o estabelecimento
       this.server.to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
         ...solicitacao,
         status: 'aprovado',
       });
+      this.logger.log(`Estabelecimento ${solicitacao.num_cnpj} notificado sobre aprovação da solicitação`);
     } catch (error) {
-      console.error('Erro ao aprovar solicitação:', error);
+      this.logger.error('Erro ao aprovar solicitação:', error);
       client.emit('erro-aprovacao', { message: 'Erro ao aprovar solicitação' });
+      throw error;
     }
   }
 
@@ -117,10 +135,13 @@ export class SolicitacaoMesaService
     data: { solicitacaoId: string },
   ) {
     try {
+      this.logger.log(`Rejeitando solicitação: ${data.solicitacaoId}`);
+
       const solicitacao = await this.solicitacaoMesaRepository.findById(
         data.solicitacaoId,
       );
       if (!solicitacao) {
+        this.logger.error(`Solicitação não encontrada: ${data.solicitacaoId}`);
         throw new Error('Solicitação não encontrada');
       }
 
@@ -128,27 +149,34 @@ export class SolicitacaoMesaService
         data.solicitacaoId,
         'rejeitado',
       );
+      this.logger.log(`Solicitação ${data.solicitacaoId} rejeitada com sucesso`);
 
       // Notificar o cliente
       this.server.emit('atualizacao-solicitacao', {
         ...solicitacao,
         status: 'rejeitado',
       });
+      this.logger.log(`Cliente notificado sobre rejeição da solicitação ${data.solicitacaoId}`);
 
       // Notificar o estabelecimento
       this.server.to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
         ...solicitacao,
         status: 'rejeitado',
       });
+      this.logger.log(`Estabelecimento ${solicitacao.num_cnpj} notificado sobre rejeição da solicitação`);
     } catch (error) {
-      console.error('Erro ao rejeitar solicitação:', error);
+      this.logger.error('Erro ao rejeitar solicitação:', error);
       client.emit('erro-rejeicao', { message: 'Erro ao rejeitar solicitação' });
+      throw error;
     }
   }
 
   async getSolicitacoesPendentes(num_cnpj: string): Promise<SolicitacaoMesa[]> {
-    return this.solicitacaoMesaRepository.findPendentesByEstabelecimento(
+    this.logger.log(`Buscando solicitações pendentes para o estabelecimento: ${num_cnpj}`);
+    const solicitacoes = await this.solicitacaoMesaRepository.findPendentesByEstabelecimento(
       num_cnpj,
     );
+    this.logger.log(`Encontradas ${solicitacoes.length} solicitações pendentes para o estabelecimento: ${num_cnpj}`);
+    return solicitacoes;
   }
 }

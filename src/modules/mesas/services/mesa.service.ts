@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mesa } from '../mesa.entity';
@@ -7,6 +7,8 @@ import { QrCodeService } from './qr-code.service';
 
 @Injectable()
 export class MesaService {
+  private readonly logger = new Logger(MesaService.name);
+
   constructor(
     @InjectRepository(Mesa)
     private readonly mesaRepository: Repository<Mesa>,
@@ -14,22 +16,34 @@ export class MesaService {
   ) {}
 
   async getAllMesas(): Promise<Mesa[]> {
-    return this.mesaRepository.find();
+    this.logger.log('Buscando todas as mesas no banco de dados');
+    const mesas = await this.mesaRepository.find();
+    this.logger.log(`Encontradas ${mesas.length} mesas no banco de dados`);
+    return mesas;
   }
 
   async getMesasByEstabelecimento(cnpj: string): Promise<Mesa[]> {
-    return this.mesaRepository.find({
+    this.logger.log(`Buscando mesas do estabelecimento: ${cnpj} no banco de dados`);
+    const mesas = await this.mesaRepository.find({
       where: { estabelecimento: { num_cnpj: cnpj } },
       relations: ['estabelecimento'],
     });
+    this.logger.log(`Encontradas ${mesas.length} mesas para o estabelecimento: ${cnpj}`);
+    return mesas;
   }
 
   async getMesaByNumero(numMesa: string): Promise<Mesa | null> {
-    return this.mesaRepository.findOne({ where: { numMesa } });
+    this.logger.log(`Buscando mesa número: ${numMesa} no banco de dados`);
+    const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
+    this.logger.log(`Mesa ${mesa ? 'encontrada' : 'não encontrada'} com número: ${numMesa}`);
+    return mesa;
   }
 
   async createMesa(dto: CreateMesaDto): Promise<Mesa> {
+    this.logger.log(`Iniciando criação de mesa para o estabelecimento: ${dto.num_cnpj}`);
+
     // Verificar se já existe uma mesa com o mesmo número no mesmo estabelecimento
+    this.logger.log(`Verificando existência de mesa com número: ${dto.numMesa}`);
     const mesaExistente = await this.mesaRepository.findOne({
       where: {
         numMesa: dto.numMesa,
@@ -38,26 +52,37 @@ export class MesaService {
     });
 
     if (mesaExistente) {
+      this.logger.error(`Mesa ${dto.numMesa} já existe no estabelecimento ${dto.num_cnpj}`);
       throw new Error('Já existe uma mesa com este número no estabelecimento');
     }
 
+    this.logger.log('Criando nova mesa no banco de dados');
     const newMesa = this.mesaRepository.create(dto);
     const mesa = await this.mesaRepository.save(newMesa);
 
     // Gerar QR Code para a mesa
+    this.logger.log(`Gerando QR Code para a mesa ${mesa.numMesa}`);
     const qrCode = this.qrCodeService.gerarQrCode(dto.num_cnpj, mesa.numMesa);
     mesa.qrCode = qrCode;
 
-    return this.mesaRepository.save(mesa);
+    const mesaSalva = await this.mesaRepository.save(mesa);
+    this.logger.log(`Mesa criada com sucesso. Número: ${mesaSalva.numMesa}, CNPJ: ${mesaSalva.num_cnpj}`);
+    return mesaSalva;
   }
 
   async updateMesa(numMesa: string, dto: UpdateMesaDto): Promise<Mesa> {
+    this.logger.log(`Iniciando atualização da mesa número: ${numMesa}`);
+
     const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
     if (!mesa) {
+      this.logger.error(`Mesa ${numMesa} não encontrada`);
       throw new Error('Mesa não encontrada');
     }
 
+    this.logger.log(`Atualizando dados da mesa ${numMesa}`);
     Object.assign(mesa, dto);
-    return this.mesaRepository.save(mesa);
+    const mesaAtualizada = await this.mesaRepository.save(mesa);
+    this.logger.log(`Mesa atualizada com sucesso. Número: ${mesaAtualizada.numMesa}, CNPJ: ${mesaAtualizada.num_cnpj}`);
+    return mesaAtualizada;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Conta } from '../conta.entity';
@@ -6,21 +6,32 @@ import { CreateContaDto } from '../dtos/conta.dto';
 
 @Injectable()
 export class ContaService {
+  private readonly logger = new Logger(ContaService.name);
+
   constructor(
     @InjectRepository(Conta)
     private readonly contaRepository: Repository<Conta>,
   ) {}
 
   async getAllContas(): Promise<Conta[]> {
-    return this.contaRepository.find();
+    this.logger.log('Buscando todas as contas no banco de dados');
+    const contas = await this.contaRepository.find();
+    this.logger.log(`Encontradas ${contas.length} contas no banco de dados`);
+    return contas;
   }
 
   async getContaByCpf(num_cpf: string): Promise<Conta[]> {
-    return this.contaRepository.find({ where: { num_cpf } });
+    this.logger.log(`Buscando contas para o CPF: ${num_cpf} no banco de dados`);
+    const contas = await this.contaRepository.find({ where: { num_cpf } });
+    this.logger.log(`Encontradas ${contas.length} contas para o CPF: ${num_cpf} no banco de dados`);
+    return contas;
   }
 
   async createConta(dto: CreateContaDto): Promise<Conta> {
+    this.logger.log(`Criando nova conta para o CPF: ${dto.num_cpf} no banco de dados`);
     const newConta = this.contaRepository.create(dto);
-    return this.contaRepository.save(newConta);
+    const savedConta = await this.contaRepository.save(newConta);
+    this.logger.log(`Conta criada com sucesso no banco de dados. CPF: ${savedConta.num_cpf}`);
+    return savedConta;
   }
 }
