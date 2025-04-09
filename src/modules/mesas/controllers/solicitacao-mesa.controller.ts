@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { SolicitacaoMesaService } from '../services/solicitacao-mesa.service';
 import { SolicitacaoMesaDto } from '../dtos/solicitacao-mesa.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 
 @Controller('solicitacoes-mesa')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 export class SolicitacaoMesaController {
   private readonly logger = new Logger(SolicitacaoMesaController.name);
 
@@ -26,23 +26,26 @@ export class SolicitacaoMesaController {
   @Get('estabelecimento/:cnpj')
   async getSolicitacoesByEstabelecimento(@Param('cnpj') cnpj: string) {
     try {
-      this.logger.log(`Buscando solicitações do estabelecimento: ${cnpj}`);
+      this.logger.log(`[DEBUG] Iniciando busca de solicitações para CNPJ: ${cnpj}`);
       const solicitacoes =
         await this.solicitacaoMesaService.getSolicitacoesByEstabelecimento(
           cnpj,
         );
       this.logger.log(
-        `Encontradas ${solicitacoes.length} solicitações para o estabelecimento: ${cnpj}`,
+        `[DEBUG] Encontradas ${solicitacoes.length} solicitações para o CNPJ: ${cnpj}`,
       );
+      this.logger.log(`[DEBUG] Dados retornados: ${JSON.stringify(solicitacoes)}`);
+      
       return {
         success: true,
         data: solicitacoes,
       };
     } catch (error: unknown) {
+      this.logger.error(`[DEBUG] Erro ao buscar solicitações para CNPJ ${cnpj}:`, error);
       if (error instanceof Error) {
-        this.logger.error('Erro ao buscar solicitações:', error.stack);
+        this.logger.error('Stack trace:', error.stack);
       }
-      throw new InternalServerErrorException('Erro ao buscar solicitações');
+      throw error;
     }
   }
 

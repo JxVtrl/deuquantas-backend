@@ -13,11 +13,12 @@ import { MesaService } from './services/mesa.service';
 import { SolicitacaoMesaService } from './services/solicitacao-mesa.service';
 import { QrCodeService } from './services/qr-code.service';
 import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
+import { SocketModule } from '../socket/socket.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Mesa, SolicitacaoMesa, Comanda, Estabelecimento]),
-    TypeOrmModule.forFeature([Mesa], 'default'),
+    SocketModule,
   ],
   controllers: [MesaController, QrCodeController, SolicitacaoMesaController],
   providers: [

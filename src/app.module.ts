@@ -24,7 +24,7 @@ import { MonitoringModule } from './monitoring/monitoring.module';
 import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { TestDataModule } from './modules/test-data/test-data.module';
-import { SocketModule } from '@nestjs/websockets/socket-module';
+import { SocketModule } from './modules/socket/socket.module';
 
 @Module({
   imports: [

@@ -67,9 +67,15 @@ export class TestDataService {
 
   private async runMigrations(): Promise<void> {
     try {
+      // Primeiro, verifica se a extensão uuid-ossp está instalada
+      await this.usuarioRepository.query(`
+        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      `);
+
+      // Depois, cria a tabela usuarios
       await this.usuarioRepository.query(`
         CREATE TABLE IF NOT EXISTS usuarios (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
           email VARCHAR(255) UNIQUE NOT NULL,
           password VARCHAR(255) NOT NULL,
           name VARCHAR(255) NOT NULL,
@@ -79,6 +85,8 @@ export class TestDataService {
           data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `);
+
+      this.logger.log('Migrações executadas com sucesso!');
     } catch (error) {
       this.logger.error('Erro ao executar migrações:', error);
       throw error;
