@@ -26,7 +26,9 @@ export class SolicitacaoMesaController {
   @Get('estabelecimento/:cnpj')
   async getSolicitacoesByEstabelecimento(@Param('cnpj') cnpj: string) {
     try {
-      this.logger.log(`[DEBUG] Iniciando busca de solicitações para CNPJ: ${cnpj}`);
+      this.logger.log(
+        `[DEBUG] Iniciando busca de solicitações para CNPJ: ${cnpj}`,
+      );
       const solicitacoes =
         await this.solicitacaoMesaService.getSolicitacoesByEstabelecimento(
           cnpj,
@@ -34,14 +36,19 @@ export class SolicitacaoMesaController {
       this.logger.log(
         `[DEBUG] Encontradas ${solicitacoes.length} solicitações para o CNPJ: ${cnpj}`,
       );
-      this.logger.log(`[DEBUG] Dados retornados: ${JSON.stringify(solicitacoes)}`);
-      
+      this.logger.log(
+        `[DEBUG] Dados retornados: ${JSON.stringify(solicitacoes)}`,
+      );
+
       return {
         success: true,
         data: solicitacoes,
       };
     } catch (error: unknown) {
-      this.logger.error(`[DEBUG] Erro ao buscar solicitações para CNPJ ${cnpj}:`, error);
+      this.logger.error(
+        `[DEBUG] Erro ao buscar solicitações para CNPJ ${cnpj}:`,
+        error,
+      );
       if (error instanceof Error) {
         this.logger.error('Stack trace:', error.stack);
       }

@@ -31,10 +31,7 @@ export class SolicitacaoMesaRepository {
     return this.repository.findOne({ where });
   }
 
-  async updateStatus(
-    id: string,
-    status: StatusSolicitacao,
-  ): Promise<void> {
+  async updateStatus(id: string, status: StatusSolicitacao): Promise<void> {
     await this.repository.update(id, { status });
   }
 
