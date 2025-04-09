@@ -24,7 +24,7 @@ export class TestDataService {
   async createTestUsers() {
     try {
       this.logger.log('Verificando tabelas...');
-      
+
       // Verifica se as tabelas existem
       const tablesExist = await this.checkTablesExist();
       if (!tablesExist) {
