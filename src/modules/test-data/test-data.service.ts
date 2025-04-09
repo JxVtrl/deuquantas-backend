@@ -21,15 +21,22 @@ export class TestDataService {
     private estabelecimentoRepository: Repository<Estabelecimento>,
   ) {}
 
-  async createTestData() {
+  async createTestUsers() {
     try {
+      this.logger.log('Verificando tabelas...');
+      
+      // Verifica se as tabelas existem
+      const tablesExist = await this.checkTablesExist();
+      if (!tablesExist) {
+        this.logger.log('Tabelas não encontradas. Executando migrações...');
+        await this.runMigrations();
+      }
+
       this.logger.log('Criando dados de teste...');
-
-      // Criar usuários
       const senhaHash = await hash('123456', 10);
-      const usuarios: Usuario[] = [];
 
-      // Criar 5 clientes
+      // Criar usuários de teste
+      const usuarios: Usuario[] = [];
       for (let i = 1; i <= 5; i++) {
         const usuario = await this.usuarioRepository.save({
           email: `cliente${i}@teste.com`,
@@ -39,33 +46,6 @@ export class TestDataService {
           is_ativo: true,
         } as Partial<Usuario>);
         usuarios.push(usuario);
-
-        await this.clienteRepository.save({
-          usuario: usuario,
-          num_cpf: `1234567890${i}`,
-          nome: `Cliente Teste ${i}`,
-          telefone: `1199999999${i}`,
-        } as Partial<Cliente>);
-      }
-
-      // Criar 5 estabelecimentos
-      for (let i = 1; i <= 5; i++) {
-        const usuario = await this.usuarioRepository.save({
-          email: `estabelecimento${i}@teste.com`,
-          password: senhaHash,
-          name: `Estabelecimento Teste ${i}`,
-          is_admin: false,
-          is_ativo: true,
-        } as Partial<Usuario>);
-        usuarios.push(usuario);
-
-        await this.estabelecimentoRepository.save({
-          usuario: usuario,
-          num_cnpj: `1234567890123${i}`,
-          nome: `Estabelecimento Teste ${i}`,
-          telefone: `1199999999${i}`,
-          endereco: `Rua Teste ${i}, 123`,
-        } as Partial<Estabelecimento>);
       }
 
       this.logger.log('Dados de teste criados com sucesso!');
@@ -76,11 +56,31 @@ export class TestDataService {
     }
   }
 
-  async createTestUsers() {
+  private async checkTablesExist(): Promise<boolean> {
     try {
-      // Implementação do método
-      return { success: true };
+      await this.usuarioRepository.query('SELECT 1 FROM usuarios LIMIT 1');
+      return true;
     } catch (error) {
+      return false;
+    }
+  }
+
+  private async runMigrations(): Promise<void> {
+    try {
+      await this.usuarioRepository.query(`
+        CREATE TABLE IF NOT EXISTS usuarios (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          name VARCHAR(255) NOT NULL,
+          is_admin BOOLEAN DEFAULT false,
+          is_ativo BOOLEAN DEFAULT true,
+          data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+    } catch (error) {
+      this.logger.error('Erro ao executar migrações:', error);
       throw error;
     }
   }
