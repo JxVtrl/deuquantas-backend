@@ -7,6 +7,6 @@ export class TestDataController {
 
   @Post('create-test-users')
   async createTestUsers() {
-    return this.testDataService.createTestUsers();
+    return await this.testDataService.createTestUsers();
   }
 }

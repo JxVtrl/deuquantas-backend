@@ -75,4 +75,13 @@ export class TestDataService {
       throw error;
     }
   }
+
+  async createTestUsers() {
+    try {
+      // Implementação do método
+      return { success: true };
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -73,8 +73,7 @@ export class SolicitacaoMesaController {
   async solicitarMesa(@Body() data: SolicitacaoMesaDto) {
     try {
       this.logger.log(`Criando solicitação: ${JSON.stringify(data)}`);
-      const solicitacao =
-        await this.solicitacaoMesaService.solicitarMesa(data);
+      const solicitacao = await this.solicitacaoMesaService.solicitarMesa(data);
       this.logger.log(
         `Solicitação criada com sucesso: ${JSON.stringify(solicitacao)}`,
       );

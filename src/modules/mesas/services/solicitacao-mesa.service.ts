@@ -31,7 +31,10 @@ export class SolicitacaoMesaService {
       );
 
       // Notificar o estabelecimento
-      this.socketGateway.getServer().to(data.num_cnpj).emit('nova-solicitacao', solicitacao);
+      this.socketGateway
+        .getServer()
+        .to(data.num_cnpj)
+        .emit('nova-solicitacao', solicitacao);
       this.logger.log(
         `Estabelecimento ${data.num_cnpj} notificado sobre nova solicitação`,
       );
@@ -82,14 +85,19 @@ export class SolicitacaoMesaService {
         status: 'aprovado',
         comandaId: comanda.num_cpf,
       });
-      this.logger.log(`Cliente notificado sobre aprovação da solicitação ${id}`);
+      this.logger.log(
+        `Cliente notificado sobre aprovação da solicitação ${id}`,
+      );
 
       // Notificar o estabelecimento
-      this.socketGateway.getServer().to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
-        ...solicitacao,
-        status: 'aprovado',
-        comandaId: comanda.num_cpf,
-      });
+      this.socketGateway
+        .getServer()
+        .to(solicitacao.num_cnpj)
+        .emit('solicitacao-atualizada', {
+          ...solicitacao,
+          status: 'aprovado',
+          comandaId: comanda.num_cpf,
+        });
       this.logger.log(
         `Estabelecimento ${solicitacao.num_cnpj} notificado sobre aprovação da solicitação`,
       );
@@ -121,10 +129,13 @@ export class SolicitacaoMesaService {
       this.logger.log(`Cliente notificado sobre rejeição da solicitação ${id}`);
 
       // Notificar o estabelecimento
-      this.socketGateway.getServer().to(solicitacao.num_cnpj).emit('solicitacao-atualizada', {
-        ...solicitacao,
-        status: 'rejeitado',
-      });
+      this.socketGateway
+        .getServer()
+        .to(solicitacao.num_cnpj)
+        .emit('solicitacao-atualizada', {
+          ...solicitacao,
+          status: 'rejeitado',
+        });
       this.logger.log(
         `Estabelecimento ${solicitacao.num_cnpj} notificado sobre rejeição da solicitação`,
       );

@@ -39,4 +39,4 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   getServer(): Server {
     return this.server;
   }
-} 
+}

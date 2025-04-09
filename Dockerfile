@@ -4,8 +4,8 @@ FROM node:20-slim
 # Define o diretório de trabalho
 WORKDIR /app
 
-# Copia apenas os arquivos de dependências primeiro
-COPY package*.json ./
+# Copia os arquivos de dependências primeiro
+COPY backend/package*.json ./
 
 # Configurar o npm para usar o registry global
 RUN npm config set registry https://registry.npmjs.org/
@@ -19,7 +19,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copia o restante do código do backend
-COPY . .
+COPY backend/ ./
 
 # Compila o TypeScript
 RUN npm run build
