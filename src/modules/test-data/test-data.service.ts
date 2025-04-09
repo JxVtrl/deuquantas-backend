@@ -1,75 +1,78 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Usuario } from '../usuarios/usuario.entity';
 import { Cliente } from '../clientes/cliente.entity';
 import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
 import { hash } from 'bcryptjs';
-import { Usuario } from '../usuarios/usuario.entity';
 
 @Injectable()
 export class TestDataService {
+  private readonly logger = new Logger(TestDataService.name);
+
   constructor(
     @InjectRepository(Usuario)
-    private readonly usuarioRepository: Repository<Usuario>,
+    private usuarioRepository: Repository<Usuario>,
     @InjectRepository(Cliente)
-    private readonly clienteRepository: Repository<Cliente>,
+    private clienteRepository: Repository<Cliente>,
     @InjectRepository(Estabelecimento)
-    private readonly estabelecimentoRepository: Repository<Estabelecimento>,
+    private estabelecimentoRepository: Repository<Estabelecimento>,
   ) {}
 
-  async createTestUsers() {
+  async createTestData() {
     try {
-      // Criar 10 clientes
-      for (let i = 1; i <= 10; i++) {
-        const senhaHash = await hash('123456', 10);
+      this.logger.log('Criando dados de teste...');
 
-        // Criar usuário
-        const usuario = this.usuarioRepository.create({
+      // Criar usuários
+      const senhaHash = await hash('123456', 10);
+      const usuarios: Usuario[] = [];
+
+      // Criar 5 clientes
+      for (let i = 1; i <= 5; i++) {
+        const usuario = await this.usuarioRepository.save({
           email: `cliente${i}@teste.com`,
           password: senhaHash,
-          name: `Cliente ${i}`,
+          name: `Cliente Teste ${i}`,
           is_admin: false,
           is_ativo: true,
-        });
-        const savedUsuario = await this.usuarioRepository.save(usuario);
+        } as Partial<Usuario>);
+        usuarios.push(usuario);
 
-        // Criar cliente
-        const cliente = this.clienteRepository.create({
+        await this.clienteRepository.save({
+          usuario: usuario,
           num_cpf: `1234567890${i}`,
-          num_celular: `1199999999${i}`,
-          usuario: savedUsuario,
-        });
-        await this.clienteRepository.save(cliente);
+          nome: `Cliente Teste ${i}`,
+          telefone: `1199999999${i}`,
+        } as Partial<Cliente>);
       }
 
-      // Criar 10 estabelecimentos
-      for (let i = 1; i <= 10; i++) {
-        const senhaHash = await hash('123456', 10);
-
-        // Criar usuário
-        const usuario = this.usuarioRepository.create({
+      // Criar 5 estabelecimentos
+      for (let i = 1; i <= 5; i++) {
+        const usuario = await this.usuarioRepository.save({
           email: `estabelecimento${i}@teste.com`,
           password: senhaHash,
-          name: `Estabelecimento ${i}`,
+          name: `Estabelecimento Teste ${i}`,
           is_admin: false,
           is_ativo: true,
-        });
-        const savedUsuario = await this.usuarioRepository.save(usuario);
+        } as Partial<Usuario>);
+        usuarios.push(usuario);
 
-        // Criar estabelecimento
-        const estabelecimento = this.estabelecimentoRepository.create({
+        await this.estabelecimentoRepository.save({
+          usuario: usuario,
           num_cnpj: `1234567890123${i}`,
-          num_celular: `1199999999${i}`,
-          usuario: savedUsuario,
-        });
-        await this.estabelecimentoRepository.save(estabelecimento);
+          nome: `Estabelecimento Teste ${i}`,
+          telefone: `1199999999${i}`,
+          endereco: `Rua Teste ${i}, 123`,
+        } as Partial<Estabelecimento>);
       }
 
-      return { message: 'Usuários de teste criados com sucesso' };
+      this.logger.log('Dados de teste criados com sucesso!');
+      return { success: true, data: usuarios };
     } catch (error) {
-      throw new Error(`Erro ao criar usuários de teste: ${error.message}`);
+      this.logger.error('Erro ao criar dados de teste:', error);
+      throw error;
     }
   }
 }

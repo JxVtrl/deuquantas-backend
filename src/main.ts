@@ -4,8 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthGuard } from './auth/auth.guard';
 import { Reflector } from '@nestjs/core';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -60,32 +58,8 @@ async function bootstrap() {
     }),
   );
 
-  // Criar servidor HTTP
-  const httpServer = createServer(app.getHttpAdapter().getInstance());
-
-  // Configurar Socket.IO
-  const io = new Server(httpServer, {
-    cors: {
-      origin: [
-        process.env.FRONTEND_URL || 'http://localhost:3000',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-      ],
-      methods: ['GET', 'POST'],
-      credentials: true,
-    },
-    path: '/socket.io',
-    transports: ['websocket', 'polling'],
-    allowEIO3: true,
-  });
-
   // Iniciar servidor HTTP na porta 3001
   await app.listen(3001, '0.0.0.0');
-
-  // Iniciar servidor Socket.IO na porta 3002
-  httpServer.listen(3002, '0.0.0.0', () => {
-    console.log('Servidor Socket.IO rodando na porta 3002');
-  });
 }
 
 bootstrap();

@@ -12,11 +12,10 @@ import {
 } from '@nestjs/common';
 import { SolicitacaoMesaService } from '../services/solicitacao-mesa.service';
 import { SolicitacaoMesaDto } from '../dtos/solicitacao-mesa.dto';
-import { AuthGuard } from '../../../auth/auth.guard';
-import { RolesGuard } from '../../../auth/role.guard';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('solicitacoes-mesas')
-@UseGuards(AuthGuard, RolesGuard)
+@Controller('solicitacoes-mesa')
+@UseGuards(AuthGuard('jwt'))
 export class SolicitacaoMesaController {
   private readonly logger = new Logger(SolicitacaoMesaController.name);
 
@@ -71,11 +70,11 @@ export class SolicitacaoMesaController {
   }
 
   @Post()
-  async createSolicitacao(@Body() data: SolicitacaoMesaDto) {
+  async solicitarMesa(@Body() data: SolicitacaoMesaDto) {
     try {
       this.logger.log(`Criando solicitação: ${JSON.stringify(data)}`);
       const solicitacao =
-        await this.solicitacaoMesaService.createSolicitacao(data);
+        await this.solicitacaoMesaService.solicitarMesa(data);
       this.logger.log(
         `Solicitação criada com sucesso: ${JSON.stringify(solicitacao)}`,
       );
@@ -91,7 +90,7 @@ export class SolicitacaoMesaController {
     }
   }
 
-  @Put(':id/aprovar')
+  @Post(':id/aprovar')
   async aprovarSolicitacao(@Param('id') id: string) {
     try {
       this.logger.log(`Aprovando solicitação: ${id}`);
@@ -112,7 +111,7 @@ export class SolicitacaoMesaController {
     }
   }
 
-  @Put(':id/rejeitar')
+  @Post(':id/rejeitar')
   async rejeitarSolicitacao(@Param('id') id: string) {
     try {
       this.logger.log(`Rejeitando solicitação: ${id}`);
