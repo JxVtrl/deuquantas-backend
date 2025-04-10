@@ -2,11 +2,8 @@ import {
   Entity,
   Column,
   CreateDateColumn,
-  OneToOne,
-  JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Conta } from '../contas/conta.entity';
 
 @Entity('comandas')
 export class Comanda {
@@ -37,17 +34,27 @@ export class Comanda {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   valPreco: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  valTotal: number;
+
   @Column({ type: 'boolean', default: true })
   is_ativo: boolean;
+
+  @Column({ type: 'int', default: 0 })
+  codFormaPg: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  horPagto: Date;
+
+  @Column({ type: 'int', nullable: true })
+  codErro: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   data_criacao: Date;
 
-  @OneToOne(() => Conta)
-  @JoinColumn([
-    { name: 'num_cnpj', referencedColumnName: 'num_cnpj' },
-    { name: 'numMesa', referencedColumnName: 'numMesa' },
-    { name: 'num_cpf', referencedColumnName: 'num_cpf' },
-  ])
-  conta: Conta;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  valConta: number;
+
+  @Column({ type: 'timestamp' })
+  datConta: Date;
 }

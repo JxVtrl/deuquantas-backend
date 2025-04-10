@@ -13,6 +13,7 @@ import { QrCodeService } from './services/qr-code.service';
 import { EstabelecimentosModule } from '../estabelecimentos/estabelecimentos.module';
 import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
 import { Comanda } from '../comandas/comanda.entity';
+import { QrCodeController } from './controllers/qr-code.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { Comanda } from '../comandas/comanda.entity';
     SolicitacaoMesaService,
     QrCodeService,
   ],
-  controllers: [MesaController, SolicitacaoMesaController],
+  controllers: [MesaController, SolicitacaoMesaController, QrCodeController],
   exports: [MesaRepository, SolicitacaoMesaRepository, SolicitacaoMesaService],
 })
 export class MesasModule {}

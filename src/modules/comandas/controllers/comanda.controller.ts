@@ -8,7 +8,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ComandaService } from '../services/comanda.service';
-import { TestComandaService } from '../services/test-comanda.service';
 import { CreateComandaDto } from '../dtos/comanda.dto';
 import { AuthGuard } from '../../../auth/auth.guard';
 
@@ -18,7 +17,6 @@ export class ComandaController {
 
   constructor(
     private readonly comandaService: ComandaService,
-    private readonly testComandaService: TestComandaService,
   ) {}
 
   @Get()
@@ -27,14 +25,6 @@ export class ComandaController {
     this.logger.log('Buscando todas as comandas');
     const comandas = await this.comandaService.getAllComandas();
     this.logger.log(`Encontradas ${comandas.length} comandas`);
-    return comandas;
-  }
-
-  @Get('test')
-  async getAllTestComandas() {
-    this.logger.log('Buscando todas as comandas de teste');
-    const comandas = await this.testComandaService.getAllTestComandas();
-    this.logger.log(`Encontradas ${comandas.length} comandas de teste`);
     return comandas;
   }
 
@@ -49,7 +39,7 @@ export class ComandaController {
     return comanda;
   }
 
-  @Get(':num_cpf')
+  @Get('cpf/:num_cpf')
   @UseGuards(AuthGuard)
   async getComandaByCpf(@Param('num_cpf') num_cpf: string) {
     this.logger.log(`Buscando comanda para o CPF: ${num_cpf}`);
@@ -57,25 +47,6 @@ export class ComandaController {
     this.logger.log(
       `Comanda ${comanda ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`,
     );
-    return comanda;
-  }
-
-  @Get('test/:num_cpf')
-  async getTestComandaByCpf(@Param('num_cpf') num_cpf: string) {
-    this.logger.log(`Buscando comanda de teste para o CPF: ${num_cpf}`);
-    const comanda = await this.testComandaService.getTestComandaByCpf(num_cpf);
-    this.logger.log(
-      `Comanda de teste ${comanda ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`,
-    );
-    return comanda;
-  }
-
-  @Get('id/:id')
-  @UseGuards(AuthGuard)
-  async getComandaById(@Param('id') id: string) {
-    this.logger.log(`Buscando comanda por ID: ${id}`);
-    const comanda = await this.comandaService.getComandaById(id);
-    this.logger.log(`Comanda encontrada para o ID: ${id}`);
     return comanda;
   }
 
@@ -100,5 +71,19 @@ export class ComandaController {
       `Comanda ${comanda ? 'ativada' : 'não encontrada'} para o CPF: ${num_cpf}`,
     );
     return comanda;
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async getComandaById(@Param('id') id: string) {
+    this.logger.log(`Buscando comanda por ID: ${id}`);
+    try {
+      const comanda = await this.comandaService.getComandaById(id);
+      this.logger.log(`Comanda encontrada para o ID: ${id}`, { comanda });
+      return comanda;
+    } catch (error) {
+      this.logger.error(`Erro ao buscar comanda por ID: ${id}`, error);
+      throw error;
+    }
   }
 }

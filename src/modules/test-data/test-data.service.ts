@@ -4,8 +4,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from '../usuarios/usuario.entity';
-import { Cliente } from '../clientes/cliente.entity';
-import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
 import { hash } from 'bcryptjs';
 
 @Injectable()
@@ -15,10 +13,6 @@ export class TestDataService {
   constructor(
     @InjectRepository(Usuario)
     private usuarioRepository: Repository<Usuario>,
-    @InjectRepository(Cliente)
-    private clienteRepository: Repository<Cliente>,
-    @InjectRepository(Estabelecimento)
-    private estabelecimentoRepository: Repository<Estabelecimento>,
   ) {}
 
   async createTestUsers() {

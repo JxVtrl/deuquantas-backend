@@ -8,8 +8,6 @@ export * from './contas/conta.entity';
 export * from './contas/contas.module';
 export * from './estabelecimentos/estabelecimento.entity';
 export * from './estabelecimentos/estabelecimentos.module';
-export * from './funcionarios/funcionario.entity';
-export * from './funcionarios/funcionarios.module';
 export * from './itens/item.entity';
 export * from './itens/itens.module';
 export * from './mesas/mesa.entity';

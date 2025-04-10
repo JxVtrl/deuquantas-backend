@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsNumber } from 'class-validator';
+import { IsString, IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateComandaDto {
   @IsString()
@@ -17,11 +17,22 @@ export class CreateComandaDto {
   horPedido: string;
 
   @IsString()
-  codItem: string;
+  @IsOptional()
+  codItem?: string;
 
   @IsNumber()
-  numQuant: number;
+  @IsOptional()
+  numQuant?: number;
 
   @IsNumber()
-  valPreco: number;
+  @IsOptional()
+  valPreco?: number;
+
+  @IsNumber()
+  @IsOptional()
+  valConta?: number;
+
+  @IsDateString()
+  @IsOptional()
+  datConta?: string;
 }

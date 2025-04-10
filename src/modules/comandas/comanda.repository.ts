@@ -15,6 +15,23 @@ export class ComandaRepository {
   }
 
   async findByCpf(num_cpf: string): Promise<Comanda | null> {
-    return this.repository.findOne({ where: { num_cpf } });
+    return this.repository.findOne({
+      where: { num_cpf },
+    });
+  }
+
+  async findById(id: string): Promise<Comanda | null> {
+    return this.repository.findOne({
+      where: { id },
+    });
+  }
+
+  async save(comanda: Partial<Comanda>): Promise<Comanda> {
+    return this.repository.save(comanda);
+  }
+
+  async create(data: Partial<Comanda>): Promise<Comanda> {
+    const comanda = this.repository.create(data);
+    return this.repository.save(comanda);
   }
 }

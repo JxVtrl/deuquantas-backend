@@ -189,36 +189,32 @@ export class SolicitacaoMesaService {
         );
       }
 
-      // Criar comanda e conta
       const comandaDto: CreateComandaDto = {
         num_cpf: solicitacao.clienteId,
         num_cnpj: solicitacao.num_cnpj,
         numMesa: solicitacao.numMesa,
         datApropriacao: new Date().toISOString(),
         horPedido: new Date().toISOString(),
-        codItem: '', // Será preenchido quando o cliente fizer o pedido
-        numQuant: 0, // Será preenchido quando o cliente fizer o pedido
-        valPreco: 0, // Será preenchido quando o cliente fizer o pedido
       };
 
+      // Criar e ativar a comanda
       const comanda = await this.comandaService.createComanda(comandaDto);
+      await this.comandaService.ativarComanda(comanda.id);
 
       // Atualizar status da solicitação
-      await this.solicitacaoMesaRepository.updateStatus(id, 'aprovado');
-      this.logger.log(`[DEBUG] Solicitação ${id} aprovada com sucesso`);
-
-      // Atualizar status da mesa
-      await this.mesaRepository.update(
-        { num_cnpj: solicitacao.num_cnpj, numMesa: solicitacao.numMesa },
-        { status: 'ocupada' },
-      );
-
-      return {
-        ...solicitacao,
-        status: 'aprovado',
-      };
+      solicitacao.status = 'aprovado';
+      solicitacao.dataAtualizacao = new Date();
+      
+      const solicitacaoAtualizada = await this.solicitacaoMesaRepository.save(solicitacao);
+      
+      this.logger.log(`[DEBUG] Solicitação aprovada com sucesso: ${JSON.stringify(solicitacaoAtualizada)}`);
+      
+      return solicitacaoAtualizada;
     } catch (error) {
-      this.logger.error(`[DEBUG] Erro ao aprovar solicitação ${id}:`, error);
+      this.logger.error(
+        `[DEBUG] Erro ao aprovar solicitação ${id}:`,
+        error,
+      );
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException
