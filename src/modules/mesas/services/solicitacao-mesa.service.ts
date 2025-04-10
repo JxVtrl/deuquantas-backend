@@ -3,6 +3,8 @@ import {
   Logger,
   NotFoundException,
   BadRequestException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SolicitacaoMesaRepository } from '../repositories/solicitacao-mesa.repository';
@@ -23,6 +25,7 @@ export class SolicitacaoMesaService {
     private readonly mesaRepository: Repository<Mesa>,
     @InjectRepository(Comanda)
     private readonly comandaRepository: Repository<Comanda>,
+    @Inject(forwardRef(() => SocketGateway))
     private readonly socketGateway: SocketGateway,
   ) {}
 

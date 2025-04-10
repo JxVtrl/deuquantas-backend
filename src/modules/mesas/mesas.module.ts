@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mesa } from './mesa.entity';
 import { SolicitacaoMesa } from './entities/solicitacao-mesa.entity';
@@ -18,7 +18,7 @@ import { SocketModule } from '../socket/socket.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Mesa, SolicitacaoMesa, Comanda, Estabelecimento]),
-    SocketModule,
+    forwardRef(() => SocketModule),
   ],
   controllers: [MesaController, QrCodeController, SolicitacaoMesaController],
   providers: [
