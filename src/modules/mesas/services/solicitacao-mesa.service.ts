@@ -14,6 +14,8 @@ import { SocketGateway } from '../../socket/socket.gateway';
 import { Repository } from 'typeorm';
 import { Comanda } from '../../comandas/comanda.entity';
 import { Mesa } from '../mesa.entity';
+import { ComandaService } from '../../comandas/services/comanda.service';
+import { CreateComandaDto } from '../../comandas/dtos/comanda.dto';
 
 @Injectable()
 export class SolicitacaoMesaService {
@@ -27,6 +29,7 @@ export class SolicitacaoMesaService {
     private readonly comandaRepository: Repository<Comanda>,
     @Inject(forwardRef(() => SocketGateway))
     private readonly socketGateway: SocketGateway,
+    private readonly comandaService: ComandaService,
   ) {}
 
   async getSolicitacoesByEstabelecimento(
@@ -227,6 +230,21 @@ export class SolicitacaoMesaService {
         );
       }
 
+      // Criar comanda e conta
+      const comandaDto: CreateComandaDto = {
+        num_cpf: solicitacao.clienteId,
+        num_cnpj: solicitacao.num_cnpj,
+        numMesa: solicitacao.numMesa,
+        datApropriacao: new Date().toISOString(),
+        horPedido: new Date().toISOString(),
+        codItem: '', // Será preenchido quando o cliente fizer o pedido
+        numQuant: 0, // Será preenchido quando o cliente fizer o pedido
+        valPreco: 0, // Será preenchido quando o cliente fizer o pedido
+      };
+
+      const comanda = await this.comandaService.createComanda(comandaDto);
+
+      // Atualizar status da solicitação
       await this.solicitacaoMesaRepository.updateStatus(id, 'aprovado');
       this.logger.log(`[DEBUG] Solicitação ${id} aprovada com sucesso`);
 
@@ -236,10 +254,11 @@ export class SolicitacaoMesaService {
         { status: 'ocupada' },
       );
 
-      // Notificar o cliente
+      // Notificar o cliente com o ID da comanda
       this.socketGateway.getServer().emit('atualizacao-solicitacao', {
         ...solicitacao,
         status: 'aprovado',
+        comandaId: comanda.id,
       });
 
       // Notificar o estabelecimento
@@ -251,7 +270,11 @@ export class SolicitacaoMesaService {
           status: 'aprovado',
         });
 
-      return solicitacao;
+      return {
+        ...solicitacao,
+        status: 'aprovado',
+        comandaId: comanda.id,
+      };
     } catch (error) {
       this.logger.error(`[DEBUG] Erro ao aprovar solicitação ${id}:`, error);
       if (

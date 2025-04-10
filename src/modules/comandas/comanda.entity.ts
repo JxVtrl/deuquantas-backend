@@ -1,21 +1,25 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   CreateDateColumn,
   OneToOne,
   JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Conta } from '../contas/conta.entity';
+
 @Entity('comandas')
 export class Comanda {
-  @PrimaryColumn({ type: 'varchar', length: 11 })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ length: 11 })
   num_cpf: string;
 
-  @PrimaryColumn({ type: 'varchar', length: 14 })
+  @Column({ length: 14 })
   num_cnpj: string;
 
-  @Column({ type: 'varchar', length: 4 })
+  @Column({ length: 4 })
   numMesa: string;
 
   @Column({ type: 'timestamp' })
@@ -24,7 +28,7 @@ export class Comanda {
   @Column({ type: 'timestamp', nullable: true })
   horPedido: Date;
 
-  @Column({ type: 'varchar', length: 15 })
+  @Column({ length: 15 })
   codItem: string;
 
   @Column({ type: 'int' })

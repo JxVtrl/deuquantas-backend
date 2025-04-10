@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comanda } from '../comanda.entity';
@@ -116,5 +116,21 @@ export class ComandaService {
     this.logger.log(`Comanda ativada com sucesso para o CPF: ${num_cpf}`);
 
     return updatedComanda;
+  }
+
+  async getComandaById(id: string): Promise<Comanda> {
+    this.logger.log(`Buscando comanda por ID: ${id}`);
+    const comanda = await this.comandaRepository.findOne({
+      where: { id },
+      relations: ['conta'],
+    });
+
+    if (!comanda) {
+      this.logger.error(`Comanda não encontrada para o ID: ${id}`);
+      throw new NotFoundException(`Comanda não encontrada para o ID: ${id}`);
+    }
+
+    this.logger.log(`Comanda encontrada para o ID: ${id}`);
+    return comanda;
   }
 }

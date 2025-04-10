@@ -1,34 +1,29 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mesa } from './mesa.entity';
-import { SolicitacaoMesa } from './entities/solicitacao-mesa.entity';
-import { Comanda } from '../comandas/comanda.entity';
 import { MesaRepository } from './mesa.repository';
-import { SolicitacaoMesaRepository } from './repositories/solicitacao-mesa.repository';
-import { ComandaRepository } from '../comandas/comanda.repository';
-import { MesaController } from './controllers/mesa.controller';
-import { QrCodeController } from './controllers/qr-code.controller';
-import { SolicitacaoMesaController } from './controllers/solicitacao-mesa.controller';
 import { MesaService } from './services/mesa.service';
+import { MesaController } from './controllers/mesa.controller';
+import { SolicitacaoMesa } from './entities/solicitacao-mesa.entity';
+import { SolicitacaoMesaRepository } from './repositories/solicitacao-mesa.repository';
 import { SolicitacaoMesaService } from './services/solicitacao-mesa.service';
-import { QrCodeService } from './services/qr-code.service';
-import { Estabelecimento } from '../estabelecimentos/estabelecimento.entity';
+import { SolicitacaoMesaController } from './controllers/solicitacao-mesa.controller';
 import { SocketModule } from '../socket/socket.module';
+import { ComandasModule } from '../comandas/comandas.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Mesa, SolicitacaoMesa, Comanda, Estabelecimento]),
-    forwardRef(() => SocketModule),
+    TypeOrmModule.forFeature([Mesa, SolicitacaoMesa]),
+    SocketModule,
+    ComandasModule,
   ],
-  controllers: [MesaController, QrCodeController, SolicitacaoMesaController],
   providers: [
-    MesaService,
-    SolicitacaoMesaService,
     MesaRepository,
+    MesaService,
     SolicitacaoMesaRepository,
-    ComandaRepository,
-    QrCodeService,
+    SolicitacaoMesaService,
   ],
-  exports: [MesaService, SolicitacaoMesaService, QrCodeService],
+  controllers: [MesaController, SolicitacaoMesaController],
+  exports: [MesaRepository, SolicitacaoMesaRepository],
 })
 export class MesasModule {}

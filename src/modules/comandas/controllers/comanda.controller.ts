@@ -70,6 +70,15 @@ export class ComandaController {
     return comanda;
   }
 
+  @Get('id/:id')
+  @UseGuards(AuthGuard)
+  async getComandaById(@Param('id') id: string) {
+    this.logger.log(`Buscando comanda por ID: ${id}`);
+    const comanda = await this.comandaService.getComandaById(id);
+    this.logger.log(`Comanda encontrada para o ID: ${id}`);
+    return comanda;
+  }
+
   @Post()
   async createComanda(@Body() createComandaDto: CreateComandaDto) {
     this.logger.log(
