@@ -22,7 +22,9 @@ export class ContaService {
 
   async getContaByCpf(num_cpf: string): Promise<Conta[]> {
     this.logger.log(`Buscando contas para o CPF: ${num_cpf} no banco de dados`);
-    const contas = await this.contaRepository.find({ where: { id_comanda: num_cpf } });
+    const contas = await this.contaRepository.find({
+      where: { id_comanda: num_cpf },
+    });
     this.logger.log(
       `Encontradas ${contas.length} contas para o CPF: ${num_cpf} no banco de dados`,
     );

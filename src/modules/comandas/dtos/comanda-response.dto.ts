@@ -19,7 +19,7 @@ export class ComandaResponseDto {
   numMesa: string;
   status: 'ativo' | 'finalizado';
   data_criacao: string;
-  conta?: ContaResponseDto;
+  conta: ContaResponseDto;
   itens: ComandaItemResponseDto[];
 
   constructor(data: ComandaData) {
@@ -29,7 +29,21 @@ export class ComandaResponseDto {
     this.numMesa = data.numMesa;
     this.status = data.status;
     this.data_criacao = data.data_criacao.toISOString();
-    this.conta = data.conta ? new ContaResponseDto(data.conta) : undefined;
-    this.itens = data.itens ? data.itens.map(item => new ComandaItemResponseDto(item)) : [];
+    
+    // Criar uma conta com valores zerados se não existir
+    this.conta = data.conta ? new ContaResponseDto(data.conta) : new ContaResponseDto({
+      id: '',
+      id_comanda: data.id,
+      valTotal: 0,
+      valDesconto: 0,
+      valServico: 0,
+      codFormaPg: null,
+      codErro: null,
+      data_criacao: new Date(),
+    });
+    
+    this.itens = data.itens
+      ? data.itens.map((item) => new ComandaItemResponseDto(item))
+      : [];
   }
 }

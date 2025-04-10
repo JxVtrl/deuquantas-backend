@@ -38,7 +38,9 @@ export class ContaController {
 
   @Post()
   async createConta(@Body() createContaDto: CreateContaDto) {
-    this.logger.log(`Criando nova conta para o CPF: ${createContaDto.id_comanda}`);
+    this.logger.log(
+      `Criando nova conta para o CPF: ${createContaDto.id_comanda}`,
+    );
     const conta = await this.contaService.createConta(createContaDto);
     this.logger.log(`Conta criada com sucesso para o CPF: ${conta.id_comanda}`);
     return conta;

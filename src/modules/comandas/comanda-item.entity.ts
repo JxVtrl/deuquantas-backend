@@ -42,4 +42,4 @@ export class ComandaItem {
   @ManyToOne(() => Item)
   @JoinColumn({ name: 'id_item' })
   item: Item;
-} 
+}

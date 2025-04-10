@@ -58,4 +58,4 @@ export class ComandaItemResponseDto {
     this.data_criacao = data.data_criacao.toISOString();
     this.item = data.item;
   }
-} 
+}

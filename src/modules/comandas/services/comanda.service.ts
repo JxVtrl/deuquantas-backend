@@ -44,7 +44,9 @@ export class ComandaService {
     const comanda = await this.comandaRepository.findAtivaByCpf(num_cpf);
 
     if (!comanda) {
-      this.logger.warn(`Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`);
+      this.logger.warn(
+        `Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`,
+      );
       return null;
     }
 
@@ -97,15 +99,19 @@ export class ComandaService {
     };
 
     const conta = await this.contaService.createConta(contaDto);
-    
+
     this.logger.log(
       `Comanda e Conta criadas com sucesso no banco de dados. CPF: ${savedComanda.num_cpf}`,
     );
 
     // Busca a comanda com a conta relacionada
-    const comandaComConta = await this.comandaRepository.findById(savedComanda.id);
+    const comandaComConta = await this.comandaRepository.findById(
+      savedComanda.id,
+    );
     if (!comandaComConta) {
-      throw new NotFoundException(`Comanda não encontrada após criação: ${savedComanda.id}`);
+      throw new NotFoundException(
+        `Comanda não encontrada após criação: ${savedComanda.id}`,
+      );
     }
     return new ComandaResponseDto(comandaComConta);
   }
