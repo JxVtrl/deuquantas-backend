@@ -25,7 +25,7 @@ COPY backend/ ./
 RUN npm run build
 
 # Expõe as portas do backend e socket
-EXPOSE 3001 3002
+EXPOSE 3010 3011
 
 # Define o ambiente com a importação do crypto antes de iniciar
 CMD ["npm", "run", "start:prod"]

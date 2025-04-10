@@ -20,19 +20,12 @@ async function bootstrap() {
   // Configuração do CORS
   app.enableCors({
     origin: [
-      process.env.FRONTEND_URL || 'http://localhost:3000',
       'http://localhost:3000',
       'http://127.0.0.1:3000',
       'http://0.0.0.0:3000',
       'http://localhost:3001',
       'http://127.0.0.1:3001',
       'http://0.0.0.0:3001',
-      'http://localhost:3002',
-      'http://127.0.0.1:3002',
-      'http://0.0.0.0:3002',
-      'http://localhost:3003',
-      'http://127.0.0.1:3003',
-      'http://0.0.0.0:3003',
     ],
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
@@ -97,14 +90,14 @@ async function bootstrap() {
     pingInterval: 25000,
   });
 
-  // Iniciar servidor HTTP na porta 3001
-  await app.listen(3001, '0.0.0.0', () => {
-    console.log('Servidor HTTP rodando na porta 3001');
+  // Iniciar servidor HTTP na porta 3010
+  await app.listen(3010, '0.0.0.0', () => {
+    console.log('Servidor HTTP rodando na porta 3010');
   });
 
-  // Iniciar servidor Socket.IO na porta 3002
-  httpServer.listen(3002, '0.0.0.0', () => {
-    console.log('Servidor Socket.IO rodando na porta 3002');
+  // Iniciar servidor Socket.IO na porta 3011
+  httpServer.listen(3011, '0.0.0.0', () => {
+    console.log('Servidor Socket.IO rodando na porta 3011');
   });
 
   // Exportar instância do Socket.IO
