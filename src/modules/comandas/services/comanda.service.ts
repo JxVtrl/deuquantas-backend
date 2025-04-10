@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Comanda } from '../comanda.entity';
 import { CreateComandaDto } from '../dtos/comanda.dto';
 import { ComandaResponseDto } from '../dtos/comanda-response.dto';
@@ -35,7 +40,9 @@ export class ComandaService {
     const comanda = await this.comandaRepository.findAtivaByCpf(num_cpf);
 
     if (!comanda) {
-      this.logger.warn(`Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`);
+      this.logger.warn(
+        `Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`,
+      );
       return null;
     }
 
@@ -49,7 +56,9 @@ export class ComandaService {
     );
 
     // Verifica se já existe uma comanda ativa para este CPF
-    const comandaAtiva = await this.comandaRepository.findAtivaByCpf(dto.num_cpf);
+    const comandaAtiva = await this.comandaRepository.findAtivaByCpf(
+      dto.num_cpf,
+    );
     if (comandaAtiva) {
       this.logger.warn(
         `Tentativa de criar nova comanda para CPF ${dto.num_cpf} que já possui comanda ativa`,
@@ -100,7 +109,10 @@ export class ComandaService {
       this.logger.log(`Comanda finalizada com sucesso para o CPF: ${num_cpf}`);
       return new ComandaResponseDto(updatedComanda);
     } catch (error) {
-      this.logger.error(`Erro ao finalizar comanda para o CPF: ${num_cpf}`, error);
+      this.logger.error(
+        `Erro ao finalizar comanda para o CPF: ${num_cpf}`,
+        error,
+      );
       throw error;
     }
   }
