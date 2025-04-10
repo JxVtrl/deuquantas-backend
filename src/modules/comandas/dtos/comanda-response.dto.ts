@@ -11,7 +11,7 @@ interface ComandaData {
   numQuant: number;
   valPreco: number;
   valTotal: number;
-  is_ativo: boolean;
+  status: 'ativo' | 'finalizado';
   codFormaPg: number;
   horPagto?: Date;
   codErro?: number;
@@ -31,7 +31,7 @@ export class ComandaResponseDto {
   numQuant: number;
   valPreco: number;
   valTotal: number;
-  is_ativo: boolean;
+  status: 'ativo' | 'finalizado';
   codFormaPg: number;
   horPagto?: string;
   codErro?: number;
@@ -50,7 +50,7 @@ export class ComandaResponseDto {
     this.numQuant = data.numQuant;
     this.valPreco = data.valPreco;
     this.valTotal = data.valTotal;
-    this.is_ativo = data.is_ativo;
+    this.status = data.status;
     this.codFormaPg = data.codFormaPg;
     this.horPagto = data.horPagto?.toISOString();
     this.codErro = data.codErro;

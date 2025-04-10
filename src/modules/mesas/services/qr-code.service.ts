@@ -57,7 +57,6 @@ export class QrCodeService {
         num_cnpj,
         numMesa,
         status: 'disponivel',
-        is_ativo: true,
       },
     });
 

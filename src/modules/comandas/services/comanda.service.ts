@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Comanda } from '../comanda.entity';
 import { CreateComandaDto } from '../dtos/comanda.dto';
 import { ComandaResponseDto } from '../dtos/comanda-response.dto';
@@ -32,9 +32,10 @@ export class ComandaService {
     this.logger.log(
       `Buscando comanda ativa para o CPF: ${num_cpf} no banco de dados`,
     );
-    const comanda = await this.comandaRepository.findByCpf(num_cpf);
+    const comanda = await this.comandaRepository.findAtivaByCpf(num_cpf);
 
-    if (!comanda || !comanda.is_ativo) {
+    if (!comanda) {
+      this.logger.warn(`Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`);
       return null;
     }
 
@@ -47,6 +48,17 @@ export class ComandaService {
       `Criando nova comanda para o CPF: ${dto.num_cpf} no banco de dados`,
     );
 
+    // Verifica se já existe uma comanda ativa para este CPF
+    const comandaAtiva = await this.comandaRepository.findAtivaByCpf(dto.num_cpf);
+    if (comandaAtiva) {
+      this.logger.warn(
+        `Tentativa de criar nova comanda para CPF ${dto.num_cpf} que já possui comanda ativa`,
+      );
+      throw new BadRequestException(
+        'Usuário já possui uma comanda ativa. Não é possível criar outra.',
+      );
+    }
+
     const savedComanda = await this.comandaRepository.create({
       ...dto,
       datApropriacao: new Date(dto.datApropriacao),
@@ -55,7 +67,7 @@ export class ComandaService {
       numQuant: dto.numQuant || 0,
       valPreco: dto.valPreco || 0,
       valTotal: (dto.valPreco || 0) * (dto.numQuant || 0),
-      is_ativo: false, // Comanda inativa até ser aprovada pelo estabelecimento
+      status: 'ativo', // Comanda já começa ativa
       codFormaPg: 0, // Forma de pagamento não definida ainda
       horPagto: undefined,
       codErro: undefined,
@@ -70,30 +82,25 @@ export class ComandaService {
     return new ComandaResponseDto(savedComanda);
   }
 
-  async ativarComanda(num_cpf: string): Promise<ComandaResponseDto | null> {
+  async finalizarComanda(num_cpf: string): Promise<ComandaResponseDto | null> {
     this.logger.debug(
-      `Iniciando processo de ativação da comanda para o CPF: ${num_cpf}`,
+      `Iniciando processo de finalização da comanda para o CPF: ${num_cpf}`,
     );
 
-    const comanda = await this.comandaRepository.findByCpf(num_cpf);
+    const comanda = await this.comandaRepository.findAtivaByCpf(num_cpf);
 
     if (!comanda) {
       this.logger.warn(`Comanda não encontrada para o CPF: ${num_cpf}`);
       return null;
     }
 
-    if (comanda.is_ativo) {
-      this.logger.warn(`Comanda já está ativa para o CPF: ${num_cpf}`);
-      return new ComandaResponseDto(comanda);
-    }
-
     try {
-      comanda.is_ativo = true;
+      comanda.status = 'finalizado';
       const updatedComanda = await this.comandaRepository.save(comanda);
-      this.logger.log(`Comanda ativada com sucesso para o CPF: ${num_cpf}`);
+      this.logger.log(`Comanda finalizada com sucesso para o CPF: ${num_cpf}`);
       return new ComandaResponseDto(updatedComanda);
     } catch (error) {
-      this.logger.error(`Erro ao ativar comanda para o CPF: ${num_cpf}`, error);
+      this.logger.error(`Erro ao finalizar comanda para o CPF: ${num_cpf}`, error);
       throw error;
     }
   }

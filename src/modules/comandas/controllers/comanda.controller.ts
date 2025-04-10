@@ -34,7 +34,7 @@ export class ComandaController {
     this.logger.log(
       `Comanda ativa ${comanda ? 'encontrada' : 'não encontrada'} para o CPF: ${num_cpf}`,
     );
-    return comanda;
+    return comanda || {};
   }
 
   @Get('cpf/:num_cpf')
@@ -56,17 +56,6 @@ export class ComandaController {
     const comanda = await this.comandaService.createComanda(createComandaDto);
     this.logger.log(
       `Comanda criada com sucesso para o CPF: ${createComandaDto.num_cpf}`,
-    );
-    return comanda;
-  }
-
-  @Post('ativar/:num_cpf')
-  @UseGuards(AuthGuard)
-  async ativarComanda(@Param('num_cpf') num_cpf: string) {
-    this.logger.log(`Ativando comanda para o CPF: ${num_cpf}`);
-    const comanda = await this.comandaService.ativarComanda(num_cpf);
-    this.logger.log(
-      `Comanda ${comanda ? 'ativada' : 'não encontrada'} para o CPF: ${num_cpf}`,
     );
     return comanda;
   }

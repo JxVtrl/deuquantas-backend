@@ -37,8 +37,12 @@ export class Comanda {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   valTotal: number;
 
-  @Column({ type: 'boolean', default: true })
-  is_ativo: boolean;
+  @Column({
+    type: 'enum',
+    enum: ['ativo', 'finalizado'],
+    default: 'ativo',
+  })
+  status: 'ativo' | 'finalizado';
 
   @Column({ type: 'int', default: 0 })
   codFormaPg: number;

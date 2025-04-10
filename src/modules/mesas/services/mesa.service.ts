@@ -96,7 +96,6 @@ export class MesaService {
       const newMesa = this.mesaRepository.create({
         ...dto,
         status: 'disponivel',
-        is_ativo: true,
       });
 
       // Gerar QR Code para a mesa
@@ -151,9 +150,6 @@ export class MesaService {
     // Atualizar apenas os campos permitidos
     if (dto.numMaxPax !== undefined) {
       mesaExistente.numMaxPax = dto.numMaxPax;
-    }
-    if (dto.is_ativo !== undefined) {
-      mesaExistente.is_ativo = dto.is_ativo;
     }
     if (dto.status !== undefined) {
       mesaExistente.status = dto.status;

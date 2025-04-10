@@ -13,9 +13,6 @@ export class Mesa {
   @Column({ type: 'int' })
   numMaxPax: number;
 
-  @Column({ type: 'boolean', default: true })
-  is_ativo: boolean;
-
   @Column({
     type: 'enum',
     enum: ['disponivel', 'ocupada'],

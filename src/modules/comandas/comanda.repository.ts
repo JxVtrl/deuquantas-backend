@@ -20,6 +20,15 @@ export class ComandaRepository {
     });
   }
 
+  async findAtivaByCpf(num_cpf: string): Promise<Comanda | null> {
+    return this.repository.findOne({
+      where: {
+        num_cpf,
+        status: 'ativo',
+      },
+    });
+  }
+
   async findById(id: string): Promise<Comanda | null> {
     return this.repository.findOne({
       where: { id },

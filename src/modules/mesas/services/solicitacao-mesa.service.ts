@@ -115,7 +115,6 @@ export class SolicitacaoMesaService {
           num_cnpj: solicitacao.num_cnpj,
           numMesa: solicitacao.numMesa,
           status: 'disponivel',
-          is_ativo: true,
         },
       });
 
@@ -197,9 +196,10 @@ export class SolicitacaoMesaService {
         horPedido: new Date().toISOString(),
       };
 
-      // Criar e ativar a comanda
+      // Criar a comanda (já começa ativa)
       const comanda = await this.comandaService.createComanda(comandaDto);
-      await this.comandaService.ativarComanda(comanda.id);
+
+      console.log('[DEBUG] COMANDA CRIADA', JSON.stringify(comanda, null, 2));
 
       // Atualizar status da solicitação
       solicitacao.status = 'aprovado';
