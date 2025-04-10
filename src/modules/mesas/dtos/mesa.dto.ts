@@ -25,6 +25,10 @@ export class CreateMesaDto {
 
 export class UpdateMesaDto {
   @IsString()
+  @Length(14, 14)
+  num_cnpj: string;
+
+  @IsString()
   @IsOptional()
   numMesa?: string;
 

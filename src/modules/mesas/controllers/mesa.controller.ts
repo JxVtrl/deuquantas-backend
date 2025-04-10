@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -139,6 +140,25 @@ export class MesaController {
         throw error;
       }
       throw new InternalServerErrorException('Erro ao atualizar mesa');
+    }
+  }
+
+  @Delete(':numMesa')
+  async deleteMesa(@Param('numMesa') numMesa: string) {
+    try {
+      this.logger.log(`Excluindo mesa número: ${numMesa}`);
+      await this.mesaService.deleteMesa(numMesa);
+      this.logger.log(`Mesa excluída com sucesso. Número: ${numMesa}`);
+      return {
+        success: true,
+        message: 'Mesa excluída com sucesso'
+      };
+    } catch (error) {
+      this.logger.error(`Erro ao excluir mesa ${numMesa}:`, error.stack);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro ao excluir mesa');
     }
   }
 }

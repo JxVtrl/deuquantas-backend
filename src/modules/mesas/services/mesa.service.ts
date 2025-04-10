@@ -133,18 +133,46 @@ export class MesaService {
   async updateMesa(numMesa: string, dto: UpdateMesaDto): Promise<Mesa> {
     this.logger.log(`Iniciando atualização da mesa número: ${numMesa}`);
 
-    const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
-    if (!mesa) {
+    // Buscar mesa pela chave composta (numMesa e num_cnpj)
+    const mesaExistente = await this.mesaRepository.findOne({ 
+      where: { 
+        numMesa: numMesa,
+        num_cnpj: dto.num_cnpj 
+      } 
+    });
+
+    if (!mesaExistente) {
       this.logger.error(`Mesa ${numMesa} não encontrada`);
-      throw new Error('Mesa não encontrada');
+      throw new NotFoundException('Mesa não encontrada');
     }
 
     this.logger.log(`Atualizando dados da mesa ${numMesa}`);
-    Object.assign(mesa, dto);
-    const mesaAtualizada = await this.mesaRepository.save(mesa);
+    
+    // Atualizar apenas os campos permitidos
+    if (dto.numMaxPax !== undefined) {
+      mesaExistente.numMaxPax = dto.numMaxPax;
+    }
+    if (dto.is_ativo !== undefined) {
+      mesaExistente.is_ativo = dto.is_ativo;
+    }
+
+    const mesaAtualizada = await this.mesaRepository.save(mesaExistente);
     this.logger.log(
       `Mesa atualizada com sucesso. Número: ${mesaAtualizada.numMesa}, CNPJ: ${mesaAtualizada.num_cnpj}`,
     );
     return mesaAtualizada;
+  }
+
+  async deleteMesa(numMesa: string): Promise<void> {
+    this.logger.log(`Iniciando exclusão da mesa número: ${numMesa}`);
+
+    const mesa = await this.mesaRepository.findOne({ where: { numMesa } });
+    if (!mesa) {
+      this.logger.error(`Mesa ${numMesa} não encontrada`);
+      throw new NotFoundException('Mesa não encontrada');
+    }
+
+    await this.mesaRepository.delete({ numMesa });
+    this.logger.log(`Mesa ${numMesa} excluída com sucesso`);
   }
 }
