@@ -79,9 +79,15 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('join-room')
-  async handleJoinRoom(client: Socket, roomName: string) {
+  async handleJoinRoom(
+    client: Socket,
+    roomName: string,
+    callback?: (error: any, response: any) => void,
+  ) {
     try {
-      this.logger.log(`[DEBUG] Recebido pedido para entrar na sala: ${roomName}`);
+      this.logger.log(
+        `[DEBUG] Recebido pedido para entrar na sala: ${roomName}`,
+      );
 
       if (!roomName || typeof roomName !== 'string') {
         throw new Error('Nome da sala é obrigatório');
@@ -89,28 +95,41 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       if (!roomName.startsWith(this.roomPrefix)) {
         this.logger.error(`Nome da sala inválido: ${roomName}`);
-        client.emit('room-join-error', { message: 'Nome da sala inválido' });
+        if (callback) {
+          callback({ message: 'Nome da sala inválido' }, null);
+        } else {
+          client.emit('room-join-error', { message: 'Nome da sala inválido' });
+        }
         return;
       }
 
       const estabelecimentoId = roomName.replace(this.roomPrefix, '');
-      
+
       // Adiciona o cliente à sala
       await client.join(roomName);
-      
-      // Busca solicitações existentes
-      const solicitacoes = await this.solicitacaoMesaService.getSolicitacoesByEstabelecimento(
-        estabelecimentoId,
-      );
 
-      // IMPORTANTE: Emite resposta imediatamente após juntar-se à sala
-      client.emit('room-joined', {
+      // Busca solicitações existentes
+      const solicitacoes =
+        await this.solicitacaoMesaService.getSolicitacoesByEstabelecimento(
+          estabelecimentoId,
+        );
+
+      const response = {
         room: roomName,
         solicitacoes: solicitacoes || [],
-      });
+      };
 
-      this.logger.log(`[DEBUG] Cliente ${client.id} entrou na sala: ${roomName}`);
-      
+      // IMPORTANTE: Emite resposta usando o callback se disponível
+      if (callback) {
+        callback(null, response);
+      } else {
+        client.emit('room-joined', response);
+      }
+
+      this.logger.log(
+        `[DEBUG] Cliente ${client.id} entrou na sala: ${roomName}`,
+      );
+
       // Atualiza registro de salas do cliente
       this.clientRooms.set(client.id, [roomName]);
 
@@ -118,14 +137,20 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     } catch (error) {
       const message = getErrorMessage(error);
       this.logger.error(`[DEBUG] Erro ao entrar na sala: ${message}`);
-      client.emit('room-join-error', { message });
+      if (callback) {
+        callback({ message }, null);
+      } else {
+        client.emit('room-join-error', { message });
+      }
       throw error;
     }
   }
 
   @SubscribeMessage('solicitar-mesa')
   async handleSolicitarMesa(client: Socket, data: SolicitacaoMesaDto) {
-    this.logger.log(`[DEBUG] Recebida solicitação de mesa: ${JSON.stringify(data)}`);
+    this.logger.log(
+      `[DEBUG] Recebida solicitação de mesa: ${JSON.stringify(data)}`,
+    );
     try {
       if (!data || !data.num_cnpj || !data.numMesa || !data.clienteId) {
         throw new Error('Dados da solicitação inválidos');
@@ -134,21 +159,25 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const solicitacao = await this.solicitacaoMesaService.solicitarMesa(data);
 
       // Envia confirmação para o cliente que fez a solicitação
-      client.emit('solicitacao-recebida', { 
-        status: 'ok', 
-        data: solicitacao 
+      client.emit('solicitacao-recebida', {
+        status: 'ok',
+        data: solicitacao,
       });
 
       // Notifica todos na sala sobre a nova solicitação
       const roomName = `${this.roomPrefix}${data.num_cnpj}`;
       this.server.to(roomName).emit('nova-solicitacao', solicitacao);
 
-      this.logger.log(`[DEBUG] Nova solicitação notificada para sala ${roomName}`);
-      
+      this.logger.log(
+        `[DEBUG] Nova solicitação notificada para sala ${roomName}`,
+      );
+
       return { success: true, solicitacao };
     } catch (error: unknown) {
       const message = getErrorMessage(error);
-      this.logger.error(`[DEBUG] Erro ao processar solicitação de mesa: ${message}`);
+      this.logger.error(
+        `[DEBUG] Erro ao processar solicitação de mesa: ${message}`,
+      );
       client.emit('solicitacao-recebida', {
         status: 'error',
         message,
