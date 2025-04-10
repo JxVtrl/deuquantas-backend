@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ContaResponseDto } from '../../contas/dtos/conta.dto';
 import { ComandaItemResponseDto } from './comanda-item.dto';
 
@@ -34,7 +35,7 @@ export class ComandaResponseDto {
     this.conta = data.conta
       ? new ContaResponseDto(data.conta)
       : new ContaResponseDto({
-          id: '',
+          id: uuidv4(),
           id_comanda: data.id,
           valTotal: 0,
           valDesconto: 0,
