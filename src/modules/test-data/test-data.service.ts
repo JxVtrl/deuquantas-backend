@@ -60,7 +60,7 @@ export class TestDataService {
     try {
       await this.usuarioRepository.query('SELECT 1 FROM usuarios LIMIT 1');
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
