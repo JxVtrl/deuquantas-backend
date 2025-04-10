@@ -3,7 +3,12 @@ import {
   Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
+import { Conta } from '../contas/conta.entity';
+import { ComandaItem } from './comanda-item.entity';
 
 @Entity('comandas')
 export class Comanda {
@@ -56,9 +61,10 @@ export class Comanda {
   @CreateDateColumn({ type: 'timestamp' })
   data_criacao: Date;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  valConta: number;
+  @OneToOne(() => Conta, (conta) => conta.comanda, { eager: true })
+  @JoinColumn({ name: 'id_conta' })
+  conta: Conta;
 
-  @Column({ type: 'timestamp' })
-  datConta: Date;
+  @OneToMany(() => ComandaItem, (comandaItem) => comandaItem.comanda)
+  itens: ComandaItem[];
 }

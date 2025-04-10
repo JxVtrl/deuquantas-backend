@@ -22,7 +22,7 @@ export class ContaService {
 
   async getContaByCpf(num_cpf: string): Promise<Conta[]> {
     this.logger.log(`Buscando contas para o CPF: ${num_cpf} no banco de dados`);
-    const contas = await this.contaRepository.find({ where: { num_cpf } });
+    const contas = await this.contaRepository.find({ where: { id_comanda: num_cpf } });
     this.logger.log(
       `Encontradas ${contas.length} contas para o CPF: ${num_cpf} no banco de dados`,
     );
@@ -31,12 +31,12 @@ export class ContaService {
 
   async createConta(dto: CreateContaDto): Promise<Conta> {
     this.logger.log(
-      `Criando nova conta para o CPF: ${dto.num_cpf} no banco de dados`,
+      `Criando nova conta para o CPF: ${dto.id_comanda} no banco de dados`,
     );
     const newConta = this.contaRepository.create(dto);
     const savedConta = await this.contaRepository.save(newConta);
     this.logger.log(
-      `Conta criada com sucesso no banco de dados. CPF: ${savedConta.num_cpf}`,
+      `Conta criada com sucesso no banco de dados. CPF: ${savedConta.id_comanda}`,
     );
     return savedConta;
   }

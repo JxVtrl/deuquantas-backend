@@ -26,12 +26,14 @@ export class ComandaRepository {
         num_cpf,
         status: 'ativo',
       },
+      relations: ['conta', 'itens', 'itens.item'],
     });
   }
 
   async findById(id: string): Promise<Comanda | null> {
     return this.repository.findOne({
       where: { id },
+      relations: ['conta', 'itens', 'itens.item'],
     });
   }
 

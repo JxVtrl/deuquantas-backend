@@ -8,12 +8,16 @@ import { Comanda } from '../comanda.entity';
 import { CreateComandaDto } from '../dtos/comanda.dto';
 import { ComandaResponseDto } from '../dtos/comanda-response.dto';
 import { ComandaRepository } from '../comanda.repository';
+import { ContaService } from '../../contas/services/conta.service';
 
 @Injectable()
 export class ComandaService {
   private readonly logger = new Logger(ComandaService.name);
 
-  constructor(private readonly comandaRepository: ComandaRepository) {}
+  constructor(
+    private readonly comandaRepository: ComandaRepository,
+    private readonly contaService: ContaService,
+  ) {}
 
   async getAllComandas(): Promise<ComandaResponseDto[]> {
     this.logger.log('Buscando todas as comandas no banco de dados');
@@ -40,9 +44,7 @@ export class ComandaService {
     const comanda = await this.comandaRepository.findAtivaByCpf(num_cpf);
 
     if (!comanda) {
-      this.logger.warn(
-        `Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`,
-      );
+      this.logger.warn(`Nenhuma comanda ativa encontrada para o CPF: ${num_cpf}`);
       return null;
     }
 
@@ -68,6 +70,7 @@ export class ComandaService {
       );
     }
 
+    // Cria a comanda
     const savedComanda = await this.comandaRepository.create({
       ...dto,
       datApropriacao: new Date(dto.datApropriacao),
@@ -80,15 +83,31 @@ export class ComandaService {
       codFormaPg: 0, // Forma de pagamento não definida ainda
       horPagto: undefined,
       codErro: undefined,
-      valConta: 0,
-      datConta: new Date(),
     });
 
+    // Cria a conta associada
+    const contaDto = {
+      id_comanda: savedComanda.id,
+      num_cnpj: dto.num_cnpj,
+      numMesa: dto.numMesa,
+      num_cpf: dto.num_cpf,
+      datConta: new Date().toISOString(),
+      valConta: 0, // Valor inicial zerado
+      codFormaPg: 0, // Forma de pagamento não definida ainda
+    };
+
+    const conta = await this.contaService.createConta(contaDto);
+    
     this.logger.log(
-      `Comanda criada com sucesso no banco de dados. CPF: ${savedComanda.num_cpf}`,
+      `Comanda e Conta criadas com sucesso no banco de dados. CPF: ${savedComanda.num_cpf}`,
     );
 
-    return new ComandaResponseDto(savedComanda);
+    // Busca a comanda com a conta relacionada
+    const comandaComConta = await this.comandaRepository.findById(savedComanda.id);
+    if (!comandaComConta) {
+      throw new NotFoundException(`Comanda não encontrada após criação: ${savedComanda.id}`);
+    }
+    return new ComandaResponseDto(comandaComConta);
   }
 
   async finalizarComanda(num_cpf: string): Promise<ComandaResponseDto | null> {

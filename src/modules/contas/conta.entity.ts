@@ -1,24 +1,25 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn } from 'typeorm';
+import { Comanda } from '../comandas/comanda.entity';
 
 // Conta Entity
 @Entity('contas')
 export class Conta {
-  @PrimaryColumn({ type: 'varchar', length: 14 })
-  num_cnpj: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @PrimaryColumn({ type: 'varchar', length: 4 })
-  numMesa: string;
+  @Column({ type: 'uuid' })
+  id_comanda: string;
 
-  @PrimaryColumn({ type: 'varchar', length: 11 })
-  num_cpf: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  valTotal: number;
 
-  @Column({ type: 'timestamp' })
-  datConta: Date;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  valDesconto: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
-  valConta: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  valServico: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   codFormaPg: number;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -26,4 +27,13 @@ export class Conta {
 
   @Column({ type: 'int', nullable: true })
   codErro: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  data_criacao: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  data_fechamento: Date;
+
+  @OneToOne(() => Comanda, (comanda) => comanda.conta)
+  comanda: Comanda;
 }
