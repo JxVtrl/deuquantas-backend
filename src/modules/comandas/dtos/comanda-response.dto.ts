@@ -29,19 +29,21 @@ export class ComandaResponseDto {
     this.numMesa = data.numMesa;
     this.status = data.status;
     this.data_criacao = data.data_criacao.toISOString();
-    
+
     // Criar uma conta com valores zerados se não existir
-    this.conta = data.conta ? new ContaResponseDto(data.conta) : new ContaResponseDto({
-      id: '',
-      id_comanda: data.id,
-      valTotal: 0,
-      valDesconto: 0,
-      valServico: 0,
-      codFormaPg: null,
-      codErro: null,
-      data_criacao: new Date(),
-    });
-    
+    this.conta = data.conta
+      ? new ContaResponseDto(data.conta)
+      : new ContaResponseDto({
+          id: '',
+          id_comanda: data.id,
+          valTotal: 0,
+          valDesconto: 0,
+          valServico: 0,
+          codFormaPg: null,
+          codErro: null,
+          data_criacao: new Date(),
+        });
+
     this.itens = data.itens
       ? data.itens.map((item) => new ComandaItemResponseDto(item))
       : [];
