@@ -28,10 +28,6 @@ export class UpdateMesaDto {
   @Length(14, 14)
   num_cnpj: string;
 
-  @IsString()
-  @IsOptional()
-  numMesa?: string;
-
   @IsNumber()
   @IsOptional()
   numMaxPax?: number;
@@ -39,4 +35,8 @@ export class UpdateMesaDto {
   @IsBoolean()
   @IsOptional()
   is_ativo?: boolean;
+
+  @IsString()
+  @IsOptional()
+  status?: 'disponivel' | 'ocupada';
 }

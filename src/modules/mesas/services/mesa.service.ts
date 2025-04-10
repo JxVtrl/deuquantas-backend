@@ -134,11 +134,11 @@ export class MesaService {
     this.logger.log(`Iniciando atualização da mesa número: ${numMesa}`);
 
     // Buscar mesa pela chave composta (numMesa e num_cnpj)
-    const mesaExistente = await this.mesaRepository.findOne({ 
-      where: { 
+    const mesaExistente = await this.mesaRepository.findOne({
+      where: {
         numMesa: numMesa,
-        num_cnpj: dto.num_cnpj 
-      } 
+        num_cnpj: dto.num_cnpj,
+      },
     });
 
     if (!mesaExistente) {
@@ -147,13 +147,16 @@ export class MesaService {
     }
 
     this.logger.log(`Atualizando dados da mesa ${numMesa}`);
-    
+
     // Atualizar apenas os campos permitidos
     if (dto.numMaxPax !== undefined) {
       mesaExistente.numMaxPax = dto.numMaxPax;
     }
     if (dto.is_ativo !== undefined) {
       mesaExistente.is_ativo = dto.is_ativo;
+    }
+    if (dto.status !== undefined) {
+      mesaExistente.status = dto.status;
     }
 
     const mesaAtualizada = await this.mesaRepository.save(mesaExistente);

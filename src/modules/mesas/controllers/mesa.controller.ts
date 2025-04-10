@@ -151,7 +151,7 @@ export class MesaController {
       this.logger.log(`Mesa excluída com sucesso. Número: ${numMesa}`);
       return {
         success: true,
-        message: 'Mesa excluída com sucesso'
+        message: 'Mesa excluída com sucesso',
       };
     } catch (error) {
       this.logger.error(`Erro ao excluir mesa ${numMesa}:`, error.stack);
