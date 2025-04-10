@@ -10,7 +10,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SolicitacaoMesaRepository } from '../repositories/solicitacao-mesa.repository';
 import { SolicitacaoMesaDto } from '../dtos/solicitacao-mesa.dto';
 import { SolicitacaoMesa } from '../entities/solicitacao-mesa.entity';
-import { SocketGateway } from '../../socket/socket.gateway';
 import { Repository } from 'typeorm';
 import { Comanda } from '../../comandas/comanda.entity';
 import { Mesa } from '../mesa.entity';
@@ -27,8 +26,6 @@ export class SolicitacaoMesaService {
     private readonly mesaRepository: Repository<Mesa>,
     @InjectRepository(Comanda)
     private readonly comandaRepository: Repository<Comanda>,
-    @Inject(forwardRef(() => SocketGateway))
-    private readonly socketGateway: SocketGateway,
     private readonly comandaService: ComandaService,
   ) {}
 
@@ -158,44 +155,6 @@ export class SolicitacaoMesaService {
         `[DEBUG] Solicitação criada com sucesso: ${JSON.stringify(solicitacaoSalva)}`,
       );
 
-      // Notificar o estabelecimento via socket
-      const room = `estabelecimento:${solicitacao.num_cnpj}`;
-      this.logger.log(
-        `[DEBUG] Tentando notificar estabelecimento na sala ${room}`,
-      );
-
-      const server = this.socketGateway.getServer();
-      if (!server) {
-        this.logger.error('[DEBUG] Servidor de socket não disponível');
-        throw new Error('Servidor de socket não disponível');
-      }
-
-      // Verificar se há clientes na sala antes de enviar
-      const sockets = await server.in(room).allSockets();
-      this.logger.log(`[DEBUG] Clientes na sala ${room}: ${sockets.size}`);
-      this.logger.log(
-        `[DEBUG] IDs dos clientes na sala: ${Array.from(sockets).join(', ')}`,
-      );
-
-      if (sockets.size === 0) {
-        this.logger.warn(`[DEBUG] Nenhum cliente encontrado na sala ${room}`);
-      }
-
-      // Enviar notificação para a sala
-      server.to(room).emit('nova-solicitacao', {
-        type: 'nova-solicitacao',
-        data: solicitacaoSalva,
-      });
-
-      this.logger.log(`[DEBUG] Notificação enviada para a sala ${room}`);
-
-      // Enviar notificação geral (para debug)
-      server.emit('debug-nova-solicitacao', {
-        type: 'nova-solicitacao',
-        room: room,
-        data: solicitacaoSalva,
-      });
-
       return solicitacaoSalva;
     } catch (error) {
       this.logger.error(
@@ -254,26 +213,9 @@ export class SolicitacaoMesaService {
         { status: 'ocupada' },
       );
 
-      // Notificar o cliente com o ID da comanda
-      this.socketGateway.getServer().emit('atualizacao-solicitacao', {
-        ...solicitacao,
-        status: 'aprovado',
-        comandaId: comanda.id,
-      });
-
-      // Notificar o estabelecimento
-      this.socketGateway
-        .getServer()
-        .to(solicitacao.num_cnpj)
-        .emit('solicitacao-atualizada', {
-          ...solicitacao,
-          status: 'aprovado',
-        });
-
       return {
         ...solicitacao,
         status: 'aprovado',
-        comandaId: comanda.id,
       };
     } catch (error) {
       this.logger.error(`[DEBUG] Erro ao aprovar solicitação ${id}:`, error);
@@ -307,21 +249,6 @@ export class SolicitacaoMesaService {
 
       await this.solicitacaoMesaRepository.updateStatus(id, 'rejeitado');
       this.logger.log(`[DEBUG] Solicitação ${id} rejeitada com sucesso`);
-
-      // Notificar o cliente
-      this.socketGateway.getServer().emit('atualizacao-solicitacao', {
-        ...solicitacao,
-        status: 'rejeitado',
-      });
-
-      // Notificar o estabelecimento
-      this.socketGateway
-        .getServer()
-        .to(solicitacao.num_cnpj)
-        .emit('solicitacao-atualizada', {
-          ...solicitacao,
-          status: 'rejeitado',
-        });
 
       return solicitacao;
     } catch (error) {

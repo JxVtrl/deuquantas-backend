@@ -18,6 +18,6 @@ import { ContasModule } from '../contas/contas.module';
     TestComandaService,
   ],
   controllers: [ComandaController],
-  exports: [ComandaRepository, TestComandaRepository],
+  exports: [ComandaRepository, TestComandaRepository, ComandaService],
 })
 export class ComandasModule {}

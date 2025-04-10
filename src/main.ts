@@ -4,12 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthGuard } from './auth/auth.guard';
 import { Reflector } from '@nestjs/core';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-
-interface HttpAdapter {
-  set(key: string, value: any): void;
-}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -67,42 +61,10 @@ async function bootstrap() {
     }),
   );
 
-  // Criar servidor HTTP
-  const httpServer = createServer(app.getHttpAdapter().getInstance());
-
-  // Configurar Socket.IO
-  const io = new Server(httpServer, {
-    cors: {
-      origin: [
-        process.env.FRONTEND_URL || 'http://localhost:3000',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://0.0.0.0:3000',
-      ],
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization'],
-    },
-    path: '/socket.io',
-    transports: ['websocket', 'polling'],
-    allowEIO3: true,
-    pingTimeout: 60000,
-    pingInterval: 25000,
-  });
-
   // Iniciar servidor HTTP na porta 3010
   await app.listen(3010, '0.0.0.0', () => {
     console.log('Servidor HTTP rodando na porta 3010');
   });
-
-  // Iniciar servidor Socket.IO na porta 3011
-  httpServer.listen(3011, '0.0.0.0', () => {
-    console.log('Servidor Socket.IO rodando na porta 3011');
-  });
-
-  // Exportar instância do Socket.IO
-  const httpAdapter = app.getHttpAdapter().getInstance() as HttpAdapter;
-  httpAdapter.set('io', io);
 }
 
 bootstrap();

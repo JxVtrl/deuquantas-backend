@@ -32,7 +32,4 @@ export class SolicitacaoMesa {
 
   @UpdateDateColumn()
   dataAtualizacao: Date;
-
-  @Column({ nullable: true })
-  comandaId?: string;
 }
