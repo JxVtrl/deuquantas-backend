@@ -204,17 +204,17 @@ export class SolicitacaoMesaService {
       // Atualizar status da solicitação
       solicitacao.status = 'aprovado';
       solicitacao.dataAtualizacao = new Date();
-      
-      const solicitacaoAtualizada = await this.solicitacaoMesaRepository.save(solicitacao);
-      
-      this.logger.log(`[DEBUG] Solicitação aprovada com sucesso: ${JSON.stringify(solicitacaoAtualizada)}`);
-      
+
+      const solicitacaoAtualizada =
+        await this.solicitacaoMesaRepository.save(solicitacao);
+
+      this.logger.log(
+        `[DEBUG] Solicitação aprovada com sucesso: ${JSON.stringify(solicitacaoAtualizada)}`,
+      );
+
       return solicitacaoAtualizada;
     } catch (error) {
-      this.logger.error(
-        `[DEBUG] Erro ao aprovar solicitação ${id}:`,
-        error,
-      );
+      this.logger.error(`[DEBUG] Erro ao aprovar solicitação ${id}:`, error);
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException

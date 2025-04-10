@@ -8,15 +8,13 @@ import { ComandaRepository } from '../comanda.repository';
 export class ComandaService {
   private readonly logger = new Logger(ComandaService.name);
 
-  constructor(
-    private readonly comandaRepository: ComandaRepository,
-  ) {}
+  constructor(private readonly comandaRepository: ComandaRepository) {}
 
   async getAllComandas(): Promise<ComandaResponseDto[]> {
     this.logger.log('Buscando todas as comandas no banco de dados');
     const comandas = await this.comandaRepository.findAll();
     this.logger.log(`Retornando ${comandas.length} comandas do banco de dados`);
-    return comandas.map(comanda => new ComandaResponseDto(comanda));
+    return comandas.map((comanda) => new ComandaResponseDto(comanda));
   }
 
   async getComandaByCpf(num_cpf: string): Promise<ComandaResponseDto[]> {
@@ -24,25 +22,23 @@ export class ComandaService {
       `Buscando comandas para o CPF: ${num_cpf} no banco de dados`,
     );
     const comanda = await this.comandaRepository.findByCpf(num_cpf);
-    this.logger.log(
-      `Encontrada comanda para o CPF: ${num_cpf}`,
-    );
+    this.logger.log(`Encontrada comanda para o CPF: ${num_cpf}`);
     return comanda ? [new ComandaResponseDto(comanda)] : [];
   }
 
-  async getComandaAtivaByCpf(num_cpf: string): Promise<ComandaResponseDto | null> {
+  async getComandaAtivaByCpf(
+    num_cpf: string,
+  ): Promise<ComandaResponseDto | null> {
     this.logger.log(
       `Buscando comanda ativa para o CPF: ${num_cpf} no banco de dados`,
     );
     const comanda = await this.comandaRepository.findByCpf(num_cpf);
-    
+
     if (!comanda || !comanda.is_ativo) {
       return null;
     }
 
-    this.logger.log(
-      `Comanda ativa encontrada para o CPF: ${num_cpf}`,
-    );
+    this.logger.log(`Comanda ativa encontrada para o CPF: ${num_cpf}`);
     return new ComandaResponseDto(comanda);
   }
 
@@ -75,7 +71,9 @@ export class ComandaService {
   }
 
   async ativarComanda(num_cpf: string): Promise<ComandaResponseDto | null> {
-    this.logger.debug(`Iniciando processo de ativação da comanda para o CPF: ${num_cpf}`);
+    this.logger.debug(
+      `Iniciando processo de ativação da comanda para o CPF: ${num_cpf}`,
+    );
 
     const comanda = await this.comandaRepository.findByCpf(num_cpf);
 

@@ -15,9 +15,7 @@ import { AuthGuard } from '../../../auth/auth.guard';
 export class ComandaController {
   private readonly logger = new Logger(ComandaController.name);
 
-  constructor(
-    private readonly comandaService: ComandaService,
-  ) {}
+  constructor(private readonly comandaService: ComandaService) {}
 
   @Get()
   @UseGuards(AuthGuard)
