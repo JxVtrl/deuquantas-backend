@@ -24,7 +24,9 @@ export class ItemController {
   async getItensByEstabelecimento(@Param('cnpj') cnpj: string) {
     this.logger.log(`Buscando itens do estabelecimento: ${cnpj}`);
     const itens = await this.itemService.getItensByEstabelecimento(cnpj);
-    this.logger.log(`Encontrados ${itens.length} itens para o estabelecimento ${cnpj}`);
+    this.logger.log(
+      `Encontrados ${itens.length} itens para o estabelecimento ${cnpj}`,
+    );
     return itens;
   }
 

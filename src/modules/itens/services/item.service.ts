@@ -34,7 +34,9 @@ export class ItemService {
     const itens = await this.itemRepository.find({
       where: { estabelecimento_id: cnpj },
     });
-    this.logger.log(`Encontrados ${itens.length} itens para o estabelecimento ${cnpj}`);
+    this.logger.log(
+      `Encontrados ${itens.length} itens para o estabelecimento ${cnpj}`,
+    );
     return itens;
   }
 
@@ -43,11 +45,13 @@ export class ItemService {
     const item = await this.itemRepository.findOne({
       where: { id, estabelecimento_id: cnpj },
     });
-    
+
     if (!item) {
-      throw new NotFoundException(`Item ${id} não encontrado para o estabelecimento ${cnpj}`);
+      throw new NotFoundException(
+        `Item ${id} não encontrado para o estabelecimento ${cnpj}`,
+      );
     }
-    
+
     return item;
   }
 
@@ -57,35 +61,37 @@ export class ItemService {
     );
     const newItem = this.itemRepository.create(dto);
     const savedItem = await this.itemRepository.save(newItem);
-    this.logger.log(
-      `Item criado com sucesso. Código: ${savedItem.id}`,
-    );
+    this.logger.log(`Item criado com sucesso. Código: ${savedItem.id}`);
     return savedItem;
   }
 
-  async updateItem(id: string, cnpj: string, updateDto: Partial<CreateItemDto>): Promise<Item> {
+  async updateItem(
+    id: string,
+    cnpj: string,
+    updateDto: Partial<CreateItemDto>,
+  ): Promise<Item> {
     this.logger.log(`Atualizando item ${id} do estabelecimento: ${cnpj}`);
-    
+
     // Verifica se o item existe
     const item = await this.getItemByIdAndEstabelecimento(id, cnpj);
-    
+
     // Atualiza o item
     Object.assign(item, updateDto);
     const updatedItem = await this.itemRepository.save(item);
-    
+
     this.logger.log(`Item atualizado com sucesso. Código: ${updatedItem.id}`);
     return updatedItem;
   }
 
   async deleteItem(id: string, cnpj: string): Promise<void> {
     this.logger.log(`Excluindo item ${id} do estabelecimento: ${cnpj}`);
-    
+
     // Verifica se o item existe
     const item = await this.getItemByIdAndEstabelecimento(id, cnpj);
-    
+
     // Exclui o item
     await this.itemRepository.remove(item);
-    
+
     this.logger.log(`Item excluído com sucesso. Código: ${id}`);
   }
 }
