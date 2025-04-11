@@ -1,16 +1,31 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsNumber } from 'class-validator';
 
 export class CreateItemDto {
   @IsString()
-  codItem: string;
+  id: string;
 
   @IsString()
-  desItem: string;
+  nome: string;
 
   @IsString()
-  tipItem: string;
+  tipo: string;
+
+  @IsNumber()
+  preco: number;
 
   @IsOptional()
   @IsString()
-  imgItem?: string;
+  img?: string;
+
+  @IsOptional()
+  @IsString()
+  descricao?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  disponivel?: boolean;
+
+  @IsOptional()
+  @IsString()
+  estabelecimento_id?: string;
 }

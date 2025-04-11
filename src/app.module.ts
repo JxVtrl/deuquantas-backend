@@ -2,20 +2,19 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import {
-  Cardapio,
   Cliente,
   Comanda,
   Conta,
   Estabelecimento,
   Item,
   Mesa,
-  CardapiosModule,
   ClientesModule,
   ComandasModule,
   ContasModule,
   EstabelecimentosModule,
   ItensModule,
   MesasModule,
+  Usuario,
 } from './modules';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MonitoringModule } from './monitoring/monitoring.module';
@@ -46,19 +45,18 @@ import { TestDataModule } from './modules/test-data/test-data.module';
       },
     }),
     TypeOrmModule.forFeature([
-      Cardapio,
       Cliente,
       Comanda,
       Conta,
       Estabelecimento,
       Item,
       Mesa,
+      Usuario,
     ]),
     MonitoringModule,
     ClientesModule,
     EstabelecimentosModule,
     ComandasModule,
-    CardapiosModule,
     MesasModule,
     ContasModule,
     ItensModule,

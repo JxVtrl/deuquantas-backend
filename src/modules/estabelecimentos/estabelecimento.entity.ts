@@ -6,9 +6,9 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Cardapio } from '../cardapios/cardapio.entity';
 import { Usuario } from '../usuarios/usuario.entity';
 import { Mesa } from '../mesas/mesa.entity';
+import { Item } from '../itens/item.entity';
 
 // Estabelecimento Entity
 @Entity('estabelecimentos')
@@ -61,9 +61,6 @@ export class Estabelecimento {
   @Column({ type: 'text', nullable: true })
   imgLogo: string;
 
-  @OneToMany(() => Cardapio, (cardapio) => cardapio.estabelecimento)
-  cardapios: Cardapio[];
-
   @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
   latitude: number;
 
@@ -79,4 +76,7 @@ export class Estabelecimento {
 
   @OneToMany(() => Mesa, (mesa) => mesa.estabelecimento, { lazy: true })
   mesas: Promise<Mesa[]>;
+
+  @OneToMany(() => Item, (item) => item.estabelecimento, { lazy: true })
+  cardapio: Promise<Item[]>;
 }

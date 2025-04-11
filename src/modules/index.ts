@@ -1,5 +1,3 @@
-export * from './cardapios/cardapio.entity';
-export * from './cardapios/cardapios.module';
 export * from './clientes/cliente.entity';
 export * from './clientes/clientes.module';
 export * from './comandas/comanda.entity';

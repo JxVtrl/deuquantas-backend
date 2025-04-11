@@ -127,7 +127,6 @@ export class EstabelecimentoService {
     const estabelecimento = await this.estabelecimentoRepository
       .createQueryBuilder('estabelecimento')
       .leftJoinAndSelect('estabelecimento.usuario', 'usuario')
-      .leftJoinAndSelect('estabelecimento.cardapios', 'cardapios')
       .where('usuario.id = :usuarioId', { usuarioId })
       .getOne();
 
@@ -193,7 +192,6 @@ export class EstabelecimentoService {
       const estabelecimento = await this.estabelecimentoRepository
         .createQueryBuilder('estabelecimento')
         .leftJoinAndSelect('estabelecimento.usuario', 'usuario')
-        .leftJoinAndSelect('estabelecimento.cardapios', 'cardapios')
         .where('usuario.id = :usuarioId', { usuarioId })
         .getOne();
 
